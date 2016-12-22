@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSCustomerInfoMapper">
+
+    <select id="selectForPage" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        <![CDATA[
+        SELECT
+            CS.CUSTOMER_ID CUSTOMER_ID,
+            T1.MACRO_NAME customerType,
+            T.MACRO_NAME customerProperty,
+            CS.CORPORATION,
+            CS.SUPERIOR_COMPANY,
+            CS.COMPANY_NAME,
+            CS.USER_STATUS,
+            T2.MACRO_NAME userStatusName,
+            E1.erpNumber,
+            E2.endDateNumber,
+           	E3.startDateNumber,
+           	E4.storeNumber
+        FROM
+            T_CS_CUSTOMERINFO CS
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.CUSTOMER_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CUSTOMER_TYPE' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON CS.USER_STATUS = T2.MACRO_CODE AND T2.MACRO_TYPE = 'USER_STATUS' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS erpNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE DEL_FLAG = 'M0015' GROUP  BY CUSTOMER_ID) E1
+            ON E1.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS endDateNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE curdate() < ACCREDIT_ENDDATE AND DEL_FLAG = 'M0015'GROUP BY CUSTOMER_ID) E2
+            ON E2.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS startDateNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE curdate() > ACCREDIT_ENDDATE AND DEL_FLAG = 'M0015'GROUP BY CUSTOMER_ID) E3
+            ON E3.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS storeNumber FROM T_AM_STORE GROUP BY CUSTOMER_ID) E4 ON E4.CUSTOMER_ID = CS.CUSTOMER_ID
+                    ]]>
+        <where>
+            <if test="corporation!=null and corporation!=''">
+                AND CS.CORPORATION LIKE CONCAT('%',#{corporation},'%')
+            </if>
+            <if test="customerProperty != null and customerProperty != ''">
+                AND CS.CUSTOMER_PROPERTY = #{customerProperty}
+            </if>
+            <if test="customerType != null and customerType != ''">
+                AND CS.CUSTOMER_TYPE = #{customerType}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND CS.COMPANY_NAME LIKE CONCAT('%',#{companyName},'%')
+            </if>
+            <if test="superiorCompany != null and superiorCompany != ''">
+                AND CS.DEF1 LIKE CONCAT('%',#{superiorCompany},'%')
+            </if>
+            <if test="idNumber != null and idNumber != ''">
+                AND CS.ID_NUMBER = #{idNumber}
+            </if>
+            <if test="businessLicense != null and businessLicense != ''">
+                AND CS.BUSINESS_LICENSE = #{businessLicense}
+            </if>
+                AND CS.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY CS.UPDATE_TIME DESC
+    </select>
+
+    <select id="selectById" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        SELECT
+              CS.CUSTOMER_ID,
+              T.MACRO_NAME customerProperty,
+              T1.MACRO_NAME customerType,
+              CS.SUPERIOR_COMPANY,
+              T2.MACRO_NAME userStatus,
+              T3.MACRO_NAME education,
+              T4.MACRO_NAME sex,
+              T6.MACRO_NAME depositBank,
+              CS.CORPORATION,
+              CS.ORIG_CAREER,
+              T5.MACRO_NAME homeStyle,
+              CS.TEL,
+              CS.ID_NUMBER,
+              CS.NATIVE_PLACE,
+              CS.AGE,
+              CS.BUSINESS_LIFE,
+              CS.EXPERIENCE,
+              CS.DEPOSIT_ACCOUNT,
+              CS.COMPANY_NAME,
+              CS.BUSINESS_LICENSE,
+              CS.TAX_ID,
+              CS.EMAIL,
+              CS.FAX,
+              CS.POSTCODE,
+              CS.POST_ADDRESS,
+              CS.ADDRESS
+        From T_CS_CUSTOMERINFO CS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.CUSTOMER_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CUSTOMER_TYPE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON CS.SUPERIOR_COMPANY = T2.MACRO_CODE AND T2.MACRO_TYPE = 'USER_STATUS' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON CS.EDUCATION = T3.MACRO_CODE AND T3.MACRO_TYPE = 'EDUCATION_DEGREE' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON CS.SEX = T4.MACRO_CODE AND T4.MACRO_TYPE = 'SEX' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON CS.HOME_STYLE = T5.MACRO_CODE AND T5.MACRO_TYPE = 'HOME_STYLE' AND T5.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T6 ON CS.DEPOSIT_BANK = T6.MACRO_CODE AND T6.MACRO_TYPE = 'ACCOUNT_BANK' AND T6.DEL_FLAG = 'M0015'
+        <where>
+            AND CS.CUSTOMER_ID = #{customerId}
+            AND CS.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="selectCustomerByIdNumer" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        SELECT
+        CS.CUSTOMER_ID,
+        T.MACRO_NAME customerProperty,
+        T1.MACRO_NAME customerType,
+        CS.SUPERIOR_COMPANY,
+        T2.MACRO_NAME userStatus,
+        T3.MACRO_NAME education,
+        T4.MACRO_NAME sex,
+        T6.MACRO_NAME depositBank,
+        CS.CORPORATION,
+        CS.ORIG_CAREER,
+        T5.MACRO_NAME homeStyle,
+        CS.TEL,
+        CS.ID_NUMBER,
+        CS.NATIVE_PLACE,
+        CS.AGE,
+        CS.BUSINESS_LIFE,
+        CS.EXPERIENCE,
+        CS.DEPOSIT_ACCOUNT,
+        CS.COMPANY_NAME,
+        CS.BUSINESS_LICENSE,
+        CS.TAX_ID,
+        CS.EMAIL,
+        CS.FAX,
+        CS.POSTCODE,
+        CS.POST_ADDRESS,
+        CS.ADDRESS
+        From T_CS_CUSTOMERINFO CS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.CUSTOMER_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CUSTOMER_TYPE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON CS.SUPERIOR_COMPANY = T2.MACRO_CODE AND T2.MACRO_TYPE = 'USER_STATUS' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON CS.EDUCATION = T3.MACRO_CODE AND T3.MACRO_TYPE = 'EDUCATION_DEGREE' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON CS.SEX = T4.MACRO_CODE AND T4.MACRO_TYPE = 'SEX' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON CS.HOME_STYLE = T5.MACRO_CODE AND T5.MACRO_TYPE = 'HOME_STYLE' AND T5.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T6 ON CS.DEPOSIT_BANK = T6.MACRO_CODE AND T6.MACRO_TYPE = 'ACCOUNT_BANK' AND T6.DEL_FLAG = 'M0015'
+        <where>
+              AND CS.ID_NUMBER = #{idNumber}
+            AND CS.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="details" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        SELECT
+        CUSTOMER_ID,
+        CUSTOMER_PROPERTY,
+        CUSTOMER_TYPE,
+        SUPERIOR_COMPANY,
+        CORPORATION,
+        TEL,
+        ID_NUMBER,
+        SEX,
+        NATIVE_PLACE,
+        USER_STATUS,
+        AGE,
+        EDUCATION,
+        BUSINESS_LIFE,
+        EXPERIENCE,
+        DEPOSIT_BANK,
+        DEPOSIT_ACCOUNT,
+        COMPANY_NAME,
+        BUSINESS_LICENSE,
+        TAX_ID,
+        EMAIL,
+        FAX,
+        POSTCODE,
+        POST_ADDRESS,
+        DEF1,
+        ORIG_CAREER,
+        HOME_STYLE,
+        ADDRESS,
+        BUSINESS_LICENSE_ATTACH_ID,
+        ID_NUMBER_ATTACH_ID
+        From T_CS_CUSTOMERINFO
+        <where>
+              AND CUSTOMER_ID = #{customerId}
+            AND DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        INSERT INTO
+        T_CS_CUSTOMERINFO
+        (
+          CUSTOMER_ID,
+          CUSTOMER_PROPERTY,
+          CUSTOMER_TYPE,
+          SUPERIOR_COMPANY,
+          CORPORATION,
+          TEL,
+          ID_NUMBER,
+          SEX,
+          NATIVE_PLACE,
+          AGE,
+          EDUCATION,
+          BUSINESS_LIFE,
+          EXPERIENCE,
+          DEPOSIT_BANK,
+          DEPOSIT_ACCOUNT,
+          COMPANY_NAME,
+          BUSINESS_LICENSE,
+          TAX_ID,
+          EMAIL,
+          FAX,
+          POSTCODE,
+          POST_ADDRESS,
+          USER_STATUS,
+          ORIG_CAREER,
+          HOME_STYLE,
+          BUSINESS_LICENSE_ATTACH_ID,
+          ID_NUMBER_ATTACH_ID,
+          CREATOR,
+          CREATE_TIME,
+          UPDATER,
+          UPDATE_TIME,
+          DEL_FLAG,
+          DEF1
+        )
+        VALUE (
+          #{customerId},
+          #{customerProperty},
+          #{customerType},
+          #{superiorCompany},
+          #{corporation},
+          #{tel},
+          #{idNumber},
+          #{sex},
+          #{nativePlace},
+          #{age},
+          #{education},
+          #{businessLife},
+          #{experience},
+          #{depositBank},
+          #{depositAccount},
+          #{companyName},
+          #{businessLicense},
+          #{taxId},
+          #{email},
+          #{fax},
+          #{postCode},
+          #{postAddress},
+          #{userStatus},
+          #{origCareer},
+          #{homeStyle},
+          #{businessLicenseAttachId},
+          #{idNumberAttachId},
+          #{creator},
+          sysdate(),
+          #{updater},
+          sysdate(),
+          'M0015',
+          #{def1}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+            UPDATE
+              T_CS_CUSTOMERINFO
+              SET
+                  BUSINESS_LICENSE_ATTACH_ID = #{businessLicenseAttachId},
+                  ID_NUMBER_ATTACH_ID = #{idNumberAttachId},
+                  CUSTOMER_PROPERTY = #{customerProperty},
+                  CUSTOMER_TYPE = #{customerType} ,
+                  SUPERIOR_COMPANY = #{superiorCompany},
+                  CORPORATION =#{corporation},
+                  TEL = #{tel},
+                  ID_NUMBER = #{idNumber},
+                  SEX=#{sex},
+                  NATIVE_PLACE=#{nativePlace},
+                  AGE = #{age},
+                  EDUCATION = #{education},
+                  BUSINESS_LIFE =#{businessLife},
+                  EXPERIENCE = #{experience},
+                  DEPOSIT_BANK = #{depositBank},
+                  DEPOSIT_ACCOUNT = #{depositAccount},
+                  COMPANY_NAME = #{companyName},
+                  BUSINESS_LICENSE =#{businessLicense},
+                  TAX_ID = #{taxId},
+                  EMAIL = #{email},
+                  FAX = #{fax},
+                  POSTCODE = #{postCode},
+                  POST_ADDRESS = #{postAddress},
+                  USER_STATUS = #{userStatus},
+                  ORIG_CAREER = #{origCareer},
+                  HOME_STYLE = #{homeStyle},
+                  UPDATER = #{updater},
+                  UPDATE_TIME = sysdate()
+            WHERE CUSTOMER_ID = #{customerId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="isExistsByIdNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_CS_CUSTOMERINFO
+        WHERE ID_NUMBER = #{idNumber}
+        <if test='customerId!=null and customerId!=""'>
+            AND CUSTOMER_ID = #{customerId}
+        </if>
+    </select>
+
+    <select id="isExistsByCompanyName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_CS_CUSTOMERINFO
+        WHERE COMPANY_NAME = #{companyName}
+        <if test='customerId!=null and customerId!=""'>
+            AND CUSTOMER_ID = #{customerId}
+        </if>
+    </select>
+
+    <select id="isExistsByBusinessLicense" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_CS_CUSTOMERINFO
+        WHERE BUSINESS_LICENSE = #{businessLicense}
+        <if test='customerId!=null and customerId!=""'>
+            AND CUSTOMER_ID = #{customerId}
+        </if>
+    </select>
+
+    <select id="selectForExport" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        <![CDATA[
+        SELECT
+            CS.CUSTOMER_ID customerId,
+            T1.MACRO_NAME customerType,
+            T.MACRO_NAME customerProperty,
+            CS.CORPORATION,
+            CS.SUPERIOR_COMPANY,
+            CS.COMPANY_NAME,
+            T3.MACRO_NAME userStatus,
+            E1.erpNumber,
+            E2.endDateNumber,
+           	E3.startDateNumber,
+           	E4.storeNumber
+        FROM
+            T_CS_CUSTOMERINFO CS
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.CUSTOMER_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'OPERATION_MODE' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON CS.USER_STATUS = T3.MACRO_CODE AND T3.MACRO_TYPE = 'USER_STATUS' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS erpNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE DEL_FLAG = 'M0015' GROUP  BY CUSTOMER_ID) E1
+            ON E1.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS endDateNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE curdate() < ACCREDIT_ENDDATE AND DEL_FLAG = 'M0015'GROUP BY CUSTOMER_ID) E2
+            ON E2.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS startDateNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE curdate() > ACCREDIT_ENDDATE AND DEL_FLAG = 'M0015'GROUP BY CUSTOMER_ID) E3
+            ON E3.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS storeNumber FROM T_SF_PIPELINE GROUP BY CUSTOMER_ID) E4 ON E4.CUSTOMER_ID = CS.CUSTOMER_ID
+                    ]]>
+        <where>
+            <if test="corporation!=null and corporation!=''">
+                AND CORPORATION LIKE CONCAT('%',#{corporation},'%')
+            </if>
+            <if test="customerProperty != null and customerProperty != ''">
+                AND CUSTOMER_PROPERTY = #{customerProperty}
+            </if>
+            <if test="customerType != null and customerType != ''">
+                AND CUSTOMER_TYPE = #{customerType}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                AND COMPANY_NAME LIKE CONCAT('%',#{companyName},'%')
+            </if>
+            <if test="superiorCompany != null and superiorCompany != ''">
+                AND SUPERIOR_COMPANY LIKE CONCAT('%',#{superiorCompany},'%')
+            </if>
+            AND CS.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY CS.UPDATE_TIME DESC
+    </select>
+    
+    <select id="isExistSuperiorCompany" parameterType="java.lang.String" resultType="java.lang.Integer">
+          SELECT count(0) FROM T_CS_CUSTOMER_OFFICE_MAPPING WHERE CUSTOMER_ID = #{customerId} AND OFFICE_ID = #{officeId} AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectByOfficeId" parameterType="com.stripcode.mybatis.cs.model.CSCSustomerOfficeMap" resultType="map">
+        SELECT
+            M.CUSTOMER_ID customerId,
+            M.OFFICE_ID officeId,
+            C.CORPORATION corporation
+        FROM
+            T_CS_CUSTOMER_OFFICE_MAPPING M
+        LEFT JOIN t_cs_customerinfo C ON c.CUSTOMER_ID = m.CUSTOMER_ID
+        AND c.DEL_FLAG = 'M0015'
+        WHERE
+            OFFICE_ID = #{officeId}
+        AND M.DEL_FLAG = 'M0015'
+        ORDER BY
+            M.ROW_ID
+	    </select>
+
+    <insert id="insertSuperiorCompany" parameterType="com.stripcode.mybatis.cs.model.CSCSustomerOfficeMap">
+        INSERT INTO T_CS_CUSTOMER_OFFICE_MAPPING(
+            ROW_ID,
+            CUSTOMER_ID,
+            OFFICE_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{customerId},
+            #{officeId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    
+    <delete id="deleteSuperiorCompany" parameterType="java.lang.String">
+        DELETE FROM T_CS_CUSTOMER_OFFICE_MAPPING
+        WHERE CUSTOMER_ID = #{customerId} AND DEL_FLAG ='M0015'
+    </delete>
+
+    <select id="queryAllOffice" resultType="com.stripcode.mybatis.sys.model.SYSBranchOfficeInfo">
+        SELECT
+        ROW_ID,
+        BRANCHES_CODE,
+        BRANCHES_NAME_CN,
+        BRANCHES_NAME_EN,
+        BRAND,
+        OPERATION_DIRECTOR,
+        DIRECTOR_PHONE,
+        ADDRESS
+        FROM T_SYS_BRANCH_OFFICE
+    </select>
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFPolicySupportDetailMapper">
+    <update id="deleteByPolicy" parameterType="map">
+        UPDATE  T_SF_POLICY_SUPPORT_DETAIL
+        SET DEL_FLAG = 'M0014'
+        <where>
+            <if test="isDelete!=0">
+                AND ROW_ID NOT IN
+                <foreach collection="rowId" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND PS_ID = #{psId}
+        </where>
+    </update>
+    <select id="selectSFPolicyDetail" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        SELECT
+        U.USER_NAME creator,
+        TC.UPDATE_TIME createTime1,
+        TC.TEMPLATE_ID,
+        TC.TITLE,
+        TC.TEMPLATE_ID,
+        T.ATTACH_ID,
+        TSC.DOC_NAME fileName,
+        TSC.FILE_PATH fieldId
+        FROM
+        T_SYS_ATTACHEDTEMPLATE TC
+        LEFT JOIN T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT T ON T.TEMPLATE_ID = TC.TEMPLATE_ID AND T.DEL_FLAG = 'M0015' AND T.PP_ID =#{ppId}
+        LEFT JOIN T_SYS_COMMONATTACHED TSC ON TSC.ATTACH_ID =T.ATTACH_ID AND TSC.DEL_FLAG ='M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = TC.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+        TC.PAGE_ID='SF30_056' AND TC.DEL_FLAG='M0015'
+    </select>
+    <select id="selectPolicySupportDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.ps.model.PSPolicySupportDetail">
+        SELECT
+        T1.MACRO_NAME CHECK_TARGET
+        FROM
+        T_SF_POLICY_SUPPORT_DETAIL T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.CHECK_TARGET = T1.MACRO_CODE AND T1.MACRO_TYPE = 'ASSESSMENT_INDEX' AND T1.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertPolicySupportDetail" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail">
+        INSERT INTO T_SF_POLICY_SUPPORT_DETAIL
+        (
+        ROW_ID,
+        PS_ID,
+        SUPPORT_ITEM,
+        SUPPORT_MODE,
+        PRICE,
+        CHECK_TARGET,
+        OPERATION_TERM,
+        CHECK_VALUE,
+        MONEY,
+        CHECK_STD,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{psId},
+        #{supportItem},
+        #{supportMode},
+        #{price},
+        #{checkTarget},
+        #{operationTerm},
+        #{checkValue},
+        #{money},
+        #{checkStd},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updatePolicySupportDetail" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail">
+        UPDATE T_SF_POLICY_SUPPORT_DETAIL
+        SET
+        SUPPORT_ITEM = #{supportItem},
+        SUPPORT_MODE = #{supportMode},
+        PRICE = #{price},
+        CHECK_TARGET = #{checkTarget},
+        OPERATION_TERM = #{operationTerm},
+        CHECK_VALUE = #{checkValue},
+        MONEY = #{money},
+        CHECK_STD = #{checkStd},
+        UPDATER = sysdate(),
+        UPDATE_TIME = #{updateTime}
+        WHERE
+        ROW_ID = #{rowId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="queryInfo" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail" parameterType="map">
+        SELECT
+        T.CHECK_TARGET,
+        T1.ITEM_NAME SUPPORT_ITEM,
+        T2.ITEM_NAME SUPPORT_MODE,
+        T3.PP_ID,
+        PRICE,
+        MONEY,
+        CHECK_STD
+        FROM
+        T_SF_POLICY_SUPPORT_DETAIL T
+        LEFT JOIN T_PS_POLICY_ITEM T1 ON T1.ITEM_CODE=T.SUPPORT_ITEM AND T1.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T2 ON T2.ITEM_CODE=T.SUPPORT_MODE AND T2.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_POLICY_SUPPORT T3 ON T3.ROW_ID=T.PS_ID AND T3.DEL_FLAG='M0015'
+        WHERE
+        T.DEL_FLAG = 'M0015' AND T3.PP_ID = #{ppId}
+    </select>
+    <select id="selectAll" parameterType="map" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail">
+        SELECT
+        TSF.ROW_ID,
+        TSF.PS_ID,
+        T.PP_ID,
+        TSF.SUPPORT_ITEM,
+        TSF.SUPPORT_MODE,
+        TSF.PRICE,
+        TSF.CHECK_TARGET,
+        TSF.OPERATION_TERM,
+        TSF.CHECK_VALUE,
+        TSF.MONEY,
+        TSF.CHECK_STD,
+        TSF.CREATOR,
+        TSF.CREATE_TIME,
+        TSF.UPDATER,
+        TSF.UPDATE_TIME,
+        TSF.DEL_FLAG
+        FROM
+        T_SF_POLICY_SUPPORT_DETAIL TSF
+        LEFT JOIN T_SF_POLICY_SUPPORT T ON TSF.PS_ID =T.ROW_ID AND T.DEL_FLAG='M0015'
+        WHERE T.PP_ID = #{ppId} AND  TSF.DEL_FLAG='M0015'
+    </select>
+
+</mapper>

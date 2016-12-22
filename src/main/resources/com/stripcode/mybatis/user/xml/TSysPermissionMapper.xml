@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.TSysPermissionMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    DELETE FROM T_SYS_PERMISSION
+    where AUTO_NO = #{autoNo}
+  </delete>
+  <delete id="deleteByRoleId" parameterType="java.lang.String" >
+    DELETE FROM T_SYS_PERMISSION
+    where ROLE_ID = #{roleId}
+  </delete>
+  <insert id="insert" parameterType="TSysPermission" >
+    INSERT INTO t_sys_permission (
+        AUTO_NO,
+        MODULE_ID,
+        ROLE_ID,
+        MAP_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    )
+    VALUES
+        (
+            #{autoNo},
+            #{moduleId},
+            #{roleId},
+            #{mapId},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            #{delFlag},
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+  </insert>
+    <insert id="batchInsert" parameterType="list" >
+        INSERT INTO t_sys_permission (
+        AUTO_NO,
+        MODULE_ID,
+        ROLE_ID,
+        MAP_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+        )
+        VALUES
+        <foreach collection="tSysPermissions" separator="," item="item">
+            (
+            #{item.autoNo},
+            #{item.moduleId},
+            #{item.roleId},
+            #{item.mapId},
+            #{item.creator},
+            sysdate(),
+            #{item.updater},
+            sysdate(),
+            'M0015',
+            #{item.def1},
+            #{item.def2},
+            #{item.def3},
+            #{item.def4},
+            #{item.def5},
+            #{item.def6},
+            #{item.def7},
+            #{item.def8},
+            #{item.def9},
+            #{item.def10}
+            )
+        </foreach>
+    </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysPermission" >
+    update t_sys_permission
+    set MODULE_ID = #{moduleId},
+      ROLE_ID = #{roleId},
+      MAP_ID = #{mapId},
+      CREATOR = #{creator},
+      CREATE_TIME = #{createTime},
+      UPDATER = #{updater},
+      UPDATE_TIME = #{updateTime},
+      DEL_FLAG = #{delFlag},
+      DEF1 = #{def1},
+      DEF2 = #{def2},
+      DEF3 = #{def3},
+      DEF4 = #{def4},
+      DEF5 = #{def5},
+      DEF6 = #{def6},
+      DEF7 = #{def7},
+      DEF8 = #{def8},
+      DEF9 = #{def9},
+      DEF10 = #{def10}
+    where AUTO_NO = #{autoNo}
+  </update>
+  <select id="selectByPrimaryKey" resultType="TSysPermission" parameterType="java.lang.Integer" >
+    SELECT
+      AUTO_NO,
+      MODULE_ID,
+      ROLE_ID,
+      MAP_ID,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+  FROM
+      T_SYS_PERMISSION
+    where AUTO_NO = #{autoNo}
+  </select>
+    <select id="selectByRoleId" resultType="TSysPermission" parameterType="java.lang.String" >
+        SELECT
+        AUTO_NO,
+        MODULE_ID,
+        ROLE_ID,
+        MAP_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+        FROM
+        T_SYS_PERMISSION
+        where ROLE_ID = #{roleId}
+    </select>
+  <select id="selectAll" resultType="TSysPermission" >
+    SELECT
+      AUTO_NO,
+      MODULE_ID,
+      ROLE_ID,
+      MAP_ID,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+  FROM
+      T_SYS_PERMISSION
+  </select>
+  <select id="queryActionPermission" parameterType="map" resultType="TSysAction">
+      SELECT
+            M.ACTION_ID,
+            A.ACTION_LABEL,
+            A.TOOLTIP,
+            A.ICON,
+            A.ACTION_KEY
+        FROM
+            T_SYS_PERMISSION P
+        INNER JOIN T_SYS_ACTION_FUNCTION_MAP M ON P.MAP_ID = M.MAP_ID
+        AND M.DEL_FLAG = 'M0015'
+        INNER JOIN T_SYS_ACTION A ON M.ACTION_ID = A.ACTION_ID
+        AND M.DEL_FLAG = 'M0015'
+        WHERE
+            P.ROLE_ID IN
+            <foreach collection="roles" item="item" separator="," index="index" open="(" close=")">
+                #{item.roleId}
+            </foreach>
+        AND M.FUNCTION_ID = #{functionId}
+        AND P.DEL_FLAG = 'M0015'
+        ORDER BY M.MAP_ID
+  </select>
+</mapper>

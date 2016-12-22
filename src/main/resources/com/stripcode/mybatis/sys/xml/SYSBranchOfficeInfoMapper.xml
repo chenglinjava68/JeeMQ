@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sys.dao.SYSBranchOfficeInfoMapper">
+
+    <!--分页查所有-->
+    <select id="selectForPage" parameterType="map" resultType="SYSBranchOfficeInfo">
+        SELECT
+        SYS.ROW_ID,
+        SYS.BRANCHES_CODE,
+        SYS.BRANCHES_NAME_CN,
+        SYS.BRANCHES_NAME_EN,
+        T.MACRO_NAME brand,
+        SYS.DEF1,
+        SYS.DEF2,
+        A.USER_NAME operationDirector,
+        SYS.ADDRESS
+        FROM
+        T_SYS_BRANCH_OFFICE SYS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON SYS.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER A ON A.USER_ID = SYS.OPERATION_DIRECTOR AND A.DEL_FLAG = 'M0015'
+        <where>
+            <if test="brand!=null and brand!=''">
+                AND SYS.BRAND = #{brand}
+            </if>
+            <if test="branchesNameCn!=null and branchesNameCn!=''">
+                AND SYS.BRANCHES_NAME_CN LIKE CONCAT('%',#{branchesNameCn},'%')
+            </if>
+            AND SYS.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY SYS.UPDATE_TIME DESC
+    </select>
+
+    <!--新增-->
+    <insert id="insert" parameterType="SYSBranchOfficeInfo">
+        INSERT INTO T_SYS_BRANCH_OFFICE(
+            ROW_ID,
+            BRANCHES_CODE,
+            BRANCHES_NAME_CN,
+            BRANCHES_NAME_EN,
+            BRAND,
+            OPERATION_DIRECTOR,
+            DIRECTOR_PHONE,
+            ADDRESS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{branchesCode},
+            #{branchesNameCn},
+            #{branchesNameEn},
+            #{brand},
+            #{operationDirector},
+            #{directorPhone},
+            #{address},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <!--根据rowId查询-->
+    <select id="selectByRowId" parameterType="java.lang.String" resultType="SYSBranchOfficeInfo">
+        SELECT
+              T.ROW_ID,
+              T.BRANCHES_CODE,
+              T.BRANCHES_NAME_CN,
+              T.BRANCHES_NAME_EN,
+              T.BRAND,
+              A.USER_NAME operationDirector,
+              T.DIRECTOR_PHONE,
+              T.ADDRESS
+          FROM
+            T_SYS_BRANCH_OFFICE T
+            LEFT JOIN T_SYS_USER A ON A.USER_ID = T.OPERATION_DIRECTOR AND A.DEL_FLAG = 'M0015'
+          WHERE
+            T.ROW_ID = #{rowId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <!--更新-->
+    <update id="updateByPrimaryKey" parameterType="SYSBranchOfficeInfo">
+        UPDATE
+            T_SYS_BRANCH_OFFICE
+		    SET
+		      BRANCHES_CODE = #{branchesCode},
+		      BRANCHES_NAME_CN = #{branchesNameCn},
+		      BRANCHES_NAME_EN = #{branchesNameEn},
+		      BRAND = #{brand},
+		      OPERATION_DIRECTOR = #{operationDirector},
+		      DIRECTOR_PHONE = #{directorPhone},
+		      ADDRESS = #{address},
+		      UPDATER = #{updater},
+		      UPDATE_TIME = #{updateTime}
+		    WHERE
+              ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <!--删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM
+          T_SYS_BRANCH_OFFICE
+        WHERE
+          ROW_ID = #{rowId}
+    </delete>
+
+    <!--检验分公司编码-->
+    <select id="isExistsByBranchesCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_SYS_BRANCH_OFFICE T
+        WHERE T.BRANCHES_CODE = #{branchesCode}
+        <if test='rowId!=null and rowId!=""'>
+            AND T.ROW_ID = #{rowId}
+        </if>
+    </select>
+    <!--检验分公司中文名-->
+    <select id="isExistsByBranchesNameCn" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_SYS_BRANCH_OFFICE T
+        WHERE T.BRANCHES_NAME_CN = #{branchesNameCn}
+        <if test='rowId!=null and rowId!=""'>
+            AND T.ROW_ID = #{rowId}
+        </if>
+    </select>
+
+    <select id="selectForExport" parameterType="map" resultType="SYSBranchOfficeInfo">
+        SELECT
+        SYS.ROW_ID,
+        SYS.BRANCHES_CODE,
+        SYS.BRANCHES_NAME_CN,
+        SYS.BRANCHES_NAME_EN,
+        T.MACRO_NAME brand,
+        SYS.DEF1,
+        SYS.DEF2,
+        A.USER_NAME operationDirector,
+        SYS.ADDRESS
+        FROM
+        T_SYS_BRANCH_OFFICE SYS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON SYS.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER A ON A.USER_ID = SYS.OPERATION_DIRECTOR AND A.DEL_FLAG = 'M0015'
+        <where>
+            <if test="brand!=null and brand!=''">
+                AND SYS.BRAND = #{brand}
+            </if>
+            <if test="branchesNameCn!=null and branchesNameCn!=''">
+                AND SYS.BRANCHES_NAME_CN LIKE CONCAT('%',#{branchesNameCn},'%')
+            </if>
+            AND SYS.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY SYS.UPDATE_TIME DESC
+    </select>
+
+    <select id="selectBrand" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT
+            T.MACRO_CODE,
+            T.MACRO_NAME
+        FROM
+            T_CODE_MACRO_DEFINE T
+        WHERE T.MACRO_TYPE = 'BRAND'
+    </select>
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSAterMarketauzMapper">
+    <insert id="insertAterMarketauz"  parameterType="com.stripcode.mybatis.cs.model.CSAterMarketauz">
+        INSERT INTO
+        T_CS_ALTER_MARKETAUZ
+        (
+            ROW_ID,
+            OPTIMAUTH_ID,
+            NEW_CUSTOMER_ID,
+            IS_NEW_ERPID,
+            ERP_CODE,
+            ERP_NAME,
+            EFFICTIVE_DATE,
+            DIRECTOR,
+            REASON,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )
+        VALUES
+        (
+            #{rowId},
+            #{optimauthId},
+            #{newCustomerId},
+            #{isNewErpId},
+            #{newErpCode},
+            #{newErpName},
+            #{effictiveDate},
+            #{userId},
+            #{reason},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="updateAterMarketauz"  parameterType="com.stripcode.mybatis.cs.model.CSAterMarketauz">
+        UPDATE
+        T_CS_ALTER_MARKETAUZ
+        SET
+        NEW_CUSTOMER_ID = #{newCustomerId},
+        IS_NEW_ERPID = #{isNewErpId},
+        ERP_CODE = #{newErpCode},
+        ERP_NAME = #{newErpName},
+        EFFICTIVE_DATE = #{effictiveDate},
+        DIRECTOR = #{userId},
+        REASON = #{reason},
+        REMARK = #{remark},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        DEL_FLAG = 'M0015' AND ROW_ID = #{rowId}
+    </update>
+    <update id="updateAterOptimauth"  parameterType="com.stripcode.mybatis.cs.model.CSAterMarketauz">
+        UPDATE
+            T_CS_MARKET_OPTIMAUTH T
+        LEFT JOIN T_CS_ALTER_MARKETAUZ TZ ON T.ROW_ID = TZ.OPTIMAUTH_ID AND T.DEL_FLAG = 'M0015'
+        SET
+        T.DIRECTOR = #{userId}
+        WHERE
+        TZ.DEL_FLAG = 'M0015' AND TZ.ROW_ID =#{rowId}
+    </update>
+    <insert id="insertAterOptimauth" parameterType="com.stripcode.mybatis.cs.model.CSMarketOptimauth">
+        INSERT INTO
+        T_CS_MARKET_OPTIMAUTH
+        (
+            ROW_ID,
+            CUSTOMER_ID,
+            ERP_CODE,
+            ERP_NAME,
+            BRAND,
+            DIRECTOR,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            PRO_STATUS,
+            CURRENT_NODE,
+            DEL_FLAG,
+            OPTIMIZED_TYPE
+        )
+        VALUES (
+            #{rowId},
+            #{customerId},
+            #{erpCode},
+            #{erpName},
+            #{brand},
+            #{director},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0097',
+            'M0631',
+            'M0015',
+            'M0060'
+        )
+    </insert>
+    <select id="isExistAterMarketauz" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(0)
+        FROM
+            T_CS_ALTER_MARKETAUZ T
+        WHERE T.ROW_ID=#{rowId}  AND T.DEL_FLAG = 'M0015'
+    </select>
+    <select id="isExistsAterOptimauth" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(0)
+            FROM
+            T_CS_MARKET_OPTIMAUTH T
+            LEFT JOIN T_CS_ALTER_MARKETAUZ TZ ON T.ROW_ID = TZ.OPTIMAUTH_ID AND T.DEL_FLAG = 'M0015'
+            WHERE TZ.ROW_ID=#{rowId}
+    </select>
+    <select id="selectErpList" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            T1.ERP_CODE ,
+            T1.ERP_NAME
+       FROM  T_CS_CUSTOMER_ERP_INFO T1
+       /*LEFT JOIN T_CS_MARKET_OPTIMAUTH T ON T1.CUSTOMER_ID =T.CUSTOMER_ID AND T1.DEL_FLAG='M0015'*/
+      /* LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T2.OPTIMAUTH_ID= T.ROW_ID AND T2.DEL_FLAG='M0015'*/
+       WHERE  T1.CUSTOMER_ID=(SELECT NEW_CUSTOMER_ID FROM  T_CS_ALTER_MARKETAUZ WHERE OPTIMAUTH_ID=#{optimauthId}) AND T1.DEL_FLAG='M0015'
+    </select>
+    <select id="selectMarketauz" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSAterMarketauz">
+        SELECT
+            TZ.ROW_ID,
+            TZ.NEW_CUSTOMER_ID,
+            TZ.IS_NEW_ERPID,
+            TZ.ERP_NAME newErpName,
+            TZ.ERP_CODE newErpCode,
+            TZ.EFFICTIVE_DATE,
+            TZ.REASON,
+            TZ.DIRECTOR userId,
+            T2.USER_NAME userName,
+            T1.MACRO_NAME customerProperty,
+            TC.SUPERIOR_COMPANY,
+            TC.CORPORATION,
+            TC.ID_NUMBER,
+            TC.TEL,
+            TC.BUSINESS_LICENSE,
+            TC.COMPANY_NAME,
+            TC.POST_ADDRESS,
+            TZ.REMARK
+            FROM
+            T_CS_MARKET_OPTIMAUTH T
+            LEFT JOIN T_CS_ALTER_MARKETAUZ TZ ON T.ROW_ID = TZ.OPTIMAUTH_ID AND TZ.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CS_CUSTOMERINFO TC ON TC.CUSTOMER_ID = TZ.NEW_CUSTOMER_ID AND TC.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON TC.CUSTOMER_PROPERTY = T1.MACRO_CODE AND  T1.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_USER T2 ON TZ.DIRECTOR = T2.USER_ID AND  T2.DEL_FLAG = 'M0015'
+            WHERE T.ROW_ID=#{rowId} AND T.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

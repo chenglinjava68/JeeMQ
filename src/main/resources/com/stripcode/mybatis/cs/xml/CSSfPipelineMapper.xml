@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSSfPipelineMapper">
+
+    <select id="selectList" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" parameterType="java.lang.String">
+        SELECT
+            T.PP_ID,
+            T.STORE_CODE,
+            T.CN_SITENAME,
+            T1.MACRO_NAME channelType,
+            TM.CITY,
+            T3.MACRO_NAME storeProperty,
+            TM1.PROVINCE,
+            TM2.DISTRICT,
+            TM3.STREET,
+            T7.MACRO_NAME  brand
+        FROM
+            T_SF_PIPELINE T
+        LEFT JOIN T_MP_MARKETINFO TM ON TM.MARKET_ID = T.CITY AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM1 ON TM1.MARKET_ID = T.PROVINCE AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM2 ON TM2.MARKET_ID = T.DISTRICT AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM3 ON TM3.MARKET_ID = T.STREET AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_PP TP ON TP.PP_ID = T.PP_ID  AND TP.DEL_FLAG = 'M0015'
+        AND TP.OPTIMAUTH_ID = #{rowId}
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.CHANNEL_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CHANNEL_TYPE'AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.STORE_PROPERTY = T3.MACRO_CODE AND T3.MACRO_TYPE = 'STORE_PROPERTY' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE AND T7.MACRO_TYPE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+            WHERE T.PP_ID IN
+        <if test="pids != null and pids != ''">
+            <foreach item="pids" collection="pids" index="index" open="("
+                     separator="," close=")">
+                #{pids}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectListPP" parameterType="map"  resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" >
+        SELECT
+        T.PP_ID,
+        T.STORE_CODE,
+        T.CN_SITENAME,
+        T.CUSTOMER_ID,
+        T.BRAND BRAND_CODE,
+        T1.MACRO_NAME storeProperty,
+        TM.CITY,
+        T3.MACRO_NAME channelType,
+        TM1.PROVINCE,
+        TM2.DISTRICT,
+        TM3.STREET,
+        TC.ERP_NAME marketName,
+        T7.MACRO_NAME  brand
+        FROM
+        T_SF_PIPELINE T
+        LEFT JOIN T_MP_MARKETINFO TM ON TM.MARKET_ID = T.CITY AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM1 ON TM1.MARKET_ID = T.PROVINCE AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM2 ON TM2.MARKET_ID = T.DISTRICT AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM3 ON TM3.MARKET_ID = T.STREET AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ TC ON TC.ROW_ID = T.ERP_CODE AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.CHANNEL_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CHANNEL_TYPE'AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.STORE_PROPERTY = T3.MACRO_CODE AND T3.MACRO_TYPE = 'STORE_PROPERTY' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE AND T7.MACRO_TYPE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+        <where> T.PP_ID NOT IN
+        <if test="ppid != null and ppid != ''">
+            <foreach item="ppid" collection="ppid" index="index" open="("
+                     separator="," close=")">
+                #{ppid}
+            </foreach>
+        </if>
+        <if test="storeProperty!=null and storeProperty!=''">
+            AND T.STORE_PROPERTY =#{storeProperty}
+        </if>
+        <if test="brand!=null and brand!=''">
+            AND T.BRAND =#{brand}
+        </if>
+        <if test="channelType!=null and channelType!=''">
+            AND T.CHANNEL_TYPE =#{channelType}
+        </if>
+        <if test="district!=null and district!=''">
+            AND T.DISTRICT =#{district}
+        </if>
+        <if test="province!=null and province!=''">
+            AND T.PROVINCE =#{province}
+        </if>
+        <if test="street!=null and street!=''">
+            AND T.STREET =#{street}
+        </if>
+        <if test="city!=null and city!=''">
+            AND T.CITY =#{city}
+        </if>
+        <if test="cnStoreName!=null and cnStoreName!=''">
+            AND T.CN_SITENAME LIKE CONCAT('%',#{cnStoreName},'%')
+        </if>
+            ORDER BY T.UPDATE_TIME DESC
+        </where>
+    </select>
+
+    <select id="PipelineCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+          count(1)
+        FROM  T_CS_CUSTOMER_PP TCS
+        LEFT JOIN T_CS_MARKET_OPTIMAUTH TCO  ON TCS.OPTIMAUTH_ID = TCO.ROW_ID
+        WHERE TCS.OPTIMAUTH_ID  = #{optimauthId} AND TCS.PP_ID = #{ppId} AND TCS.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectPPid"  resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+          TCS.PP_ID
+        FROM  T_CS_CUSTOMER_PP TCS
+        WHERE TCS.OPTIMAUTH_ID  = #{rowId} AND DEL_FLAG = 'M0015'
+    </select>
+    <update id="BatchUpdate" parameterType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        UPDATE
+             T_CS_CUSTOMER_PP
+        SET
+            PP_ID = #{ppId},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+        WHERE OPTIMAUTH_ID = #{optimauthId} AND PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+    <insert id="insertBatchPipeline" parameterType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        INSERT INTO
+             T_CS_CUSTOMER_PP
+            (
+              PP_ID,
+              ROW_ID,
+              OPTIMAUTH_ID,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+            )
+        VALUES
+                (
+                #{ppId},
+                #{rowId},
+                #{optimauthId},
+                #{creator},
+                #{createTime},
+                #{updater},
+                #{updateTime},
+                'M0015'
+                )
+    </insert>
+    <update id="updatePipelineDelFlag">
+        UPDATE T_CS_CUSTOMER_PP SET DEL_FLAG = 'M0014'
+        <where>
+        <if test='ppId != null and ppId.length!= 0'>
+            PP_ID NOT IN
+        <foreach collection="ppId" item="ppId" index="index"
+                 open="(" close=")" separator=",">
+            #{ppId}
+        </foreach>
+        </if>
+            AND OPTIMAUTH_ID = #{optimauthId}
+        </where>
+    </update>
+
+    <select id="selectPipeline" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+            T.PP_ID,
+            T.CN_SITENAME,
+            T.ADDRESS_DETAIL,
+            T.POST_CODE,
+            T1.MACRO_NAME storeProperty,
+            T2.MACRO_NAME channelType,
+            T3.MACRO_NAME brand,
+            B.RENT_START_DATE rentStartDate,
+            B.RENT_END_DATE rentEndDate,
+            B.RENTAL rental,
+            B.POINTS points,
+            B.RELATION relation,
+            T8.MACRO_NAME rentMode,
+            C.AREA AREA,
+            C.SITE_AREA siteArea,
+            C.RENT_AREA rentArea,
+            C.DOOR_WIDTH doorWidth,
+            C.STOREY_HIGH storeyHigh,
+            D.EST_DATE estDate,
+            D1.EST_DATE estDateHH,
+            E.ROAD_WIDTH roadWidth,
+            E.ORIENTATION orientation,
+            T5.MACRO_NAME isIsolationBelt,
+            T6.MACRO_NAME isSteps,
+            T7.MACRO_NAME isOcclusion,
+            F.ROW_ID investmentId,
+
+            T9.MACRO_NAME rentModeHH,
+            T10.MACRO_NAME rentTypeHH,
+            B1.RENT_PER_SQUARE,
+            B1.RENT_FIRST_YEAR,
+            B1.RENT_INC_RATE,
+            B1.RENT_CONTRACT_TERM,
+            B1.DEDUCTION_POINT_FIRST_YEAR,
+            B1.DEDUCTION_POINT_CONTRACT_TERM,
+            B1.PROPERTY_FEE_PER_SQUARE,
+            B1.PROPERTY_FEE_YEAR,
+            B1.RENT_START_DATE rentStartDateHH,
+            B1.RENT_END_DATE rentEndDateHH
+        FROM
+            T_SF_PIPELINE T
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = T.PP_ID AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_RENTAL_PROPOSAL B ON B.PP_ID = T.PP_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_RENTAL_PROPOSAL_COPARTNER_STORE B1 ON B1.PP_ID = T.PP_ID AND B1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_SITEINFO C ON C.PP_ID = T.PP_ID AND C.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PROGRESS_EST D ON D.PP_ID = T.PP_ID AND D.TASK_CODE = 'M0331' AND D.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PROGRESS_EST D1 ON D1.PP_ID = T.PP_ID AND D1.TASK_CODE = 'M0516' AND D1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_LOCATIONINFO E ON E.PP_ID = T.PP_ID AND E.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT F ON F.PP_ID = T.PP_ID AND F.DEL_FLAG = 'M0015' AND F.REPORT_FLAG = 'M0044'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.STORE_PROPERTY = T1.MACRO_CODE AND T1.MACRO_TYPE = 'STORE_PROPERTY' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.CHANNEL_TYPE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'CHANNEL_TYPE' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.BRAND = T3.MACRO_CODE AND T3.MACRO_TYPE = 'BRAND' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T5 ON E.IS_ISOLATION_BELT = T5.MACRO_CODE AND T5.MACRO_TYPE = 'YES_NO' AND T5.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T6 ON E.IS_STEPS = T6.MACRO_CODE AND T6.MACRO_TYPE = 'YES_NO' AND T6.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T7 ON E.IS_OCCLUSION = T7.MACRO_CODE AND T7.MACRO_TYPE = 'YES_NO' AND T7.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T8 ON B.RENT_MODE = T8.MACRO_CODE AND T8.MACRO_TYPE = 'RENT_MODE' AND T8.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T9 ON B1.RENT_MODE = T9.MACRO_CODE AND T9.MACRO_TYPE = 'RENT_MODE' AND T9.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T10 ON B1.RENT_TYPE = T10.MACRO_CODE AND T10.MACRO_TYPE = 'RENT_TYPE' AND T10.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询意向店风格集合-->
+    <select id="selectCSSfPipelineStoreImage" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+            B.MACRO_NAME storeImage
+        FROM
+            T_SF_PIPELINE C
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = C.PP_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE B ON FIND_IN_SET(B.MACRO_CODE,C.STORE_IMAGE) AND B.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND C.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询意向店楼层面积-->
+    <select id="selectFloorInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFFloorInfo">
+        SELECT
+            T.MACRO_NAME floor,
+            F.SIZE
+        FROM
+            T_SF_FLOORINFO F
+        LEFT JOIN T_CS_CUSTOMER_PP A ON F.PP_ID = A.PP_ID AND A.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON F.FLOOR = T.MACRO_CODE AND T.MACRO_TYPE = 'FLOOR_TYPE'AND T.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND F.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询店铺落位图-->
+    <select id="selectPipelineLocationImg" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        SELECT
+            B.TEMPLATE_ID templeteId,
+            C.FILE_NAME fileName,
+            C.DOC_NAME docName,
+            C.FILE_PATH filePath
+        FROM
+            T_SF_PIPEINE_PHOTO_ATTACHMENT B
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = B.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND B.DEL_FLAG = 'M0015'
+            AND B.TEMPLATE_ID = 'e36e9a4f-9b55-11e6-bced-480fcf39'
+        </where>
+    </select>
+    <!--查询店铺所有照片-->
+    <select id="selectPipelineImg" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        SELECT
+        B.TEMPLATE_ID templeteId,
+        C.FILE_NAME fileName,
+        C.DOC_NAME docName,
+        C.FILE_PATH filePath
+        FROM
+        T_SF_PIPEINE_PHOTO_ATTACHMENT B
+        LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND A.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = B.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND B.DEL_FLAG = 'M0015'
+            AND B.TEMPLATE_ID in ('f4371987-9b55-11e6-bced-480fcf39','fdef0758-9b55-11e6-bced-480fcf39','1f946606b53911e6bced480fcf39d40b','1f946855b53911e6bced480fcf39d40b')
+        </where>
+    </select>
+    <!--查询加盟店铺房屋租赁协议-->
+    <select id="selectRentalAttachMentImgJM" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFRentalProposalAttachment">
+        SELECT
+            D.FILE_NAME,
+            D.DOC_NAME,
+            D.FILE_PATH fieldId
+        FROM
+            T_SF_RENTAL_PROPOSAL B
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_RENTAL_PROPOSAL_ATTACHMENT C ON B.ROW_ID = C.RENT_ID AND C.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_COMMONATTACHED D ON D.ATTACH_ID = C.ATTACH_ID AND D.DEL_FLAG = 'M0015'
+            <where>
+                A.OPTIMAUTH_ID = #{optimauthId}
+                AND B.DEL_FLAG = 'M0015'
+            </where>
+    </select>
+    <!--查询意向店政策支持项列表-->
+    <select id="selectFPolicySupportDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail">
+        SELECT
+            D.ITEM_NAME supportItem,
+            D1.ITEM_NAME supportMode,
+            C.PRICE,
+            C.MONEY,
+            C.OPERATION_TERM,
+            T.MACRO_NAME checktarget,
+            C.CHECK_VALUE,
+            B.REMARK remark
+        FROM
+            T_SF_POLICY_SUPPORT B
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_POLICY_SUPPORT_DETAIL C ON B.ROW_ID = C.PS_ID AND C.DEL_FLAG = 'M0015'
+            LEFT JOIN T_PS_POLICY_ITEM D ON D.ITEM_CODE = C.SUPPORT_ITEM AND D.ITEM_TYPE='M0101' AND D.DEL_FLAG='M0015'
+            LEFT JOIN T_PS_POLICY_ITEM D1 ON D1.ITEM_CODE = C.SUPPORT_MODE AND D1.ITEM_TYPE='M0102' AND D1.DEL_FLAG='M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON C.CHECK_TARGET = T.MACRO_CODE AND T.MACRO_TYPE = 'ASSESSMENT_INDEX' AND T.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND B.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询商圈图片集合-->
+    <select id="selectTradezoneInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTradezoneInfo">
+        SELECT
+            T.FILE_NAME fileName,
+            T.DOC_NAME docName,
+            T.FILE_PATH filePath
+        FROM
+            T_CS_CUSTOMER_PP A
+            LEFT JOIN T_SF_PIPELINE B ON A.PP_ID = B.PP_ID AND B.DEL_FLAG = 'M0015'
+            INNER JOIN T_SF_TRADEZONE_INFO C ON B.PP_ID = C.PP_ID AND C.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_COMMONATTACHED T ON C.ATTACH_ID = T.ATTACH_ID AND T.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询意向店系列面积占比-->
+    <select id="selectSFStyleAreaPerInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFStyleAreaPerInfo">
+        SELECT
+	        T1.MACRO_NAME style,
+	        T2.MACRO_NAME sex, SUM(AREA)/TOTALSIZE*100 areaTotal,
+            T.SALES_PER salesPer
+        FROM
+	        (
+            SELECT A.STYLE,A.SERIES_SEX,A.FLOOR,S.AREA TOTALSIZE,A.AREA_PER,A.SALES_PER,S.AREA*A.AREA_PER/100 AREA
+            FROM t_cs_customer_pp B
+            left join T_SF_STYLE_AREA_PER_INFO A on B.PP_ID = A.PP_Id and B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_SITEINFO S ON S.PP_ID = A.PP_ID AND S.DEL_FLAG = 'M0015'
+        <where>
+            B.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+	        )
+        T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.STYLE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'STORE_IMAGE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.SERIES_SEX = T2.MACRO_CODE AND T2.MACRO_TYPE = 'SEX' AND T2.DEL_FLAG = 'M0015'
+        GROUP BY T.STYLE,T.SERIES_SEX
+    </select>
+    <!--查询合伙人投资测算非人力成本-->
+    <select id="selectTSfEstInvestmentNonLaborCost" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentNonLaborCost">
+        SELECT
+            C.STORE_INCOME_FIR,
+            C.STORE_INCOME_SEC,
+            C.STORE_INCOME_THI,
+            C.STORE_INCOME_FOUR,
+            C.STORE_INCOME_FIVE,
+            C.RENT_HALF_YEAR,
+            C.LEASE_BOND,
+            C.GOODS_BOND,
+            C.RENOVATION_OTHER_FEE,
+            C.MGR_ANNUAL_SALARY,
+            C.SHOPPING_GUIDE_SALARY,
+            C.SPECIAL_POSITION_SALARY,
+            C.EST_STORE_DAILY_COST,
+            C.JOIN_INVESTMENT_TOTAL,
+            C.PROP_SUPORT_FEE,
+            C.LOGISTICS_SUPORT_FEE,
+            C.RENOVATION_SUPORT_FEE,
+            C.MANAGE_SALARY_YEAR,
+            C.OTHER_SUPORT_FEE,
+            C.COMPANY_INVESTMENT_TOTAL
+        FROM
+            T_SF_PIPELINE T
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = T.PP_ID AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT B ON B.PP_ID = T.PP_ID AND B.REPORT_FLAG = 'M0044' AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT_NON_LABOR_COST C ON B.ROW_ID = C.INVESTMENT_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询合伙人投资测算测算结果-->
+    <select id="selectTSfEstInvestmentResultDateCopartner" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentResultDateCopartner">
+        SELECT
+            C.STORE_INCOME_FIR,
+            C.STORE_INCOME_SEC,
+            C.STORE_INCOME_THI,
+            C.STORE_INCOME_FOUR,
+            C.STORE_INCOME_FIVE,
+            C.COMPANY_INCOME_FIR,
+            C.COMPANY_INCOME_SEC,
+            C.COMPANY_INCOME_THI,
+            C.COMPANY_INCOME_FOUR,
+            C.COMPANY_INCOME_FIVE,
+            C.COPARTNER_UC_FIR,
+            C.COPARTNER_UC_SEC,
+            C.COPARTNER_UC_THI,
+            C.COPARTNER_UC_FOUR,
+            C.COPARTNER_UC_FIVE,
+            C.COMPANY_UC_FIR,
+            C.COMPANY_UC_SEC,
+            C.COMPANY_UC_THI,
+            C.COMPANY_UC_FOUR,
+            C.COMPANY_UC_FIVE,
+            C.REMARK,
+            C.STORE_INCOME_TOTAL,
+            C.COMPANY_INCOME_TOTAL,
+            C.COPARTNER_UC_TOTAL,
+            C.COMPANY_UC_TOTAL
+        FROM
+            T_SF_PIPELINE T
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = T.PP_ID AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT B ON B.PP_ID = T.PP_ID AND B.REPORT_FLAG = 'M0044' AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT_RESULT_DATE_COPARTNER C ON B.ROW_ID = C.INVESTMENT_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <!--查询合伙人ppt人流量详细信息-->
+    <select id="selectCopartnerSFTrafficcountDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTrafficcountDetail">
+        SELECT
+            T1.MACRO_NAME timeInterval,
+            S.DAY1,
+            S.DAY2,
+            S.DAY3
+        FROM
+            T_SF_PIPELINE T
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = T.PP_ID AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_TRAFFICCOUNT B ON B.PP_ID = A.PP_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_TRAFFICCOUNT_DETAIL S ON B.ROW_ID = S.TEST_ID AND S.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON S.TIME_INTERVAL = T1.MACRO_CODE  AND T1.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询合伙人ppt人流量信息-->
+    <select id="selectCopartnerSFTrafficcount" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTrafficcount">
+        SELECT
+            T.PEDESTRIAN_D1,
+            T.PEDESTRIAN_D2,
+            T.PEDESTRIAN_D3,
+            T.ANNUAL_SALES_EST,
+            T.PEDESTRIAN_WEEK,
+            T.ENTRY_RATE,
+            T.TURNOVER_RATE,
+            T.GUEST_AVG,
+            T.WEEK_SALES,
+            T.MONTH_PCT,
+            T.PEDESTRIAN_D1_AF,
+            T.PEDESTRIAN_D2_AF,
+            T.PEDESTRIAN_D3_AF,
+            T.ANNUAL_SALES_EST_AF,
+            T.PEDESTRIAN_WEEK_AF,
+            T.ENTRY_RATE_AF,
+            T.TURNOVER_RATE_AF,
+            T.GUEST_AVG_AF,
+            T.WEEK_SALES_AF,
+            T.MONTH_PCT_AF
+        FROM
+            T_SF_PIPELINE T1
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = T1.PP_ID AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_TRAFFICCOUNT T ON T.PP_ID = T1.PP_ID AND T.USE_STATUS = 'M0044' AND T.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询合伙人店铺房屋租赁协议-->
+    <select id="selectRentalAttachMentImgHH" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFRentalProposalAttachment">
+        SELECT
+            D.FILE_NAME,
+            D.DOC_NAME,
+            D.FILE_PATH fieldId
+        FROM
+            T_SF_RENTAL_PROPOSAL_COPARTNER_STORE B
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_RENTAL_PROPOSAL_ATTACHMENT C ON B.ROW_ID = C.RENT_ID AND C.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_COMMONATTACHED D ON D.ATTACH_ID = C.ATTACH_ID AND D.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询合伙人收入分成占比-->
+    <select id="selectSFEstInvestmentIncomeSharing" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing">
+        SELECT
+            D.SERIES series,
+            D.SALES_PCT salesPct,
+            D.INCOME_SHARING_RADIO incomeSharingRadio
+        FROM
+            T_CS_CUSTOMER_PP A
+            LEFT JOIN T_SF_PIPELINE B ON A.PP_ID = B.PP_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT C ON C.PP_ID = B.PP_ID AND C.DEL_FLAG = 'M0015' AND C.REPORT_FLAG = 'M0044'
+            LEFT JOIN T_SF_EST_INVESTMENT_INCOME_SHARING D ON D.INVESTMENT_ID = C.ROW_ID AND D.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询合伙人收入分成占比-->
+    <select id="selectSFEstInvestmentIncomeSharingTotal" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing">
+        SELECT
+            SUM(D.SALES_PCT) salesPctTotal,
+            ROUND(SUM(D.SALES_PCT*D.INCOME_SHARING_RADIO/100),1) incomeSharingRadioTotal
+        FROM
+            T_CS_CUSTOMER_PP A
+            LEFT JOIN T_SF_PIPELINE B ON A.PP_ID = B.PP_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT C ON C.PP_ID = B.PP_ID AND C.DEL_FLAG = 'M0015' AND C.REPORT_FLAG = 'M0044'
+            LEFT JOIN T_SF_EST_INVESTMENT_INCOME_SHARING D ON D.INVESTMENT_ID = C.ROW_ID AND D.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+</mapper>

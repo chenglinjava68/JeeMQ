@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.ps.dao.PSPolicySupportMapper">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        DELETE FROM T_PS_POLICY_SUPPORT
+        WHERE ROW_ID = #{rowId}
+    </delete>
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+        T.ROW_ID,
+        T1.MACRO_NAME brand,
+        T.POLICY_CODE,
+        T.POLICY_NAME,
+        T.POLICY_START_DATE,
+        T.POLICY_END_DATE,
+        T7.MACRO_NAME  status
+        FROM   T_PS_POLICY_SUPPORT T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.STATUS = T7.MACRO_CODE AND T7.MACRO_TYPE = 'status' AND T7.DEL_FLAG = 'M0015'
+        <where>
+            <if test="policyCode != null and policyCode != ''">
+                AND T.POLICY_CODE LIKE CONCAT('%',#{policyCode},'%')
+            </if>
+            <if test="brand != null and brand != ''">
+                AND T.BRAND = #{brand}
+            </if>
+            <if test="policyName != null and policyName != ''">
+                AND T.POLICY_NAME LIKE CONCAT('%',#{policyName},'%')
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <select id="psPolicyQueryForPage" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+            T.ROW_ID,
+            T1.MACRO_NAME brand,
+            T.POLICY_CODE,
+            T.POLICY_NAME,
+            T.POLICY_START_DATE,
+            T.POLICY_END_DATE,
+            T.STATUS,
+            T4.ITEM_NAME MODE_CODE,
+            T2.REMARK,
+            T2.AMOUNT_LIMIT,
+            T5.ITEM_NAME CONDITION_CODE,
+            T3.ITEM_NAME ITEM_CODE
+
+        FROM  T_PS_POLICY_SUPPORT_DETAIL T2
+        LEFT JOIN T_PS_POLICY_SUPPORT T ON T.ROW_ID =T2.POLICY_ID AND T2.DEL_FLAG ='M0015'
+         LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+         LEFT JOIN T_PS_POLICY_ITEM T3 ON T2.ITEM_CODE = T3.ITEM_CODE AND T3.ITEM_TYPE='M0101' AND T3.DEL_FLAG ='M0015'
+         LEFT JOIN T_PS_POLICY_ITEM T4 ON T2.ITEM_CODE = T4.ITEM_CODE AND T4.ITEM_TYPE='M0102' AND T4.DEL_FLAG ='M0015'
+         LEFT JOIN T_PS_POLICY_ITEM T5 ON T2.CONDITION_CODE = T5.ITEM_CODE AND T5.ITEM_TYPE='M0103' AND T5.DEL_FLAG ='M0015'
+
+        <where>
+
+            <if test="brand != null and brand != ''">
+                AND T.BRAND = #{brand}
+            </if>
+            <if test="policyName != null and policyName != ''">
+                AND T.POLICY_NAME LIKE CONCAT('%',#{policyName},'%')
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <select id="selectLoad" parameterType="java.lang.String"
+            resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+        ROW_ID,
+        BRAND,
+        POLICY_CODE,
+        POLICY_NAME,
+        POLICY_START_DATE,
+        POLICY_END_DATE,
+        STATUS,
+        DEL_FLAG
+        From
+        T_PS_POLICY_SUPPORT
+        <where>
+            ROW_ID = #{rowId}
+            AND DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        INSERT INTO T_PS_POLICY_SUPPORT
+        (
+        ROW_ID,
+        BRAND,
+        POLICY_CODE,
+        POLICY_NAME,
+        POLICY_START_DATE,
+        POLICY_END_DATE,
+        STATUS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{brand},
+        #{policyCode},
+        #{policyName},
+        #{policyStartDate},
+        #{policyEndDate},
+        'M0043',
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        UPDATE T_PS_POLICY_SUPPORT
+        SET
+        BRAND = #{brand},
+        POLICY_CODE = #{policyCode},
+        POLICY_NAME = #{policyName},
+        POLICY_START_DATE = #{policyStartDate},
+        POLICY_END_DATE = #{policyEndDate},
+        STATUS = 'M0043',
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID = #{rowId}AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectForExport" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+        T.ROW_ID,
+        T1.MACRO_NAME brand,
+        T.POLICY_CODE,
+        T.POLICY_NAME,
+        T.POLICY_START_DATE,
+        T.POLICY_END_DATE,
+        T7.MACRO_NAME  status
+        FROM   T_PS_POLICY_SUPPORT T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.STATUS = T7.MACRO_CODE AND T7.MACRO_TYPE = 'status' AND T7.DEL_FLAG = 'M0015'
+        <where>
+            <if test="policyCode != null and policyCode != ''">
+                AND T.POLICY_CODE LIKE CONCAT('%',#{policyCode},'%')
+            </if>
+            <if test="brand != null and brand != ''">
+                AND T.BRAND = #{brand}
+            </if>
+            <if test="policyName != null and policyName != ''">
+                AND T.POLICY_NAME LIKE CONCAT('%',#{policyName},'%')
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <update id="updatePolicy" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        UPDATE T_PS_POLICY_SUPPORT
+        SET
+        STATUS = 'M0044',
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID = #{rowId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="recoveryPolicy" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        UPDATE T_PS_POLICY_SUPPORT
+        SET
+        STATUS = 'M0043',
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID = #{rowId}  AND DEL_FLAG = 'M0015'
+    </update>
+</mapper>

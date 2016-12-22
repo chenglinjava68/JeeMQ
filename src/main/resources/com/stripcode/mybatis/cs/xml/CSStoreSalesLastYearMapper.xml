@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSStoreSalesLastYearMapper">
+
+    <select id="selectBusinessFlanByOptimauthId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSBusinessFlan">
+       SELECT
+            ROW_ID,
+            OPTIMAUTH_ID,
+            planClass,
+            PP_ID,
+            CN_SITENAME,
+            storeCode,
+            channelName,
+            CHANNEL_TYPE,
+            OPERATING_AREA,
+            storeAddres,
+            OPEN_DATE,
+            SALES_Y1,
+            SALES_Y1_INCRATE,
+            SALES_Y2,
+            SALES_Y2_INCRATE,
+            SALES_Y3,
+            SALES_Y3_INCRATE
+        FROM
+       (
+        SELECT
+        F.ROW_ID,
+        F.OPTIMAUTH_ID,
+        'M0047' AS planClass,
+        pp.PP_ID,
+        sp.CN_SITENAME,
+        pp.NEW_STORE_CODE storeCode,
+        T.MACRO_NAME channelName,
+        sp.CHANNEL_TYPE,
+        S.OPERATING_AREA,
+        sp.ADDRESS_DETAIL storeAddres,
+        E.EST_DATE OPEN_DATE,
+        F.SALES_Y1,
+        F.SALES_Y1_INCRATE,
+        F.SALES_Y2,
+        F.SALES_Y2_INCRATE,
+        F.SALES_Y3,
+        F.SALES_Y3_INCRATE
+        FROM
+        T_CS_CUSTOMER_PP pp
+        LEFT JOIN T_CS_PLAN_SALES_TARGET F ON F.PP_ID = pp.PP_ID AND F.DEL_FLAG = 'M0015' AND F.PLAN_CLASS = 'M0047'
+        LEFT JOIN T_SF_PIPELINE sp ON sp.PP_ID = pp.PP_ID AND sp.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SF_SITEINFO S ON S.PP_ID = sp.PP_ID AND S.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SF_PROGRESS_EST E ON E.PP_ID = sp.PP_ID AND E.DEL_FLAG = 'M0015' AND E.TASK_CODE IN ('M0165','M0331')
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON sp.CHANNEL_TYPE = T.MACRO_CODE AND T.DEL_FLAG = 'M0015'
+        <where>
+            PP.OPTIMAUTH_ID = (
+            SELECT O1.OPTIMAUTH_ID FROM T_CS_MARKET_OPTIMAUTH O
+            LEFT JOIN T_CS_CUSTOMER_ERP_INFO E ON E.ERP_CODE = O.ERP_CODE
+            LEFT JOIN T_CS_NEW_MARKETAUZ O1 ON O1.ERP_CODE = E.ERP_CODE
+            where o.OPTIMIZED_TYPE = 'M0059' and o.ROW_ID = #{optimauthId})
+            AND pp.DEL_FLAG = 'M0015'
+        </where>
+
+        UNION
+
+        SELECT
+        S.ROW_ID,
+        S.OPTIMAUTH_ID,
+        S.PLAN_CLASS,
+        S.PP_ID,
+        S.CN_SITENAME,
+        S.STORE_CODE,
+        T.MACRO_NAME channelName,
+        S.CHANNEL_TYPE,
+        S.OPERATING_AREA,
+        S.STORE_ADDRES,
+        S.OPEN_DATE,
+        S.SALES_Y1,
+        S.SALES_Y1_INCRATE,
+        S.SALES_Y2,
+        S.SALES_Y2_INCRATE,
+        S.SALES_Y3,
+        S.SALES_Y3_INCRATE
+        FROM
+        T_CS_PLAN_SALES_TARGET S
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON S.CHANNEL_TYPE = T.MACRO_CODE AND T.DEL_FLAG = 'M0015'
+        <where>
+            AND S.OPTIMAUTH_ID  =(
+            SELECT O1.OPTIMAUTH_ID FROM T_CS_MARKET_OPTIMAUTH O
+            LEFT JOIN T_CS_CUSTOMER_ERP_INFO E ON E.ERP_CODE = O.ERP_CODE
+            LEFT JOIN T_CS_NEW_MARKETAUZ O1 ON O1.ERP_CODE = E.ERP_CODE
+            where o.OPTIMIZED_TYPE = 'M0059' and o.ROW_ID = #{optimauthId})
+            AND S.DEL_FLAG = 'M0015'
+            AND S.PLAN_CLASS IN ('M0048','M0049','M0050','M0051')
+        </where>
+       ) T
+        ORDER BY T.planClass
+    </select>
+
+    <select id="queryStoreSalesLastYear" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSStoreSalesLastYear">
+        SELECT
+        Y.ROW_ID,
+        pp.OPTIMAUTH_ID,
+        pp.PP_ID,
+        'M0047' planClass,
+        pp.NEW_STORE_CODE storeCode,
+        sp.CN_SITENAME storeName,
+        E.EST_DATE openDate,
+        Y.SALES,
+        Y.INCRATE
+        FROM T_CS_CUSTOMER_PP pp
+        LEFT JOIN T_SF_PIPELINE sp ON sp.PP_ID = pp.PP_ID AND sp.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SF_PROGRESS_EST E ON E.PP_ID = sp.PP_ID AND E.DEL_FLAG = 'M0015' AND E.TASK_CODE IN ('M0165','M0331')
+        LEFT JOIN T_CS_STORE_SALES_LAST_YEAR Y ON Y.PP_ID = pp.PP_ID AND Y.DEL_FLAG='M0015' AND Y.PLAN_CLASS='M0047'
+        WHERE pp.OPTIMAUTH_ID = (
+            SELECT O1.OPTIMAUTH_ID FROM T_CS_MARKET_OPTIMAUTH O
+            LEFT JOIN T_CS_CUSTOMER_ERP_INFO E ON E.ERP_CODE = O.ERP_CODE
+            LEFT JOIN T_CS_NEW_MARKETAUZ O1 ON O1.ERP_CODE = E.ERP_CODE
+            where o.OPTIMIZED_TYPE = 'M0059' and o.ROW_ID = #{optimauthId}) AND pp.DEL_FLAG = 'M0015'
+
+        UNION
+
+        SELECT
+        ROW_ID,
+        OPTIMAUTH_ID,
+        PP_ID,
+        PLAN_CLASS,
+        STORE_CODE,
+        STORE_NAME,
+        OPEN_DATE,
+        SALES,
+        INCRATE
+        FROM T_CS_STORE_SALES_LAST_YEAR
+        WHERE OPTIMAUTH_ID = (
+            SELECT O1.OPTIMAUTH_ID FROM T_CS_MARKET_OPTIMAUTH O
+            LEFT JOIN T_CS_CUSTOMER_ERP_INFO E ON E.ERP_CODE = O.ERP_CODE
+            LEFT JOIN T_CS_NEW_MARKETAUZ O1 ON O1.ERP_CODE = E.ERP_CODE
+            where o.OPTIMIZED_TYPE = 'M0059' and o.ROW_ID = #{optimauthId})
+        AND DEL_FLAG = 'M0015'
+        AND PLAN_CLASS IN ('M0049','M0050')
+    </select>
+
+    <update id="updateStoreSales" parameterType="com.stripcode.mybatis.cs.model.CSStoreSalesLastYear">
+        UPDATE T_CS_STORE_SALES_LAST_YEAR
+        SET
+        PP_ID = #{ppId},
+        PLAN_CLASS = #{planClass},
+        STORE_CODE = #{storeCode},
+        STORE_NAME = #{storeName},
+        OPEN_DATE = #{openDate},
+        SALES = #{sales},
+        INCRATE = #{incrate}
+        WHERE OPTIMAUTH_ID = #{optimauthId} AND ROW_ID=#{rowId}
+    </update>
+
+
+    <insert id="insertStoreSales" parameterType="com.stripcode.mybatis.cs.model.CSStoreSalesLastYear">
+        INSERT INTO T_CS_STORE_SALES_LAST_YEAR(
+        ROW_ID,
+        OPTIMAUTH_ID,
+        PP_ID,
+        PLAN_CLASS,
+        STORE_CODE,
+        STORE_NAME,
+        OPEN_DATE,
+        SALES,
+        INCRATE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{optimauthId},
+        #{ppId},
+        #{planClass},
+        #{storeCode},
+        #{storeName},
+        #{openDate},
+        #{sales},
+        #{incrate},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+</mapper>

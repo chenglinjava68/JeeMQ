@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.message.dao.PosMapper" >
+
+<sql id="posOrderColumns">
+	OrderID as orderId,
+  	StoreCode as storeCode,
+  	BizDate as bizDate,
+  	PosNo as posNo,
+  	CashierID as cashierId,
+  	CashierName as cashierName,
+  	WaiterID as waiterId,
+  	WaiterName as waiterName,
+  	FromTime as formTime,
+  	ToTime as toTime,
+	GuestCount as guestCount,
+	GuestCountFemale as guestCountFemale,
+	GuestCountMale as guestCountMale,
+	TableID as tableId,
+	ShouldAmount as shouldAmount,
+	CutoffAmount as cutoffAmout,
+	PromoAmount as promoAmount,
+	DiscountAmount as discountAmount,
+	ActualAmount as actualAmount,
+	ExAmount as exAmount,
+	Changes as changes,
+	point as point,
+	ServiceType as serviceType,
+	PosModel as posModel,
+	STATUS as status, 
+	PREORDERNO as preOrderNo,
+	ORDERTYPE as orderType,
+	LockTime as lockTime,
+	TableClearTime as tableClearTime,
+	PayPosNo as payPosNo,
+	Comments as comments,
+	MemberNo as memberNo,
+	Def1 as def1,
+	Def2 as def2,
+	Def3 as def3,
+	Def4 as def4, 
+	Def5 as def5,
+	def6 as def6,
+	def7 as def7,
+	def8 as def8,
+	def9 as def9,
+	def10 as def10,
+	entranceType
+</sql>
+
+<insert id="insertOrder" parameterType="com.stripcode.mybatis.message.model.PosOrder">
+    INSERT INTO POS_ORDER(ORDERID,
+	STORECODE,BIZDATE,POSNO,CASHIERID,CASHIERNAME,WAITERID,WAITERNAME,FROMTIME,TOTIME,
+	GUESTCOUNT,GUESTCOUNTFEMALE,GUESTCOUNTMALE,TABLEID,SHOULDAMOUNT,CUTOFFAMOUNT,
+	PROMOAMOUNT,DISCOUNTAMOUNT,ACTUALAMOUNT,EXAMOUNT,CHANGES,SERVICETYPE,POSMODEL,STATUS,PREORDERNO,ORDERTYPE,
+	LOCKTIME,TABLECLEARTIME,PAYPOSNO,COMMENTS,MEMBERNO,DEF1,DEF2,DEF3,DEF4,DEF5,def6,def7,def8,def9,def10,point,entranceType,SyncStatus,TableNo,DeskNo)
+	VALUES(#{orderId},
+	#{storeCode},#{bizDate},#{posNo},#{cashierId},#{cashierName},#{waiterId},#{waiterName},#{fromTime},#{toTime},
+	#{guestCount},#{guestCountFemale},#{guestCountMale},#{tableId},#{shouldAmount},#{cutoffAmount},
+	#{promoAmount},#{discountAmount},#{actualAmount},#{exAmount},#{changes},#{serviceType},#{posModel},#{status},#{preOrderNo},#{orderType},
+	#{lockTime},#{tableClearTime},#{payPosNo},#{comments},#{memberNo},#{def1},#{def2},#{def3},#{def4},#{def5},#{def6},#{def7},#{def8},#{def9},#{def10},
+	#{point},#{entranceType},0,#{tableID},#{deskID}
+	);
+  </insert>
+</mapper>

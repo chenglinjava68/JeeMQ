@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSNegotiationMapper">
+
+    <select id="selectAll" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSNegotiation">
+        SELECT
+              CN.RECORD_ID,
+              CN.CUSTOMER_ID,
+              CI.CORPORATION,
+              CN.DATE_TIME,
+              CN.LOCATION,
+              CN.TOPIC,
+              CN.LANDLORD,
+              CN.MB_PARTICIPANT,
+              CN.COMM_TYPE,
+              CN.CONTENT,
+              CN.CONLUSION
+        FROM
+              T_CS_CUSTOMER_NEGOTIATION CN
+              LEFT JOIN T_CS_CUSTOMERINFO CI ON CN.CUSTOMER_ID = CI.CUSTOMER_ID AND CI.DEL_FLAG = 'M0015'
+        WHERE
+              CN.CUSTOMER_ID = #{customerId} AND CN.DEL_FLAG = 'M0015'
+        ORDER BY CN.DATE_TIME DESC
+    </select>
+
+    <select id="detailsByRecordId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSNegotiation">
+        SELECT
+              RECORD_ID,
+              CUSTOMER_ID,
+              DATE_TIME,
+              LOCATION,
+              TOPIC,
+              LANDLORD,
+              MB_PARTICIPANT,
+              COMM_TYPE,
+              CONTENT,
+              CONLUSION
+        FROM
+              T_CS_CUSTOMER_NEGOTIATION
+        WHERE
+            RECORD_ID = #{recordId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertNegotiation" parameterType="com.stripcode.mybatis.cs.model.CSNegotiation">
+        INSERT INTO
+                  T_CS_CUSTOMER_NEGOTIATION(
+                        CUSTOMER_ID,
+                        DATE_TIME,
+                        LOCATION,
+                        TOPIC,
+                        LANDLORD,
+                        MB_PARTICIPANT,
+                        COMM_TYPE,
+                        CONTENT,
+                        CREATOR,
+                        CREATE_TIME,
+                        UPDATER,
+                        UPDATE_TIME,
+                        DEL_FLAG
+                  )VALUES(
+                        #{customerId},
+                        #{dateTime},
+                        #{location},
+                        #{topic},
+                        #{landlord},
+                        #{mbParticipant},
+                        #{commType},
+                        #{content},
+                        #{creator},
+                        #{createTime},
+                        #{updater},
+                        #{updateTime},
+                        'M0015'
+                  )
+    </insert>
+
+    <update id="updateNegotiation" parameterType="com.stripcode.mybatis.cs.model.CSNegotiation">
+          UPDATE
+                T_CS_CUSTOMER_NEGOTIATION
+                    SET
+                        DATE_TIME = #{dateTime},
+                        LOCATION = #{location},
+                        TOPIC = #{topic},
+                        LANDLORD = #{landlord},
+                        MB_PARTICIPANT = #{mbParticipant},
+                        COMM_TYPE = #{commType},
+                        CONTENT = #{content},
+                        UPDATER = #{updater},
+                        UPDATE_TIME = #{updateTime}
+           WHERE
+                   RECORD_ID = #{recordId} AND DEL_FLAG = 'M0015'
+    </update>
+
+</mapper>

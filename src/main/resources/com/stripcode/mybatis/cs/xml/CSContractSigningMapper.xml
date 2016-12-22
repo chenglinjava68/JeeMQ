@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSContractSigningMapper">
+
+    
+    <select id="signingByOptimauthId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractSigning">
+        SELECT
+              ROW_ID,
+              OPTIMAUTH_ID,
+              ACTUAL_SIGNDATE,
+              ACTUAL_ACCREDIT_STARTDATE,
+              ACTUAL_ACCREDIT_ENDDATE
+        FROM
+            T_CS_CONTRACT_SIGNING
+        WHERE
+              OPTIMAUTH_ID =#{optimauthId}
+              AND DEL_FLAG = 'M0015'
+    </select>
+
+
+    <insert id="insertSigning" parameterType="com.stripcode.mybatis.cs.model.CSContractSigning">
+        INSERT INTO T_CS_CONTRACT_SIGNING(
+              ROW_ID,
+              OPTIMAUTH_ID,
+              ACTUAL_SIGNDATE,
+              ACTUAL_ACCREDIT_STARTDATE,
+              ACTUAL_ACCREDIT_ENDDATE,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+        )VALUES (
+              #{rowId},
+              #{optimauthId},
+              #{actualSignDate},
+              #{actualAccreditStartDate},
+              #{actualAccreditEndDate},
+              #{creator},
+              #{createTime},
+              #{updater},
+              #{updateTime},
+             'M0015'
+        )
+    </insert>
+
+    <update id="updateSigning" parameterType="com.stripcode.mybatis.cs.model.CSContractSigning">
+          UPDATE
+                T_CS_CONTRACT_SIGNING
+                SET
+                    ACTUAL_SIGNDATE = #{actualSignDate},
+                    ACTUAL_ACCREDIT_STARTDATE = #{actualAccreditStartDate},
+                    ACTUAL_ACCREDIT_ENDDATE = #{actualAccreditEndDate},
+                    UPDATER = #{updater},
+                    UPDATE_TIME = #{updateTime}
+          WHERE
+                OPTIMAUTH_ID = #{optimauthId}
+                AND ROW_ID = #{rowId}
+                AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="isExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_CS_CONTRACT_SIGNING WHERE OPTIMAUTH_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="signingAll" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractSigning">
+        SELECT
+        A.ROW_ID,
+        A.SIGNING_ID,
+        A.CONTRACT_NAME,
+        U.USER_NAME creater,
+        A.CREATE_TIME createrTime
+        FROM T_CS_CONTRACT_SIGNING C
+        LEFT JOIN T_CS_CONTRACT_SIGNING_ATTACHMENT A ON C.ROW_ID = A.SIGNING_ID AND A.DEL_FLAG = 'M0015' AND A.TEMPLATE_ID = '1'
+        LEFT JOIN T_SYS_USER U ON u.USER_ID = A.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+        C.OPTIMAUTH_ID =#{optimauthId}
+        AND C.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="signingByTemplateId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractSigning">
+        SELECT
+        A.ROW_ID,
+        A.SIGNING_ID,
+        A.ATTACH_ID,
+        A.CONTRACT_NAME,
+        U.USER_NAME creater,
+        A.CREATE_TIME createrTime
+        FROM T_CS_CONTRACT_SIGNING C
+        LEFT JOIN T_CS_CONTRACT_SIGNING_ATTACHMENT A ON C.ROW_ID = A.SIGNING_ID AND A.DEL_FLAG = 'M0015' AND A.TEMPLATE_ID = '2'
+        LEFT JOIN T_SYS_USER U ON u.USER_ID = A.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+        C.OPTIMAUTH_ID =#{optimauthId}
+        AND C.DEL_FLAG = 'M0015'
+    </select>
+
+    <!--<select id="selectAttachedTemplateList" resultType="com.stripcode.mybatis.cs.model.TSysAttachedTemplate">-->
+        <!--SELECT-->
+            <!--TEMPLETE_ID,-->
+            <!--PAGE_ID,-->
+            <!--TITLE,-->
+            <!--SYN_METHOD,-->
+            <!--COMMENTS,-->
+            <!--FILE_TYPE,-->
+            <!--JOIN_ID,-->
+            <!--SORT_NO,-->
+            <!--SOURCE,-->
+            <!--STORE_TYPE,-->
+            <!--CAN_PREVIEW,-->
+            <!--CAN_UPLOAD,-->
+            <!--CAN_DOWNLOAD,-->
+            <!--CAN_DELETE,-->
+            <!--TASK_CHECK,-->
+            <!--CAN_VIEW,-->
+            <!--VIEW_TYPE-->
+        <!--FROM-->
+            <!--T_SYS_ATTACHEDTEMPLATE-->
+        <!--WHERE-->
+              <!--PAGE_ID = 'CS20_017' AND DEL_FLAG = 'M0015'-->
+    <!--</select>-->
+
+    <select id="selectAttachedTemplate" resultType="com.stripcode.mybatis.cs.model.CSCertificateOfPayment">
+        SELECT
+              T.TEMPLATE_ID,
+              P.ROW_ID,
+              P.SIGNING_ID,
+              P.ATTACH_ID,
+              T.TITLE contractName,
+              U.USER_NAME creater,
+              P.UPDATE_TIME createrTime
+        FROM T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_CS_CERTIFICATE_OF_PAYMENT P ON P.TEMPLATE_ID = T.TEMPLATE_ID AND P.SIGNING_ID = #{signingId} AND P.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = P.UPDATER AND U.DEL_FLAG = 'M0015'
+        WHERE
+              T.PAGE_ID = 'CS20_017'
+              AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="isExistSignPayment" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_CS_CERTIFICATE_OF_PAYMENT WHERE TEMPLATE_ID = #{templateId} AND SIGNING_ID = #{signingId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertSignPayment" parameterType="com.stripcode.mybatis.cs.model.CSCertificateOfPayment">
+        INSERT INTO T_CS_CERTIFICATE_OF_PAYMENT(
+            ROW_ID,
+            SIGNING_ID,
+            TEMPLATE_ID,
+            CONTRACT_NAME,
+            ATTACH_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{signingId},
+            #{templateId},
+            #{contractName},
+            #{attachId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateSignPayment" parameterType="com.stripcode.mybatis.cs.model.CSCertificateOfPayment">
+        UPDATE T_CS_CERTIFICATE_OF_PAYMENT
+        SET
+            CONTRACT_NAME = #{contractName},
+            ATTACH_ID = #{attachId},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        <where>
+          AND SIGNING_ID = #{signingId}
+          AND TEMPLATE_ID = #{templateId}
+          AND DEL_FLAG = 'M0015'
+        </where>
+    </update>
+
+    <insert id="insertSignContract" parameterType="com.stripcode.mybatis.cs.model.CSSigningAttachment">
+        INSERT INTO T_CS_CONTRACT_SIGNING_ATTACHMENT(
+            ROW_ID,
+            SIGNING_ID,
+            TEMPLATE_ID,
+            CONTRACT_NAME,
+            ATTACH_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{signingId},
+            #{templateId},
+            #{contractName},
+            #{attachId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateSignContract" parameterType="com.stripcode.mybatis.cs.model.CSSigningAttachment">
+          UPDATE
+                T_CS_CONTRACT_SIGNING_ATTACHMENT
+                SET
+                    UPDATER = #{updater},
+                    UPDATE_TIME = sysdate()
+           WHERE
+                  SIGNING_ID = #{signingId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="isExistSignContract" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_CS_CONTRACT_SIGNING_ATTACHMENT WHERE SIGNING_ID = #{signingId} AND DEL_FLAG = 'M0015'
+    </select>
+    <update id="updateTempleteJoinId" parameterType="com.stripcode.mybatis.cs.model.CSContractSigning">
+        update T_SYS_ATTACHEDTEMPLATE
+        set JOIN_ID = #{joinId},
+        CAN_UPLOAD = 'M0012'
+        where TEMPLATE_ID = #{templateId}
+    </update>
+
+    <select id="queryByNewMarketAuzId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractSigning">
+        SELECT
+              S.ROW_ID,
+              S.OPTIMAUTH_ID,
+              S.ACTUAL_SIGNDATE,
+              S.ACTUAL_ACCREDIT_STARTDATE,
+              S.ACTUAL_ACCREDIT_ENDDATE
+        FROM
+            T_CS_CONTRACT_SIGNING S
+            LEFT JOIN T_CS_NEW_MARKETAUZ M ON M.OPTIMAUTH_ID = S.OPTIMAUTH_ID AND M.DEL_FLAG ='M0015'
+        WHERE M.ROW_ID = #{rowId} and S.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

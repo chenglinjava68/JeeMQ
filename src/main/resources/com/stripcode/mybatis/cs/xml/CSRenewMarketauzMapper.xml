@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSRenewMarketauzMapper">
+
+    <select id="selectRenewMarketauzById"  parameterType="java.lang.String"  resultType="com.stripcode.mybatis.cs.model.RenewMarketauz">
+        SELECT
+            T.ROW_ID,
+            T.START_DATE,
+            T.END_DATE,
+            T.USER_ID,
+            T1.CUSTOMER_ID,
+            T1.ERP_CODE,
+            T.REMARK
+        FROM
+         T_CS_MARKET_OPTIMAUTH T1
+        LEFT JOIN T_CS_RENEW_MARKETAUZ T ON T.OPTIMAUTH_ID=T1.ROW_ID AND T1.DEL_FLAG = 'M0015'
+        WHERE
+        T1.ROW_ID = #{optimauthId} AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <update id="updateByReNewInfo"  parameterType="com.stripcode.mybatis.cs.model.RenewMarketauz">
+        UPDATE
+        T_CS_RENEW_MARKETAUZ
+        SET
+            START_DATE = #{startDate},
+            END_DATE = #{endDate},
+            USER_ID = #{userId},
+            REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE
+        DEL_FLAG = 'M0015' AND ROW_ID = #{rowId}
+    </update>
+    <update id="updateMarketOptimauth"  parameterType="com.stripcode.mybatis.cs.model.RenewMarketauz">
+         UPDATE
+            T_CS_MARKET_OPTIMAUTH T
+        LEFT JOIN T_CS_RENEW_MARKETAUZ TZ ON T.ROW_ID = TZ.OPTIMAUTH_ID AND T.DEL_FLAG = 'M0015'
+        SET
+        T.DIRECTOR = #{userId}
+        WHERE
+        TZ.DEL_FLAG = 'M0015' AND TZ.ROW_ID =#{rowId}
+    </update>
+
+    <insert id="insertByReNewInfo"  parameterType="com.stripcode.mybatis.cs.model.RenewMarketauz">
+        INSERT INTO
+        T_CS_RENEW_MARKETAUZ
+        (
+            ROW_ID,
+            OPTIMAUTH_ID,
+            START_DATE,
+            END_DATE,
+            USER_ID,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )
+        VALUES
+        (
+            #{rowId},
+            #{optimauthId},
+            #{startDate},
+            #{endDate},
+            #{userId},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <select id="selectByReNewInfo"  parameterType="java.lang.String"  resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            CS.CUSTOMER_ID,
+            CS.ROW_ID,
+            CS.ERP_CODE,
+            CS.ERP_NAME,
+            CS.ACCREDIT_STARTDATE,
+            CS.ACCREDIT_ENDDATE,
+            CS.BASIC_DISCOUNT_RATE,
+            CS.SPLIT_RATE,
+            CS.BRAND,
+            CS.MARKET_LEV,
+            INFO.CORPORATION,
+            INFO.POST_ADDRESS,
+            T.MACRO_NAME customerProperty,
+            T3.MACRO_NAME isBuyout,
+            T4.MACRO_NAME cooperationMode,
+            T5.MACRO_NAME marketLevName,
+            T6.MACRO_NAME discountRateMode,
+            T2.MACRO_NAME brandName,
+            INFO.ID_NUMBER,
+            INFO.COMPANY_NAME,
+            INFO.SUPERIOR_COMPANY,
+            INFO.TEL
+        FROM
+        T_CS_CUSTOMER_ERP_INFO CS
+        LEFT JOIN  T_CS_CUSTOMERINFO INFO ON INFO.CUSTOMER_ID = CS.CUSTOMER_ID AND INFO.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON INFO.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON CS.BRAND = T2.MACRO_CODE AND  T2.MACRO_TYPE = 'BRAND' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON CS.IS_BUYOUT = T3.MACRO_CODE AND T3.MACRO_TYPE = 'YES_NO' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON CS.COOPERATION_MODE = T4.MACRO_CODE AND T4.MACRO_TYPE = 'COOPERATION_MODEL' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON CS.MARKET_LEV = T5.MACRO_CODE AND T5.MACRO_TYPE = 'MARKET_LEVEL' AND T5.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T6 ON CS.DISCOUNT_RATE_MODE = T6.MACRO_CODE AND T6.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T6.DEL_FLAG = 'M0015'
+        WHERE
+        CS.CUSTOMER_ID = #{customerId} AND CS.ERP_CODE=#{erpCode} AND CS.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectReNewInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            CS.CUSTOMER_ID,
+            CS.ERP_CODE,
+            CS.ERP_NAME,
+            CS.ACCREDIT_STARTDATE,
+            CS.ACCREDIT_ENDDATE,
+            CS.BASIC_DISCOUNT_RATE,
+            CS.SPLIT_RATE,
+            INFO.CORPORATION,
+            INFO.POST_ADDRESS,
+            INFO.SUPERIOR_COMPANY,
+            T.MACRO_NAME customerProperty,
+            T1.MACRO_NAME brand,
+            T2.MACRO_NAME marketLev,
+            T3.MACRO_NAME isBuyout,
+            T4.MACRO_NAME cooperationMode,
+            T5.MACRO_NAME discountRateMode,
+            INFO.ID_NUMBER,
+            INFO.COMPANY_NAME,
+            TCR.START_DATE,
+            TCR.END_DATE,
+            TSI.ACTUAL_SIGNDATE,
+            INFO.TEL
+        FROM
+        T_CS_MARKET_OPTIMAUTH TCO
+        LEFT JOIN  T_CS_CUSTOMERINFO INFO ON INFO.CUSTOMER_ID = TCO.CUSTOMER_ID AND INFO.DEL_FLAG = 'M0015'
+        LEFT JOIN  T_CS_CUSTOMER_ERP_INFO CS ON TCO.ERP_CODE = CS.ERP_CODE AND CS.DEL_FLAG = 'M0015'
+        LEFT JOIN  T_CS_RENEW_MARKETAUZ TCR ON TCR.OPTIMAUTH_ID = TCO.ROW_ID AND TCR.DEL_FLAG = 'M0015'
+        LEFT JOIN  T_CS_CONTRACT_SIGNING TSI ON TSI.OPTIMAUTH_ID = TCO.ROW_ID AND TSI.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON INFO.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON CS.MARKET_LEV = T2.MACRO_CODE AND T2.MACRO_TYPE = 'MARKET_LEVEL' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON CS.IS_BUYOUT = T3.MACRO_CODE AND T3.MACRO_TYPE = 'YES_NO' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON CS.COOPERATION_MODE = T4.MACRO_CODE AND T4.MACRO_TYPE = 'COOPERATION_MODEL' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON CS.DISCOUNT_RATE_MODE = T5.MACRO_CODE AND T5.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T5.DEL_FLAG = 'M0015'
+        WHERE
+        TCO.CUSTOMER_ID = #{customerId} AND TCO.ROW_ID=#{rowId} AND TCO.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertMarketOptimauth" parameterType="com.stripcode.mybatis.cs.model.CSMarketOptimauth">
+        INSERT INTO
+        T_CS_MARKET_OPTIMAUTH
+        (
+            ROW_ID,
+            CUSTOMER_ID,
+            ERP_CODE,
+            ERP_NAME,
+            BRAND,
+            DIRECTOR,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            PRO_STATUS,
+            CURRENT_NODE,
+            DEL_FLAG,
+            OPTIMIZED_TYPE
+        )
+        VALUES (
+            #{rowId},
+            #{customerId},
+            #{erpCode},
+            #{erpName},
+            #{brand},
+            #{director},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0097',
+            'M0623',
+            'M0015',
+            'M0059'
+        )
+    </insert>
+    <select id="isExistsRenewMarketauz" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(0)
+        FROM
+        T_CS_RENEW_MARKETAUZ T
+        WHERE T.ROW_ID=#{rowId}  AND T.DEL_FLAG = 'M0015'
+    </select>
+   <!--查询收入分成比例 -->
+    <select id="selectDiscountSplit" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSMarketCustomerDiscountSplit">
+        SELECT
+            Tcs.SPLIT_RATE,
+            Tcs.DISCOUNT_RATE,
+            T2.MACRO_NAME style
+        FROM
+        T_CS_MARKET_CUSTOMER_DISCOUNT_SPLIT Tcs
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO Tcer  ON Tcer.ROW_ID = Tcs.AUTHORIZATION_ID AND Tcs.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_MARKET_OPTIMAUTH TCO  ON Tcer.ERP_CODE = TCO.ERP_CODE AND TCO.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON Tcs.STYLE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'STORE_IMAGE' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            AND TCO.ROW_ID = #{rowId}
+            AND Tcer.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="isExistsOption" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(0)
+            FROM
+            T_CS_MARKET_OPTIMAUTH T
+            LEFT JOIN T_CS_RENEW_MARKETAUZ TZ ON T.ROW_ID = TZ.OPTIMAUTH_ID AND T.DEL_FLAG = 'M0015'
+            WHERE TZ.ROW_ID=#{rowId}
+    </select>
+
+    <update id="updateRenewErpCustomer"  parameterType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        UPDATE
+            T_CS_CUSTOMER_ERP_INFO
+        SET
+        ACCREDIT_ENDDATE = #{accreditEndDate},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        DEL_FLAG = 'M0015' AND ERP_CODE = #{erpCode} AND CUSTOMER_ID =#{customerId}
+    </update>
+</mapper>

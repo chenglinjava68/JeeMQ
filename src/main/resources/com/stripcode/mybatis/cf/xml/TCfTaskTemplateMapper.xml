@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.stripcode.mybatis.cf.dao.TCfTaskTemplateMapper" >
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from T_CF_TASK_TEMPLATE
+    where AUTO_NO = #{autoNo}
+  </delete>
+  <insert id="insert" parameterType="TCfTaskTemplate" >
+    INSERT INTO T_CF_TASK_TEMPLATE (
+      AUTO_NO,
+      TASK_TYPE,
+      TASK_ID,
+      TASK_NAME,
+      PROGRESS,
+      IS_MUST,
+      IS_APPROVAL,
+      PRE_TASK_ID,
+      SORT_NO,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+    )
+    VALUES
+    (
+      #{autoNo},
+      #{taskType},
+      #{taskId},
+      #{taskName},
+      #{progress},
+      #{isMust},
+      #{isApproval},
+      #{preTaskId},
+      #{sortNo},
+      #{creator},
+      #{createTime},
+      #{updater},
+      #{updateTime},
+      #{delFlag},
+      #{def1},
+      #{def2},
+      #{def3},
+      #{def4},
+      #{def5},
+      #{def6},
+      #{def7},
+      #{def8},
+      #{def9},
+      #{def10})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TCfTaskTemplate" >
+    update T_CF_TASK_TEMPLATE
+    set
+      TASK_TYPE = #{taskType},
+      TASK_ID = #{taskId},
+      TASK_NAME = #{taskName},
+      PROGRESS = #{progress},
+      IS_MUST = #{isMust},
+      IS_APPROVAL = #{isApproval},
+      PRE_TASK_ID = #{preTaskId},
+      SORT_NO = #{sortNo},
+      CREATOR = #{creator},
+      CREATE_TIME = #{createTime},
+      UPDATER = #{updater},
+      UPDATE_TIME = #{updateTime},
+      DEL_FLAG = #{delFlag},
+      DEF1 = #{def1},
+      DEF2 = #{def2},
+      DEF3 = #{def3},
+      DEF4 = #{def4},
+      DEF5 = #{def5},
+      DEF6 = #{def6},
+      DEF7 = #{def7},
+      DEF8 = #{def8},
+      DEF9 = #{def9},
+      DEF10 = #{def10}
+    where AUTO_NO = #{autoNo}
+  </update>
+  <select id="selectByPrimaryKey" resultType="TCfTaskTemplate" parameterType="java.lang.Integer" >
+    SELECT
+      AUTO_NO,
+      TASK_TYPE,
+      TASK_ID,
+      TASK_NAME,
+      PROGRESS,
+      IS_MUST,
+      IS_APPROVAL,
+      PRE_TASK_ID,
+      SORT_NO,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+    FROM
+     T_CF_TASK_TEMPLATE
+    where AUTO_NO = #{autoNo}
+  </select>
+  <select id="selectAll" resultType="TCfTaskTemplate" >
+    SELECT
+      AUTO_NO,
+      TASK_TYPE,
+      TASK_ID,
+      TASK_NAME,
+      PROGRESS,
+      IS_MUST,
+      IS_APPROVAL,
+      PRE_TASK_ID,
+      SORT_NO,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+    FROM
+     T_CF_TASK_TEMPLATE
+  </select>
+  <select id="selectByTaskType" parameterType="map" resultType="TCfTaskTemplate">
+     SELECT
+          T.TASK_ID,
+          T.TASK_NAME,
+          T.PRE_TASK_ID,
+          T.IS_MUST,
+          T.DEF1,
+          T.PROGRESS,
+          C1.IS_FINISHED ISFINISHED,
+          C1.UPDATE_TIME
+      FROM
+          T_CF_TASK_TEMPLATE T
+      LEFT JOIN T_CS_TASK_COMPLETION C1 ON T.TASK_ID = C1.TASK_ID and C1.OPTIMAUTH_ID = #{rowId}
+      WHERE
+          T.TASK_TYPE = #{taskType}
+      ORDER BY
+          SORT_NO
+  </select>
+</mapper>

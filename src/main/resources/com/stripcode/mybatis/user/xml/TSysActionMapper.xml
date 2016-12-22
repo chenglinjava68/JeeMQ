@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.user.dao.TSysActionMapper">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+   DELETE
+    FROM
+        t_sys_action
+    WHERE
+        AUTO_NO = #{autoNo,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="TSysAction">
+    insert into t_sys_action (AUTO_NO, ACTION_ID, ACTION_LABEL, 
+      ACTION_ENLABEL, ACTION_KEY, TOOLTIP, 
+      ICON, SORT_NO, CREATOR, 
+      CREATE_TIME, UPDATER, UPDATE_TIME, 
+      DEL_FLAG, DEF1, DEF2, 
+      DEF3, DEF4, DEF5, DEF6, 
+      DEF7, DEF8, DEF9, DEF10
+      )
+    values (#{autoNo,jdbcType=INTEGER}, #{actionId,jdbcType=VARCHAR}, #{actionLabel,jdbcType=VARCHAR}, 
+      #{actionEnlabel,jdbcType=VARCHAR}, #{actionKey,jdbcType=VARCHAR}, #{tooltip,jdbcType=VARCHAR}, 
+      #{icon,jdbcType=VARCHAR}, #{sortNo,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=VARCHAR}, #{def1,jdbcType=VARCHAR}, #{def2,jdbcType=VARCHAR}, 
+      #{def3,jdbcType=VARCHAR}, #{def4,jdbcType=VARCHAR}, #{def5,jdbcType=VARCHAR}, #{def6,jdbcType=VARCHAR}, 
+      #{def7,jdbcType=VARCHAR}, #{def8,jdbcType=VARCHAR}, #{def9,jdbcType=VARCHAR}, #{def10,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysAction">
+   UPDATE t_sys_action
+      SET ACTION_ID = #{actionId,jdbcType=VARCHAR},
+      ACTION_LABEL = #{actionLabel,jdbcType=VARCHAR},
+      ACTION_ENLABEL = #{actionEnlabel,jdbcType=VARCHAR},
+      ACTION_KEY = #{actionKey,jdbcType=VARCHAR},
+      TOOLTIP = #{tooltip,jdbcType=VARCHAR},
+      ICON = #{icon,jdbcType=VARCHAR},
+      SORT_NO = #{sortNo,jdbcType=INTEGER},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=VARCHAR},
+      DEF1 = #{def1,jdbcType=VARCHAR},
+      DEF2 = #{def2,jdbcType=VARCHAR},
+      DEF3 = #{def3,jdbcType=VARCHAR},
+      DEF4 = #{def4,jdbcType=VARCHAR},
+      DEF5 = #{def5,jdbcType=VARCHAR},
+      DEF6 = #{def6,jdbcType=VARCHAR},
+      DEF7 = #{def7,jdbcType=VARCHAR},
+      DEF8 = #{def8,jdbcType=VARCHAR},
+      DEF9 = #{def9,jdbcType=VARCHAR},
+      DEF10 = #{def10,jdbcType=VARCHAR}
+    where AUTO_NO = #{autoNo,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="TSysAction">
+    SELECT
+        AUTO_NO,
+        ACTION_ID,
+        ACTION_LABEL,
+        ACTION_ENLABEL,
+        ACTION_KEY,
+        TOOLTIP,
+        ICON,
+        SORT_NO,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_ACTION
+    where AUTO_NO = #{autoNo,jdbcType=INTEGER}
+    AND DEL_FLAG = 'M0015'
+    ORDER BY SORT_NO
+  </select>
+  <select id="selectAll" resultType="TSysAction">
+     SELECT
+        AUTO_NO,
+        ACTION_ID,
+        ACTION_LABEL,
+        ACTION_ENLABEL,
+        ACTION_KEY,
+        TOOLTIP,
+        ICON,
+        SORT_NO,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_ACTION
+        WHERE  DEL_FLAG = 'M0015'
+        ORDER BY SORT_NO
+  </select>
+    <select id="selectByFunctionId" parameterType="java.lang.String" resultType="TSysAction">
+    SELECT
+        m.MAP_ID ACTION_ID,
+        a.ACTION_LABEL,
+        #{functionId} def1
+    FROM
+        T_SYS_ACTION_FUNCTION_MAP m
+    INNER JOIN T_SYS_ACTION a ON m.action_id = a.action_id
+    AND m.DEL_FLAG = 'M0015'
+    AND a.DEL_FLAG = 'M0015'
+    WHERE
+        m.FUNCTION_ID = (
+            SELECT
+                FUNCTION_ID
+            FROM
+                T_SYS_ACTION_FUNCTION_MAP
+            WHERE
+                MAP_ID = #{functionId}
+                AND DEL_FLAG = 'M0015'
+                )
+            ORDER BY
+                a.SORT_NO
+    </select>
+</mapper>

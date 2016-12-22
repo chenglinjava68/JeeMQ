@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSCustomerPPMapper">
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+            T.PP_ID,
+            T.STORE_CODE,
+            T.CN_SITENAME,
+            T1.MACRO_NAME storeProperty,
+            TM.CITY,
+            T3.MACRO_NAME channelType,
+            TM1.PROVINCE,
+            TM2.DISTRICT,
+            TM3.STREET,
+            TC.ERP_NAME marketName,
+            T7.MACRO_NAME  brand
+        FROM
+            T_SF_PIPELINE T
+        LEFT JOIN T_MP_MARKETINFO TM ON TM.MARKET_ID = T.CITY AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM1 ON TM1.MARKET_ID = T.PROVINCE AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM2 ON TM2.MARKET_ID = T.DISTRICT AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO TM3 ON TM3.MARKET_ID = T.STREET AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ TC ON TC.ROW_ID = T.ERP_CODE AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.STORE_PROPERTY = T1.MACRO_CODE AND T1.MACRO_CODE = 'STORE_PROPERTY'AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.CHANNEL_TYPE = T3.MACRO_CODE AND T3.MACRO_CODE = 'CHANNEL_TYPE' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE AND T7.MACRO_CODE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+        <where>
+            <if test="cnStoreName!=null and cnStoreName!=''">
+                AND T.CN_STORENAME LIKE CONCAT('%',#{cnStoreName},'%')
+            </if>
+            <if test="storeProperty!=null and storeProperty!=''">
+                AND T.STORE_PROPERTY = #{storeProperty}
+            </if>
+            <if test="channelType!=null and channelType!=''">
+                AND T.CHANNEL_TYPE = #{channelType}
+            </if>
+            <if test="province!=null and province!=''">
+                <choose>
+                    <when test="city!=null and city!=''">
+                        <choose>
+                            <when test="district!=null and district!=''">
+                                <choose>
+                                    <when test="street!=null and street!=''">
+                                        AND TM.MARKET_ID  LIKE CONCAT(#{street},'%')
+                                    </when>
+                                    <otherwise>
+                                        AND TM.MARKET_ID  LIKE CONCAT(#{district},'%')
+                                    </otherwise>
+                                </choose>
+                            </when>
+                            <otherwise>
+                                AND TM.MARKET_ID  LIKE CONCAT(#{city},'%')
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        AND TM.MARKET_ID   LIKE CONCAT(#{province},'%')
+                    </otherwise>
+                </choose>
+            </if>
+                AND T.DEL_FLAG ='M0015'
+        </where>
+    </select>
+
+</mapper>

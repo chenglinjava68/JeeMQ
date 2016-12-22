@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.user.dao.TSysFunctionMapper">
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    DELETE
+      FROM
+          T_SYS_FUNCTION
+      WHERE
+          AUTO_NO = #{autoNo}
+      AND FUNCTION_ID = #{functionId}
+  </delete>
+  <insert id="insert" parameterType="TSysFunction">
+    INSERT INTO T_SYS_FUNCTION (
+	AUTO_NO,
+	FUNCTION_ID,
+	FUNCTION_NAME,
+	MODULE_ID,
+	PAGE,
+	SORT_NO,
+	ICON,
+	PARENT_ID,
+	PAGE_TYPE,
+	CREATOR,
+	CREATE_TIME,
+	UPDATER,
+	UPDATE_TIME,
+	DEL_FLAG,
+	DEF1,
+	DEF2,
+	DEF3,
+	DEF4,
+	DEF5,
+	DEF6,
+	DEF7,
+	DEF8,
+	DEF9,
+	DEF10
+)
+VALUES
+	(
+		#{autoNo},
+		#{functionId},
+		#{functionName},
+		#{moduleId},
+		#{page},
+		#{sortNo},
+		#{icon},
+		#{parentId},
+		#{pageType},
+		#{creator},
+		#{createTime},
+		#{updater},
+		#{updateTime },
+		#{delFlag},
+		#{def1},
+		#{def2},
+		#{def3},
+		#{def4},
+		#{def5},
+		#{def6},
+		#{def7},
+		#{def8},
+		#{def9},
+		#{def10}
+	)
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysFunction">
+   UPDATE T_SYS_FUNCTION
+    SET FUNCTION_NAME = #{functionName},
+    MODULE_ID = #{moduleId},
+    PAGE = #{page},
+    SORT_NO = #{sortNo},
+    ICON = #{icon},
+    PARENT_ID = #{parentId},
+    PAGE_TYPE = #{pageType},
+    CREATOR = #{creator},
+    CREATE_TIME = #{createTime},
+    UPDATER = #{updater},
+    UPDATE_TIME = #{updateTime},
+    DEL_FLAG = #{delFlag},
+    DEF1 = #{def1},
+    DEF2 = #{def2},
+    DEF3 = #{def3},
+    DEF4 = #{def4},
+    DEF5 = #{def5},
+    DEF6 = #{def6},
+    DEF7 = #{def7},
+    DEF8 = #{def8},
+    DEF9 = #{def9},
+    DEF10 = #{def10}
+    WHERE
+        AUTO_NO = #{autoNo}
+    AND FUNCTION_ID = #{functionId}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="map" resultType="TSysFunction">
+  SELECT
+        AUTO_NO,
+        FUNCTION_ID,
+        FUNCTION_NAME,
+        MODULE_ID,
+        PAGE,
+        SORT_NO,
+        ICON,
+        PARENT_ID,
+        PAGE_TYPE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_FUNCTION
+        where AUTO_NO = #{autoNo}
+          and FUNCTION_ID = #{functionId}
+  </select>
+  <select id="selectAll" resultType="TSysFunction">
+ SELECT
+        AUTO_NO,
+        FUNCTION_ID,
+        FUNCTION_NAME,
+        MODULE_ID,
+        PAGE,
+        SORT_NO,
+        ICON,
+        PARENT_ID,
+        PAGE_TYPE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_FUNCTION
+        where AUTO_NO = #{autoNo}
+          and FUNCTION_ID = #{functionId}
+  </select>
+  <select id="selectForTree" resultType="TreeModel">
+   SELECT
+        m.MAP_ID rowId,
+        f.FUNCTION_NAME tagName,
+        ifNull(m1.MAP_ID,'') parentId
+    FROM
+        T_SYS_ACTION_FUNCTION_MAP m
+    INNER JOIN t_sys_function f ON m.FUNCTION_ID = f.FUNCTION_ID AND m.DEL_FLAG = 'M0015' AND f.DEL_FLAG = 'M0015'
+    LEFT JOIN t_sys_action_function_map m1 ON f.PARENT_ID = m1.FUNCTION_ID AND m1.DEL_FLAG = 'M0015' AND f.DEL_FLAG = 'M0015'
+    WHERE m.ACTION_ID IS NULL
+    ORDER BY f.SORT_NO
+  </select>
+  <select id="selectForMenu" parameterType="java.lang.String" resultType="TreeModel">
+   SELECT DISTINCT
+	f.FUNCTION_ID rowId,
+	f.FUNCTION_NAME tagName,
+	m.URL strUrl,
+	f.CLASS_NAME strClass,
+	m.params params,
+	ifNull(f1.FUNCTION_ID, 'ROOT') parentId
+    FROM
+        T_SYS_ACTION_FUNCTION_MAP m
+    INNER JOIN t_sys_function f ON m.FUNCTION_ID = f.FUNCTION_ID
+    AND f.DEL_FLAG = 'M0015'
+    AND f.PAGE_TYPE = 'M0214'
+    LEFT JOIN t_sys_function f1 ON f.PARENT_ID = f1.FUNCTION_ID
+    AND f1.DEL_FLAG = 'M0015'
+     AND f1.PAGE_TYPE = 'M0214'
+    WHERE
+        m.ACTION_ID IS NULL
+    AND m.MAP_ID IN (
+        SELECT
+            MAP_ID
+        FROM
+            T_SYS_PERMISSION t
+        WHERE
+            ROLE_ID IN (
+                SELECT
+                    ROLE_ID
+                FROM
+                    T_SYS_ROLEUSERMAP
+                WHERE
+                    POSITION_ID = (
+                        SELECT
+                            POSITION_ID
+                        FROM
+                            T_SYS_POSITION
+                        WHERE
+                            USER_ID = #{userId}
+                        AND DEL_FLAG = 'M0015'
+                    )
+                AND DEL_FLAG = 'M0015'
+            )
+        AND DEL_FLAG = 'M0015'
+    )
+    ORDER BY F.SORT_NO
+  </select>
+</mapper>

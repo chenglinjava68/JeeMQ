@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFLandlordInterestMapper">
+    <select id="selectLoad" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordInterest">
+        SELECT
+        T.ROW_ID,
+        T.PP_ID,
+        T.LL_INTEREST,
+        T.RECORD_DATE,
+        T.REMARK,
+        T.DEL_FLAG
+        FROM
+        T_SF_LANDLORD_INTEREST T
+        <where>
+            AND T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.sf.model.SFLandlordInterest">
+        INSERT INTO T_SF_LANDLORD_INTEREST
+        (
+        ROW_ID,
+        PP_ID,
+        LL_INTEREST,
+        RECORD_DATE,
+        REMARK,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{ppId},
+        #{llInterest},
+        #{recordDate},
+        #{remark},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.sf.model.SFLandlordInterest">
+        UPDATE T_SF_LANDLORD_INTEREST
+        SET
+        ROW_ID = #{rowId},
+        PP_ID = #{ppId},
+        LL_INTEREST = #{llInterest},
+        RECORD_DATE = #{recordDate},
+        REMARK = #{remark},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        PP_ID = #{ppId}AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsSFLandlordInterest"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(0)
+        FROM
+        T_SF_LANDLORD_INTEREST T
+        WHERE  T.PP_ID = #{ppId} AND T.ROW_ID =#{rowId} AND T.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

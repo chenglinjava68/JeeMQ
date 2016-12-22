@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CaModel>
+	<ident id="" path="" type="" />
+	<init>
+		<sheet id="加盟店铺投资测算">
+			<cell c="3" r="9" name="details[0].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="9" name="details[0].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="10" name="details[1].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="10" name="details[1].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="11" name="details[2].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="11" name="details[2].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="12" name="details[3].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="12" name="details[3].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="13" name="details[4].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="13" name="details[4].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="14" name="details[5].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="14" name="details[5].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="15" name="details[6].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="15" name="details[6].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="16" name="details[7].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="16" name="details[7].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="17" name="details[8].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="17" name="details[8].description">
+				<v></v>
+			</cell>
+			<cell c="5" r="18" name="details[9].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="21" name="details[10].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="21" name="details[10].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="22" name="details[11].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="22" name="details[11].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="23" name="details[12].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="23" name="details[12].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="24" name="details[13].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="24" name="details[13].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="25" name="details[14].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="25" name="details[14].description">
+				<v></v>
+			</cell>
+			<cell c="5" r="26" name="details[15].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="29" name="details[16].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="29" name="details[16].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="30" name="details[17].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="30" name="details[17].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="31" name="details[18].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="31" name="details[18].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="32" name="details[19].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="32" name="details[19].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="33" name="details[20].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="33" name="details[20].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="34" name="details[21].sales">
+				<v></v>
+			</cell>
+			<cell c="5" r="34" name="details[21].description">
+				<v></v>
+			</cell>
+			<cell c="5" r="35" name="details[22].description">
+				<v></v>
+			</cell>
+			<cell c="3" r="38" name="resultData.supplyDiscountRate">
+				<v></v>
+			</cell>
+			<cell c="7" r="38" name="resultData.saleDiscountRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="47" name="resultData.firstSalesIncrRate">
+				<v></v>
+			</cell>
+			<cell c="3" r="47" name="resultData.firstSales">
+				<v></v>
+			</cell>
+			<cell c="2" r="48" name="resultData.secondSalesIncrRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="49" name="resultData.thirdSalesIncrRate">
+				<v></v>
+			</cell>
+		</sheet>
+	</init>
+	<return>
+		<sheet id="加盟店铺投资测算">
+			<cell c="3" r="40"  name="resultData.yearCostSales">
+				<v></v>
+			</cell>
+			<cell c="3" r="42" name="resultData.dayDiscountRate">
+				<v></v>
+			</cell>
+			<cell c="4" r="47" name="resultData.firstFixCost">
+				<v></v>
+			</cell>
+			<cell c="5" r="47" name="resultData.firstOprCost">
+				<v></v>
+			</cell>
+			<cell c="6" r="47" name="resultData.firstUc">
+				<v></v>
+			</cell>
+			<cell c="7" r="47" name="resultData.firstUcPer">
+				<v></v>
+			</cell>
+			<cell c="8" r="47" name="resultData.firstCalbackYear">
+				<v></v>
+			</cell>
+			<cell c="3" r="48" name="resultData.secondSales">
+				<v></v>
+			</cell>
+			<cell c="4" r="48" name="resultData.secondFixCost">
+				<v></v>
+			</cell>
+			<cell c="5" r="48" name="resultData.secondOprCost">
+				<v></v>
+			</cell>
+			<cell c="6" r="48" name="resultData.secondUc">
+				<v></v>
+			</cell>
+			<cell c="7" r="48" name="resultData.secondUcPer">
+				<v></v>
+			</cell>
+			<cell c="8" r="48" name="resultData.secondCalbackYear">
+				<v></v>
+			</cell>
+			<cell c="3" r="49" name="resultData.thirdSales">
+				<v></v>
+			</cell>
+			<cell c="4" r="49" name="resultData.thirdFixCost">
+				<v></v>
+			</cell>
+			<cell c="5" r="49" name="resultData.thirdOprCost">
+				<v></v>
+			</cell>
+			<cell c="6" r="49" name="resultData.thirdUc">
+				<v></v>
+			</cell>
+			<cell c="7" r="49" name="resultData.thirdUcPer">
+				<v></v>
+			</cell>
+			<cell c="8" r="49" name="resultData.thirdCalbackYear">
+				<v></v>
+			</cell>
+			<cell c="3" r="50" name="resultData.totalSales">
+				<v></v>
+			</cell>
+			<cell c="4" r="50" name="resultData.totalFixCost">
+				<v></v>
+			</cell>
+			<cell c="5" r="50" name="resultData.totalOprCost">
+				<v></v>
+			</cell>
+			<cell c="6" r="50" name="resultData.totalUc">
+				<v></v>
+			</cell>
+			<cell c="7" r="50" name="resultData.totalUcPer">
+				<v></v>
+			</cell>
+		</sheet>
+	</return>
+	<file path="" />
+</CaModel>

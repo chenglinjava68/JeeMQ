@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFSfPipelineMapper">
+
+    <select id="queryForPage" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" parameterType="map">
+        SELECT
+        T.ERP_CODE,
+        T20.ERP_NAME,
+        T.MAP_GRID,
+        T.PP_ID,
+        T.CN_SITENAME,
+        T.STATUS ppStatus,
+        T.ADDRESS_DETAIL,
+        T.REMARK,
+        T.STATUS,
+        T.CUSTOMER_ID,
+        T.CUSTOMER_PROPERTY,
+        T.POST_CODE,
+        T.DEVELOPER,
+        T9.CORPORATION,
+        T2.PROVINCE,
+        T6.CITY,
+        T12.DISTRICT,
+        T13.STREET,
+        T3.MACRO_NAME channelType,
+        T4.MACRO_NAME storeProperty,
+        T7.MACRO_NAME brandName,
+        T8.MACRO_NAME operationMode,
+        T10.MACRO_NAME customerPropertyName,
+        T15.MACRO_NAME styleSex,
+        T16.MACRO_NAME isStrategy,
+        T17.MACRO_NAME currentNode,
+        T.OPERATION_MODE operationModeCode,
+        T20.BRAND BRAND_CODE,
+        T.PIPELINE_SATUS,
+        T.STORE_IMAGE
+        FROM
+        T_SF_PIPELINE T
+        LEFT JOIN t_cs_new_marketauz T20 ON T.ERP_CODE = T20.ROW_ID AND  T20.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO T9 ON T.CUSTOMER_ID = T9.CUSTOMER_ID AND  T9.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T2 ON T.PROVINCE = T2.MARKET_ID  AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T6 ON T.CITY = T6.MARKET_ID  AND T6.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T12 ON T.DISTRICT = T12.MARKET_ID  AND T12.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T13 ON T.STREET = T13.MARKET_ID  AND T13.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.CHANNEL_TYPE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'CHANNEL_TYPE' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T.STORE_PROPERTY = T4.MACRO_CODE AND T4.MACRO_TYPE = 'STORE_PROPERTY' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T20.BRAND = T7.MACRO_CODE AND T7.MACRO_TYPE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T8 ON T.OPERATION_MODE =T8.MACRO_CODE AND T8.MACRO_TYPE='OPERATION_MODE' AND T8.DEL_FLAG ='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T10 ON T.CUSTOMER_PROPERTY =T10.MACRO_CODE AND T10.MACRO_TYPE='CUSTORMER_PROPERTY' AND T10.DEL_FLAG ='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T15 ON T.STYLE_SEX=T15.MACRO_CODE AND T15.MACRO_TYPE='SEX' AND T15.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T16 ON T.IS_STRATEGY=T16.MACRO_CODE AND T16.MACRO_TYPE='YES_NO' AND T16.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T17 ON T.CURRENT_NODE = T17.MACRO_CODE AND T17.MACRO_TYPE = 'NEW_SITE_PIPELINE' AND T17.DEL_FLAG = 'M0015'
+        <where>
+            <if test="customerId != null and customerId != ''">
+                AND T.CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="brand != null and brand != ''">
+                AND T.BRAND = #{brand}
+            </if>
+            <if test="cnSiteName != null and cnSiteName != ''">
+                AND T.CN_SITENAME LIKE CONCAT('%',#{cnSiteName},'%')
+            </if>
+            <if test="operationMode != null and operationMode != ''">
+                AND T.OPERATION_MODE = #{operationMode}
+            </if>
+            <if test="storeImage != null and storeImage != ''">
+                AND T.STORE_IMAGE = #{storeImage}
+            </if>
+            <if test="channelType != null and channelType != ''">
+                AND T.CHANNEL_TYPE = #{channelType}
+            </if>
+            <if test="storeProperty != null and storeProperty != ''">
+                AND T.STORE_PROPERTY = #{storeProperty}
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        INSERT INTO T_SF_PIPELINE
+            (
+                PP_ID,
+                PP_CODE,
+                CURRENT_NODE,
+                ADDRESS_DETAIL,
+                STORE_CODE,
+                OPERATION_MODE,
+                CN_SITENAME,
+                EN_SITENAME,
+                CUSTOMER_ID,
+                CUSTOMER_PROPERTY,
+                PROVINCE,
+                CITY,
+                DISTRICT,
+                STREET,
+                ADDRESS_CN,
+                BRAND,
+                BRAND_OPERATE,
+                CHANNEL_TYPE,
+                STORE_IMAGE,
+                STORE_PROPERTY,
+                ERP_CODE,
+                STATUS,
+                REMARK,
+                POST_CODE,
+                STYLE_SEX,
+                IS_STRATEGY,
+                DEVELOPER,
+                MAP_GRID,
+                PIPELINE_SATUS,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+            )
+        VALUE
+            (
+                #{ppId},
+                #{ppCode},
+                #{currentNode},
+                #{addressDetail},
+                #{storeCode},
+                #{operationMode},
+                #{cnSiteName},
+                #{enSiteName},
+                #{customerId},
+                #{customerProperty},
+                #{province},
+                #{city},
+                #{district},
+                #{street},
+                #{addressCn},
+                #{brand},
+                #{brandOperate},
+                #{channelType},
+                #{storeImage},
+                #{storeProperty},
+                #{erpCode},
+                #{status},
+                #{remark},
+                #{postCode},
+                #{styleSex},
+                #{isStrategy},
+                #{developer},
+                #{mapGrid},
+                #{pipelineSatus},
+                #{creator},
+                sysdate(),
+                #{updater},
+                sysdate(),
+                'M0015'
+            )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        UPDATE T_SF_PIPELINE
+        SET
+            PP_CODE = #{ppCode},
+            MAP_GRID =#{mapGrid},
+            STORE_CODE = #{storeCode},
+            ADDRESS_DETAIL = #{addressDetail},
+            OPERATION_MODE = #{operationMode},
+            CN_SITENAME = #{cnSiteName},
+            EN_SITENAME = #{enSiteName},
+            CUSTOMER_ID = #{customerId},
+            CUSTOMER_PROPERTY = #{customerProperty},
+            PROVINCE = #{province},
+            CITY = #{city},
+            DISTRICT = #{district},
+            STREET = #{street},
+            ADDRESS_CN = #{addressCn},
+            ADDRESS_DETAIL = #{addressDetail},
+            BRAND = #{brand},
+            BRAND_OPERATE = #{brandOperate},
+            CHANNEL_TYPE = #{channelType},
+            STORE_IMAGE = #{storeImage},
+            STORE_PROPERTY = #{storeProperty},
+            ERP_CODE = #{erpCode},
+            STATUS = #{status},
+            REMARK = #{remark},
+            POST_CODE = #{postCode},
+            STYLE_SEX = #{styleSex},
+            IS_STRATEGY = #{isStrategy},
+            DEVELOPER = #{developer},
+            PIPELINE_SATUS = #{pipelineSatus},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE
+            PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectErpName" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+      SELECT
+            T2.ROW_ID,
+            T.CUSTOMER_ID,
+            T2.ERP_CODE,
+            T2.ERP_NAME,
+            T3.MACRO_NAME brandName,
+            T2.BRAND
+       FROM T_CS_MARKET_OPTIMAUTH T
+       LEFT JOIN T_CS_CUSTOMER_ERP_INFO T1 ON T1.CUSTOMER_ID =T.CUSTOMER_ID AND T1.DEL_FLAG='M0015'
+       LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T2.OPTIMAUTH_ID= T.ROW_ID AND T2.DEL_FLAG='M0015'
+       LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T2.BRAND = T3.MACRO_CODE AND T3.MACRO_TYPE = 'BRAND' AND T3.DEL_FLAG = 'M0015'
+       WHERE  T.CUSTOMER_ID= #{CUSTOMERID} and T2.row_Id!='' AND T.DEL_FLAG='M0015'
+    </select>
+
+    <select id="selectBrand" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        SELECT
+        T.BRAND,
+        T3.MACRO_NAME brandName
+        FROM T_CS_CUSTOMER_ERP_INFO T
+         LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.BRAND = T3.MACRO_CODE AND T3.MACRO_TYPE = 'BRAND' AND T3.DEL_FLAG = 'M0015'
+         WHERE T.ROW_ID= #{rowId} AND T.DEL_FLAG='M0015'
+    </select>
+    <select id="selectLoad" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+        T.MAP_GRID,
+        T.PP_ID,
+        T.PP_CODE,
+        T.STORE_CODE,
+        T.OPERATION_MODE,
+        T.CN_SITENAME,
+        T.EN_SITENAME,
+        T9.CUSTOMER_ID,
+        T9.CORPORATION,
+        T5.ERP_NAME,
+        T.ERP_CODE,
+        T.CUSTOMER_PROPERTY,
+        T10.MACRO_NAME customerPropertyName,
+        T.PROVINCE,
+        T.CITY,
+        T.DISTRICT,
+        T.STREET,
+        T.ADDRESS_CN,
+        T.ADDRESS_DETAIL,
+        T7.MACRO_NAME brandName,
+        T.BRAND,
+        T.BRAND_OPERATE,
+        T.CHANNEL_TYPE,
+        T.STORE_IMAGE,
+        T.STATUS,
+        T.REMARK,
+        T.POST_CODE,
+        T.STYLE_SEX,
+        T.STORE_PROPERTY,
+        T.IS_STRATEGY,
+        T.PIPELINE_SATUS,
+        T.DEVELOPER
+        FROM
+        T_SF_PIPELINE T
+        LEFT JOIN T_CS_CUSTOMERINFO T9 ON T.CUSTOMER_ID = T9.CUSTOMER_ID AND  T9.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO T5 ON T.ERP_CODE = T5.ERP_CODE AND  T5.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE AND T7.MACRO_TYPE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T10 ON T.CUSTOMER_PROPERTY =T10.MACRO_CODE AND T10.MACRO_TYPE='CUSTORMER_PROPERTY' AND T10.DEL_FLAG ='M0015'
+        <where>
+            AND T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectCustomer" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+        T.CUSTOMER_ID,
+        T.ERP_CODE marketName,
+        T10.MACRO_NAME customerPropertyName,
+        T1.CUSTOMER_PROPERTY
+        From
+        T_CS_CUSTOMER_ERP_INFO T
+        LEFT JOIN  T_CS_CUSTOMERINFO T1 ON T.CUSTOMER_ID = T1.CUSTOMER_ID AND  T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T10 ON T1.CUSTOMER_PROPERTY =T10.MACRO_CODE AND T10.MACRO_TYPE='CUSTORMER_PROPERTY' AND T10.DEL_FLAG ='M0015'
+        <where>
+            AND T.ROW_ID = #{customerId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectErpCustomerAll"  resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        SELECT
+        T.CUSTOMER_ID ,
+        T1.CORPORATION corporation
+        From
+        T_CS_CUSTOMER_ERP_INFO T
+        LEFT JOIN  T_CS_CUSTOMERINFO T1 ON T.CUSTOMER_ID = T1.CUSTOMER_ID AND  T1.DEL_FLAG = 'M0015'
+        WHERE
+        T.CUSTOMER_ID=#{customerId}   AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="selectMarketInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+
+        MARKET_ID,
+        MARKET_NAME
+        FROM
+        T_MP_MARKETINFO
+        WHERE PARENT_ID= (SELECT ROW_ID FROM T_MP_MARKETINFO WHERE MARKET_ID = #{marketId})
+        ORDER BY CONVERT(MARKET_NAME USING GBK)
+    </select>
+    <select id="selectForExport" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+        T.ERP_CODE,
+        T20.ERP_NAME,
+        T.MAP_GRID,
+        T.PP_ID,
+        T.CN_SITENAME,
+        T.STATUS ppStatus,
+        T.ADDRESS_DETAIL,
+        T.REMARK,
+        T.STATUS,
+        T.CUSTOMER_ID,
+        T.CUSTOMER_PROPERTY,
+        T.POST_CODE,
+        T.DEVELOPER,
+        T9.CORPORATION,
+        T2.PROVINCE,
+        T6.CITY,
+        T12.DISTRICT,
+        T13.STREET,
+        T3.MACRO_NAME channelType,
+        T4.MACRO_NAME storeProperty,
+        T7.MACRO_NAME  brand,
+        T8.MACRO_NAME operationMode,
+        T10.MACRO_NAME customerProperty,
+        T15.MACRO_NAME styleSex,
+        T16.MACRO_NAME isStrategy,
+        T17.MACRO_NAME currentNode,
+        T.OPERATION_MODE operationModeCode,
+        T.BRAND BRAND_CODE,
+        T.PIPELINE_SATUS,
+        T.STORE_IMAGE
+        FROM
+        T_SF_PIPELINE T
+        LEFT JOIN t_cs_new_marketauz T20 ON T.ERP_CODE = T20.ROW_ID AND  T20.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO T9 ON T.CUSTOMER_ID = T9.CUSTOMER_ID AND  T9.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T2 ON T.PROVINCE = T2.MARKET_ID  AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T6 ON T.CITY = T6.MARKET_ID  AND T6.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T12 ON T.DISTRICT = T12.MARKET_ID  AND T12.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T13 ON T.STREET = T13.MARKET_ID  AND T13.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.CHANNEL_TYPE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'CHANNEL_TYPE' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T.STORE_PROPERTY = T4.MACRO_CODE AND T4.MACRO_TYPE = 'STORE_PROPERTY' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE AND T7.MACRO_TYPE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T8 ON T.OPERATION_MODE =T8.MACRO_CODE AND T8.MACRO_TYPE='OPERATION_MODE' AND T8.DEL_FLAG ='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T10 ON T.CUSTOMER_PROPERTY =T10.MACRO_CODE AND T10.MACRO_TYPE='CUSTORMER_PROPERTY' AND T10.DEL_FLAG ='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T15 ON T.STYLE_SEX=T15.MACRO_CODE AND T15.MACRO_TYPE='SEX' AND T15.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T16 ON T.IS_STRATEGY=T16.MACRO_CODE AND T16.MACRO_TYPE='YES_NO' AND T16.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T17 ON T.CURRENT_NODE = T17.MACRO_CODE AND T17.MACRO_TYPE = 'NEW_SITE_PIPELINE' AND T17.DEL_FLAG = 'M0015'
+        <where>
+            <if test="customerId != null and customerId != ''">
+                AND T.CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="brand != null and brand != ''">
+                AND T.BRAND = #{brand}
+            </if>
+            <if test="cnSiteName != null and cnSiteName != ''">
+                AND T.CN_SITENAME LIKE CONCAT('%',#{cnSiteName},'%')
+            </if>
+            <if test="operationMode != null and operationMode != ''">
+                AND T.OPERATION_MODE = #{operationMode}
+            </if>
+            <if test="storeImage != null and storeImage != ''">
+                AND T.STORE_IMAGE = #{storeImage}
+            </if>
+            <if test="channelType != null and channelType != ''">
+                AND T.CHANNEL_TYPE = #{channelType}
+            </if>
+            <if test="storeProperty != null and storeProperty != ''">
+                AND T.STORE_PROPERTY = #{storeProperty}
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <select id="selectById" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        <!--SELECT
+        CS.CUSTOMER_ID,
+        T.MACRO_NAME CUSTOMERPROPERTY,
+        T1.ERP_CODE,
+        T1.ERP_NAME
+        FROM T_CS_CUSTOMERINFO CS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO T1 ON CS.CUSTOMER_ID = T1.CUSTOMER_ID AND T1.DEL_FLAG='M0015'
+        <where>
+            AND CS.CUSTOMER_ID = #{customerId}
+            AND CS.DEL_FLAG = 'M0015'
+        </where>-->
+        SELECT CS.CUSTOMER_ID, T.MACRO_NAME customerPropertyName,CS.CUSTOMER_PROPERTY,CS.COMPANY_NAME
+        FROM T_CS_CUSTOMERINFO CS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        WHERE CS.CUSTOMER_ID = #{customerId} AND CS.DEL_FLAG = 'M0015'
+    </select>
+
+    <!--查询直营ppt所需数据-->
+    <select id="selectPipeline" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+            T.CN_SITENAME,
+            G.CITY,
+            T2.MACRO_NAME channelType,
+            C.RENT_AREA rentArea,
+            C.OPERATING_AREA operatingArea,
+            C.DOOR_WIDTH doorWidth,
+            C.SITE_AREA siteArea,
+            C.SIDE_PROPS_HIGH sidePropsHigh,
+            C.MID_PROPS_HIGH midPropHigh,
+            C.FLOOR floor,
+            T.ADDRESS_CN addressCn,
+            T.POST_CODE,
+            T3.MACRO_NAME brand,
+            T1.MACRO_NAME storeProperty,
+            T6.MACRO_NAME rentMode,
+            T7.MACRO_NAME rentType,
+            T12.MACRO_NAME signingMode,
+            B.END_SALES endSales,
+            B.RENT_MTH rentMth,
+            B.PROPERTY_FEE_MTH propertyFeeMth,
+            B.DELIVERY_DATE deliveryDate,
+            B.DEFAULT_CLAUSE_PENALTY defaultClausePenalty,
+            B.SPECIAL_TERMS_CONDITIONS specialTermsConditions,
+            B.RENT_START_DATE rentStartDate,
+            B.RENT_END_DATE rentEndDate,
+            B.FREE_START_DATE freeStartDate,
+            B.FREE_END_DATE freeEndDate,
+            B.BERTH_NO berthNo,
+            B.ROOM_RATE roomRate,
+            B.RENOVATION_PROPERTY_FEE renovationPropertyFee,
+            B.OPERATION_FREE_START_DATE operationFreeStartDate,
+            B.OPERATION_FREE_END_DATE operationFreeEndDate,
+            B.DELIVERY_CONDITIONS deliveryConditions,
+            B.LEASE_BOND leaseBond,
+            B.RENTAL_PROPERTY_FEE rentalPropertyFee,
+            B.OTHER_FEE otherFee,
+            D.EST_DATE estDate,
+            D1.ACTUAL_DATE actualDate,
+            T5.MACRO_NAME rentPayType,
+            H.TA_NAME taName,
+            T8.MACRO_NAME taType,
+            T9.MACRO_NAME taPriority,
+            T10.MACRO_NAME taDesirability,
+            T11.MACRO_NAME taMaturity,
+            H.TA_SIZE taSize,
+            I.ROW_ID investmentId,
+            J.SALES sales
+        FROM
+            T_SF_PIPELINE T
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = T.PP_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_RENTAL_PROPOSAL_DIRECT_STORE B ON B.PP_ID = T.PP_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_SITEINFO C ON C.PP_ID = T.PP_ID AND C.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PROGRESS_EST D ON D.PP_ID = T.PP_ID AND D.TASK_CODE = 'M0165' AND D.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PROGRESS_EST D1 ON D1.PP_ID = T.PP_ID AND D1.TASK_CODE = 'M0162' AND D1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO G ON T.CITY = G.MARKET_ID  AND G.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_TRADEZONE_INFO H ON H.PP_ID = T.PP_ID AND H.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT I ON I.PP_ID = T.PP_ID AND I.REPORT_FLAG = 'M0044' AND I.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_EST_INVESTMENT_SALES_YEAR J ON J.INVESTMENT_ID = I.ROW_ID AND J.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.STORE_PROPERTY = T1.MACRO_CODE AND T1.MACRO_TYPE = 'STORE_PROPERTY' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.CHANNEL_TYPE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'CHANNEL_TYPE' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.BRAND = T3.MACRO_CODE AND T3.MACRO_TYPE = 'BRAND' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T5 ON B.RENT_PAY_TYPE = T5.MACRO_CODE AND T5.MACRO_TYPE = 'RENTAL_SETTLMENT' AND T5.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T6 ON B.RENT_MODE = T6.MACRO_CODE AND T6.MACRO_TYPE = 'RENT_MODE' AND T6.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T7 ON B.RENT_TYPE = T7.MACRO_CODE AND T7.MACRO_TYPE = 'RENT_TYPE' AND T7.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T8 ON H.TA_TYPE = T8.MACRO_CODE AND T8.MACRO_TYPE = 'TRADEZONE_TYPE' AND T8.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T9 ON H.TA_PRIORITY = T9.MACRO_CODE AND T9.MACRO_TYPE = 'PRIORITY' AND T9.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T10 ON H.TA_DESIRABILITY = T10.MACRO_CODE AND T10.MACRO_TYPE = 'IDEAL' AND T10.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T11 ON H.TA_MATURITY = T11.MACRO_CODE AND T11.MACRO_TYPE = 'MATURITY' AND T11.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T12 ON B.SIGNING_MODE = T12.MACRO_CODE AND T12.MACRO_TYPE = 'CONTRACT_MODE' AND T12.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            ORDER BY J.RENT_TIME LIMIT 1
+        </where>
+    </select>
+    <!--查询ppt意向店店铺形象-->
+    <select id="selectCSSfPipelineStoreImage" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+            B.MACRO_NAME storeImage
+        FROM
+            T_SF_PIPELINE A
+            LEFT JOIN T_CODE_MACRO_DEFINE B ON FIND_IN_SET(B.MACRO_CODE,A.STORE_IMAGE) AND B.DEL_FLAG = 'M0015'
+        <where>
+            A.PP_ID = #{ppId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询ppt周边租金信息-->
+    <select id="selectRentInfoByppId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFRentInfo">
+        SELECT
+            T.PRO_NAME proName,
+            T.AREA,
+            T.RENTAL,
+            T.SALES_MTH,
+            T.SALES_YEAR,
+            T.LG_EFFECT
+        FROM
+            T_SF_RENTINFO T
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询ppt各楼层面积-->
+    <select id="selectFloorInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFFloorInfo">
+        SELECT
+            T1.MACRO_NAME floor,
+            T.SIZE
+        FROM
+            T_SF_FLOORINFO T
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.FLOOR = T1.MACRO_CODE AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG= 'M0015'
+        </where>
+    </select>
+    <!--查询ppt各年租金信息-->
+    <select id="selectRentalDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFRentalDetail">
+        SELECT
+            T1.RENTAL,
+            T1.RATE,
+            T1.PROPERTY_FEE
+        FROM
+            T_SF_RENTAL_PROPOSAL_DIRECT_STORE T
+            LEFT JOIN T_SF_RENTAL_DETAIL T1 ON T.ROW_ID = T1.RENT_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询ppt店铺平面图集合-->
+    <select id="selectLandlordLayoutPlanImg" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordLayout">
+        SELECT
+            T1.TITLE title,
+            T.TEMPLATE_ID templateId,
+            T2.FILE_NAME fileName,
+            T2.DOC_NAME docName,
+            T2.FILE_PATH fieldId
+        FROM
+            T_SF_LANDLORD_LAYOUT T
+            LEFT JOIN T_SYS_ATTACHEDTEMPLATE T1 ON T.TEMPLATE_ID = T1.TEMPLATE_ID AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_COMMONATTACHED T2 ON T.ATTACH_ID = T2.ATTACH_ID AND T2.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            AND T.TEMPLATE_ID = 'af872813-8462-11e6-86dd-480fcf39'
+        </where>
+    </select>
+    <!--查询ppt物业平面图集合-->
+    <select id="selectLandlordLayoutPropertyImg" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordLayout">
+        SELECT
+            T1.TITLE title,
+            T.TEMPLATE_ID templateId,
+            T2.FILE_NAME fileName,
+            T2.DOC_NAME docName,
+            T2.FILE_PATH fieldId
+        FROM
+        T_SF_LANDLORD_LAYOUT T
+        LEFT JOIN T_SYS_ATTACHEDTEMPLATE T1 ON T.TEMPLATE_ID = T1.TEMPLATE_ID AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED T2 ON T.ATTACH_ID = T2.ATTACH_ID AND T2.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            AND T.TEMPLATE_ID = '64d09213-8463-11e6-86dd-480fcf39'
+        </where>
+    </select>
+
+    <!--查询商圈图-->
+    <select id="selectTradezoneInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTradezoneInfo">
+        SELECT
+            T1.FILE_NAME fileName,
+            T1.DOC_NAME docName,
+            T1.FILE_PATH filePath
+        FROM
+            T_SF_TRADEZONE_INFO T
+            LEFT JOIN T_SYS_COMMONATTACHED T1 ON T.ATTACH_ID = T1.ATTACH_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询商圈竞品-->
+    <select id="selectTradezoneCiuInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTradezoneCiuInfo">
+        SELECT
+            T1.CIU_NAME,
+            T1.OPEN_DATE,
+            T1.SALES,
+            T1.DEF1,
+            T1.DEF2,
+            T1.DEF3,
+            T1.DEF4
+        FROM
+            T_SF_TRADEZONE_INFO T
+            LEFT JOIN T_SF_TRADEZONE_CIU_INFO T1 ON T.ROW_ID = T1.TRADEZONE_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询ppt人流量详细信息-->
+    <select id="selectTrafficcountDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTrafficcountDetail">
+        SELECT
+            T1.MACRO_NAME timeInterval,
+            S.DAY1,
+            S.DAY2,
+            S.DAY3
+        FROM
+            T_SF_TRAFFICCOUNT T
+            LEFT JOIN T_SF_TRAFFICCOUNT_DETAIL S ON T.ROW_ID = S.TEST_ID AND S.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON S.TIME_INTERVAL = T1.MACRO_CODE  AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询ppt人流量信息-->
+    <select id="selectSFTrafficcount" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTrafficcount">
+        SELECT
+            T.PEDESTRIAN_D1,
+            T.PEDESTRIAN_D2,
+            T.PEDESTRIAN_D3,
+            T.ANNUAL_SALES_EST,
+            T.PEDESTRIAN_WEEK,
+            T.ENTRY_RATE,
+            T.TURNOVER_RATE,
+            T.GUEST_AVG,
+            T.WEEK_SALES,
+            T.MONTH_PCT,
+            T.PEDESTRIAN_D1_AF,
+            T.PEDESTRIAN_D2_AF,
+            T.PEDESTRIAN_D3_AF,
+            T.ANNUAL_SALES_EST_AF,
+            T.PEDESTRIAN_WEEK_AF,
+            T.ENTRY_RATE_AF,
+            T.TURNOVER_RATE_AF,
+            T.GUEST_AVG_AF,
+            T.WEEK_SALES_AF,
+            T.MONTH_PCT_AF
+        FROM
+            T_SF_TRAFFICCOUNT T
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            AND T.USE_STATUS = 'M0043'
+        </where>
+    </select>
+    <!--查询ppt意向店落位图-->
+    <select id="selectPipeineLocationImgList" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        SELECT
+            T.NAME,
+            T1.FILE_NAME fileName,
+            T1.DOC_NAME docName,
+            T1.FILE_PATH filePath,
+            T.TEMPLATE_ID templateId
+        FROM
+            T_SF_PIPEINE_PHOTO_ATTACHMENT T
+            LEFT JOIN T_SYS_COMMONATTACHED T1 ON T.ATTACH_ID = T1.ATTACH_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            AND T.TEMPLATE_ID = 'e36e9a4f-9b55-11e6-bced-480fcf39'
+        </where>
+    </select>
+    <!--查询意向店新址照片-->
+    <select id="selectPipeinePhotoAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        SELECT
+            T.NAME,
+            T1.FILE_NAME fileName,
+            T1.DOC_NAME docName,
+            T1.FILE_PATH filePath,
+            T.TEMPLATE_ID templateId
+        FROM
+            T_SF_PIPEINE_PHOTO_ATTACHMENT T
+            LEFT JOIN T_SYS_COMMONATTACHED T1 ON T.ATTACH_ID = T1.ATTACH_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            AND T.TEMPLATE_ID in ('f4371987-9b55-11e6-bced-480fcf39','fdef0758-9b55-11e6-bced-480fcf39','1f946606b53911e6bced480fcf39d40b','1f946855b53911e6bced480fcf39d40b')
+        </where>
+    </select>
+    <!--查询ppt意向店新址周边照片-->
+    <select id="selectPipeinePhotoAttachmentOther" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        SELECT
+            T.NAME,
+            T1.FILE_NAME fileName,
+            T1.DOC_NAME docName,
+            T1.FILE_PATH filePath,
+            T.TEMPLATE_ID templateId
+        FROM
+            T_SF_PIPEINE_PHOTO_ATTACHMENT T
+            LEFT JOIN T_SYS_COMMONATTACHED T1 ON T.ATTACH_ID = T1.ATTACH_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+            AND T.TEMPLATE_ID in ('1f946973b53911e6bced480fcf39d40b','1f946a81b53911e6bced480fcf39d40b','1f946c09b53911e6bced480fcf39d40b','1f946d27b53911e6bced480fcf39d40b');
+        </where>
+    </select>
+    <!--查询商圈现有店数量-->
+    <select id="selectSFTradezoneStoreInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFTradezoneStoreInfo">
+        SELECT
+            T1.STORE_NAME
+        FROM
+            T_SF_TRADEZONE_STORE_INFO T1
+            LEFT JOIN T_SF_TRADEZONE_INFO T  ON T.ROW_ID = T1.TRADEZONE_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectAllUser"  resultType="com.stripcode.mybatis.user.model.RscSysUser">
+        SELECT
+        USER_ID,
+        LOGIN_NAME,
+        USER_NAME
+        FROM
+        T_SYS_USER ORDER BY UPDATE_TIME DESC
+    </select>
+    <!--查询ppt工程概算信息-->
+    <select id="selectBudGetEstimationCostInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFBudGetEstimationCost">
+        SELECT
+            T1.ITEM_CODE,
+            T1.COST
+        FROM
+            T_SF_PROJECT_ESTIMATION T
+            LEFT JOIN T_SF_PROJECT_ESTIMATION_COST T1 ON T.ROW_ID = T1.EST_ID AND T1.DEL_FLAG ='M0015'
+            /*LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T1.ITEM_CODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'BUDGET_ITEM' AND T2.DEL_FLAG = 'M0015'*/
+        <where>
+            T.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="selectEstInvestmentRoi" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentRoi">
+        SELECT
+            /*T1.RENTAL_Y1,
+            T1.PROPERTY_MGR_FEE,
+            T1.POINTS,
+            T1.MIN_GUARANTEE,
+            T1.COOP_TERMS,
+            T1.TOTAL_EXP,
+            T1.SPE_CLAUSE,*/
+            T1.SALES_INCLUDE_TAX_Y1,
+            T1.SALES_INCLUDE_TAX_Y3,
+            T1.SALES_INCLUDE_TAX_Y5,
+            T1.TAX_ADJUSTMENT_EFT_Y1,
+            T1.TAX_ADJUSTMENT_EFT_Y3,
+            T1.TAX_ADJUSTMENT_EFT_Y5,
+            T1.GROSS_PROFIT_RADIO_Y1,
+            T1.GROSS_PROFIT_RADIO_Y3,
+            T1.GROSS_PROFIT_RADIO_Y5,
+            T1.COST_RADIO_Y1,
+            T1.COST_RADIO_Y3,
+            T1.COST_RADIO_Y5,
+            T1.TAX_RENT_PCT_Y1,
+            T1.TAX_RENT_PCT_Y3,
+            T1.TAX_RENT_PCT_Y5,
+            T1.CHECK_PROFIT_Y1,
+            T1.CHECK_PROFIT_Y3,
+            T1.CHECK_PROFIT_Y5,
+            T1.PRODUCTION_PROFIT_Y1,
+            T1.PRODUCTION_PROFIT_Y3,
+            T1.PRODUCTION_PROFIT_Y5,
+            T1.CASH_FLOW_Y1,
+            T1.CASH_FLOW_Y3,
+            T1.CASH_FLOW_Y5,
+            T1.RATE_OF_RETURN_Y1,
+            T1.RATE_OF_RETURN_Y3,
+            T1.RATE_OF_RETURN_Y5,
+            T1.PAYBACK_PERIOD_Y1,
+            T1.PAYBACK_PERIOD_Y3,
+            T1.PAYBACK_PERIOD_Y5,
+            T1.NET_PRESENT_VALUE_Y1,
+            T1.NET_PRESENT_VALUE_Y3,
+            T1.NET_PRESENT_VALUE_Y5,
+            T1.REMARK
+        FROM
+            T_SF_EST_INVESTMENT_ROI T1
+            LEFT JOIN T_SF_EST_INVESTMENT T ON T.ROW_ID = T1.INVESTMENT_ID AND T1.DEL_FLAG = 'M0015'
+        <where>
+            T.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015' AND T.REPORT_FLAG = 'M0044'
+        </where>
+    </select>
+    <!--查询ppt商务条款业主信息集合-->
+    <select id="selectLandlordinfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordinfo">
+        SELECT
+            L.LANDLORD landlord,
+            L.CONTACTER contacter,
+            L.POSITION position,
+            L.TEL tel
+        FROM
+            T_SF_ESTATE_SOURCE T
+            LEFT JOIN T_SF_LANDLORDINFO L ON T.ROW_ID = L.ESTATE_ID AND L.DEL_FLAG ='M0015'
+        <where>
+            T.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--查询意向店风格面积占比-->
+    <select id="selectSFStyleAreaPerInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFStyleAreaPerInfo">
+        SELECT
+	        T1.MACRO_NAME style,
+	        T2.MACRO_NAME sex,
+	        SUM(area)/totalsize*100 areaTotal,
+            SUM(per) salesPer
+        FROM
+	        (
+            SELECT A.STYLE,A.SERIES_SEX,A.FLOOR,S.AREA totalsize,A.AREA_PER,A.SALES_PER per,S.AREA*A.AREA_PER/100 area
+            FROM T_SF_STYLE_AREA_PER_INFO A
+            LEFT JOIN T_SF_SITEINFO S ON S.PP_ID = A.PP_ID AND S.DEL_FLAG = 'M0015'
+            <where>
+                A.PP_ID = #{ppId}
+                AND A.DEL_FLAG = 'M0015'
+            </where>
+	        )
+            T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.STYLE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'STORE_IMAGE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.SERIES_SEX = T2.MACRO_CODE AND T2.MACRO_TYPE = 'SEX' AND T2.DEL_FLAG = 'M0015'
+        GROUP BY T.STYLE,T.SERIES_SEX
+    </select>
+
+    <!--查询意向店销售占比-->
+    <select id="selectSFStyleSalesPerInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFStyleAreaPerInfo">
+        SELECT
+            T1.MACRO_NAME style,
+            SUM(A.SALES_PER) AS salesPerTotal
+        FROM
+            T_SF_STYLE_AREA_PER_INFO A
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON A.STYLE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'STORE_IMAGE' AND T1.DEL_FLAG = 'M0015'
+        <where>
+            A.PP_ID = #{PPID}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+        GROUP BY A.STYLE
+    </select>
+
+    <select id="selectEstInvestmentCostTotal" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentCost">
+        SELECT
+            SUM(B.COST)/10000 AS costTotal
+        FROM
+            T_SF_EST_INVESTMENT A
+            LEFT JOIN T_SF_EST_INVESTMENT_COST B ON A.ROW_ID = B.INVESTMENT_ID AND B.DEL_FLAG = 'M0015'
+        <where>
+            A.PP_ID = #{PPID}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectMapListForPage" parameterType="com.stripcode.core.dto.sf.QueryCSpipeLineDto" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+            T.MAP_GRID,
+            T.PP_ID,
+            T.PP_CODE,
+            T.STORE_CODE,
+            T.OPERATION_MODE,
+            T.CN_SITENAME,
+            T.EN_SITENAME,
+            T9.CUSTOMER_ID,
+            T9.CORPORATION,
+            T5.ERP_NAME,
+            T.ERP_CODE,
+            T.CUSTOMER_PROPERTY,
+            T.PROVINCE,
+            T.CITY,
+            T.BRAND,
+            T1.MACRO_NAME CHANNEL_TYPE_NAME,
+            T2.MACRO_NAME OPERATION_MODE_CODE,
+            T3.MACRO_NAME customerPropertyName,
+            T4.MACRO_NAME brandName,
+            T6.MARKET_NAME CITY_NAME,
+            T8.MACRO_NAME STORE_PROPERTY_NAME,
+            T.DISTRICT,
+            T.STREET,
+            T.ADDRESS_CN,
+            T.ADDRESS_DETAIL,
+            T.BRAND_OPERATE,
+            T.CHANNEL_TYPE,
+            T.STORE_IMAGE,
+            T.STATUS,
+            T.REMARK,
+            T.POST_CODE,
+            T.STYLE_SEX,
+            T.STORE_PROPERTY,
+            T7.FILE_PATH fieldId,
+            T7.DOC_NAME fileName,
+            T.IS_STRATEGY,
+            T.DEVELOPER
+        FROM
+        T_SF_PIPELINE T
+        LEFT JOIN T_CS_CUSTOMERINFO T9 ON T.CUSTOMER_ID = T9.CUSTOMER_ID AND  T9.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO T5 ON T.ERP_CODE = T5.ERP_CODE AND  T5.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T6 ON T.CITY = T6.MARKET_ID AND  T6.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.CHANNEL_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CHANNEL_TYPE' AND T1.DEL_FLAG = 'M0015' AND T1.STATUS = 'M0043'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.OPERATION_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'OPERATION_MODE' AND T2.DEL_FLAG = 'M0015' AND T2.STATUS = 'M0043'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.CUSTOMER_PROPERTY = T3.MACRO_CODE AND T3.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T3.DEL_FLAG = 'M0015' AND T3.STATUS = 'M0043'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T.BRAND = T4.MACRO_CODE AND T4.MACRO_TYPE = 'BRAND' AND T4.DEL_FLAG = 'M0015' AND T4.STATUS = 'M0043'
+        LEFT JOIN T_CODE_MACRO_DEFINE T8 ON T.STORE_PROPERTY = T8.MACRO_CODE AND T8.MACRO_TYPE = 'STORE_PROPERTY' AND T8.DEL_FLAG = 'M0015' AND T8.STATUS = 'M0043'
+        LEFT JOIN (
+            SELECT A.PP_ID,B.FILE_PATH,B.DOC_NAME FROM t_sf_pipeine_photo_attachment a
+            inner join t_sys_commonattached b  ON A.ATTACH_ID = B.ATTACH_ID
+            WHERE A.DEL_FLAG = 'M0015'
+            AND B.DEL_FLAG = 'M0015'
+            AND B.STATUS = 'M0043'
+            ORDER BY B.UPDATE_TIME DESC
+            LIMIT 1
+        ) T7 ON T7.PP_ID = T.PP_ID
+        <where>
+            T.PIPELINE_SATUS = 'M0043'
+            AND T.STATUS &lt;&gt;'M0098'
+           <if test="operationMode !=null and operationMode !=''">
+               AND T.OPERATION_MODE = #{operationMode}
+           </if>
+           <if test="operationModes !=null ">
+               and T.OPERATION_MODE in
+               <foreach collection="operationModes" item="item" separator="," open="(" close=")">
+                   #{item}
+               </foreach>
+           </if>
+           <if test="storeImages !=null ">
+            and T.STORE_IMAGE in
+               <foreach collection="storeImages" item="item" separator=","  open="(" close=")">
+                   #{item}
+               </foreach>
+           </if>
+           <if test="searchName !=null and searchName !='' ">
+               and(
+               T.CN_SITENAME LIKE "%"#{searchName}"%"
+               OR T.EN_SITENAME LIKE "%"#{searchName}"%"
+               OR EXISTS (
+               SELECT MACRO_CODE FROM T_CODE_MACRO_DEFINE
+               WHERE MACRO_NAME LIKE "%"#{searchName}"%"
+               AND MACRO_CODE = T.BRAND
+               AND MACRO_TYPE = 'BRAND'
+               AND DEL_FLAG = 'M0015'
+               )
+               OR EXISTS (
+               SELECT MACRO_CODE FROM T_CODE_MACRO_DEFINE
+               WHERE MACRO_NAME LIKE "%"#{searchName}"%"
+               AND MACRO_CODE = T.CHANNEL_TYPE
+               AND MACRO_TYPE = 'CHANNEL_TYPE'
+               AND DEL_FLAG = 'M0015'
+               )
+               OR EXISTS (
+               SELECT MACRO_CODE FROM T_CODE_MACRO_DEFINE
+               WHERE MACRO_NAME LIKE "%"#{searchName}"%"
+               AND MACRO_CODE = T.CUSTOMER_PROPERTY
+               AND MACRO_TYPE = 'CUSTORMER_PROPERTY'
+               AND DEL_FLAG = 'M0015'
+               )
+               )
+           </if>
+           <if test="city !=null and city !='' ">
+             <choose>
+                 <when test="city == '86110' or city== '86120' or city=='86310' or city =='86500'">
+                     and EXISTS  (select MARKET_ID FROM T_MP_MARKETINFO where PARENT_ID =  (SELECT ROW_ID FROM T_MP_MARKETINFO WHERE MARKET_ID = #{city}) AND DEL_FLAG = 'M0015' AND MARKET_ID = T.CITY )
+                 </when>
+                 <otherwise>
+                     and T.CITY = #{city}
+                 </otherwise>
+             </choose>
+           </if>
+        </where>
+    </select>
+
+    <select id="queryStoreInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline">
+        SELECT
+              E.ERP_NAME,
+              M1.REGION,
+              M1.MARKET_NAME province,
+              M2.MARKET_NAME city,
+              P.PP_CODE,
+              P.CN_SITENAME,
+              P.EN_SITENAME,
+              P.ADDRESS_CN,
+              P.ADDRESS_DETAIL
+        FROM T_SF_PIPELINE P
+        LEFT JOIN T_CS_NEW_MARKETAUZ N ON N.ROW_ID = P.ERP_CODE AND N.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO E ON E.ERP_CODE = N.ERP_CODE AND E.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO M1 ON M1.MARKET_ID = P.PROVINCE AND M1.DEL_FLAG='M0015'
+        LEFT JOIN T_MP_MARKETINFO M2 ON M2.MARKET_ID = P.CITY AND M1.DEL_FLAG='M0015'
+        WHERE PP_ID = #{ppId}
+    </select>
+</mapper>

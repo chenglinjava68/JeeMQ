@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFProgressEstMapper">
+    <select id="selectProgressAll"  resultType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        SELECT
+            T.ROW_ID,
+            T.PP_ID,
+            T.EST_DATE,
+            T.ACTUAL_DATE,
+            T.DELAY,
+            T5.MACRO_NAME MACRONAME,
+            T5.MACRO_CODE taskCode,
+            T.REMARK
+         FROM
+        T_CODE_MACRO_DEFINE T5
+        LEFT JOIN T_SF_PROGRESS_EST T ON T.TASK_CODE = T5.MACRO_CODE AND T.DEL_FLAG = 'M0015' AND T.PP_ID=#{ppId}
+        WHERE T5.MACRO_TYPE='DEV_SHEDULE_DIRECT' AND T5.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectProgressNew"  resultType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        SELECT
+        T.ROW_ID,
+        T.PP_ID,
+        T.EST_DATE,
+        T.ACTUAL_DATE,
+        T.DELAY,
+        T5.MACRO_NAME macroName,
+        T5.MACRO_CODE taskCode,
+        T.REMARK
+        FROM
+        T_CODE_MACRO_DEFINE T5
+        LEFT JOIN T_SF_PROGRESS_EST T ON T.TASK_CODE = T5.MACRO_CODE AND T.DEL_FLAG = 'M0015' AND T.PP_ID= #{ppId}
+        WHERE T5.MACRO_TYPE='DEV_SHEDULE_JOIN' AND T5.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectProgressAdd"  resultType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        SELECT
+        T.ROW_ID,
+        T.PP_ID,
+        T.EST_DATE,
+        T.ACTUAL_DATE,
+        T.DELAY,
+        T5.MACRO_NAME macroName,
+        T5.MACRO_CODE taskCode,
+        T.REMARK
+        FROM
+        T_CODE_MACRO_DEFINE T5
+        LEFT JOIN T_SF_PROGRESS_EST T ON T.TASK_CODE = T5.MACRO_CODE AND T.DEL_FLAG = 'M0015' AND T.PP_ID= #{ppId}
+        WHERE T5.MACRO_TYPE='DEV_SHEDULE_COPARTNER' AND T5.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertProgressEst" parameterType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        INSERT INTO
+         T_SF_PROGRESS_EST
+         (
+            ROW_ID,
+            PP_ID,
+            TASK_CODE,
+            EST_DATE,
+            ACTUAL_DATE,
+            DELAY,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+         )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{taskCode},
+            #{estDate},
+            #{actualDate},
+            #{delay},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="updateProgressEst" parameterType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        UPDATE
+            T_SF_PROGRESS_EST
+        SET
+        EST_DATE =#{estDate},
+        ACTUAL_DATE =#{actualDate},
+        DELAY =#{delay},
+        REMARK =#{remark},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE TASK_CODE = #{taskCode} AND PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsProgressEst" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+        T_SF_PROGRESS_EST
+        WHERE TASK_CODE = #{taskCode} AND PP_ID= #{ppId}  AND DEL_FLAG = 'M0015'
+    </select>
+
+    <update id="updateProgressEstToSignDate" parameterType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        UPDATE T_SF_PROGRESS_EST
+        SET ACTUAL_DATE=#{signDate}
+        WHERE PP_ID = #{ppId} AND TASK_CODE = 'M0328' AND DEL_FLAG='M0015'
+    </update>
+</mapper>

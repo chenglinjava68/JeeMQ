@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.TSfEstInvestmentOtherCostRateMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sf_est_investment_other_cost_rate
+    where AUTO_NO = #{autoNo}
+  </delete>
+  
+  <insert id="insertInvestmentOtherCostRate" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentOtherCostRate" >
+    insert into t_sf_est_investment_other_cost_rate (ROW_ID, INVESTMENT_ID,
+      WATER_ELECTRICITY_GAS_FEE_RATE, WRAPPAGE_FEE_RATE, 
+      ACCESSORIES_FEE_RATE, PROMOTION_FEE_RATE, EX_LABOR_FEE_RATE, 
+      CLOTHES_MAKEUP_FEE_RATE, MAINTENANCE_FEE_RATE, 
+      DATA_TRAFFICE_FEE_RATE, OFFICE_FEE_RATE, POS_PROCEDURES_FEE_RATE, 
+      GOODS_SURPLUS_FEE_RATE, TRAVE_FEE_RATE, BUSINESS_FEE_RATE, 
+      OTHER_CONTROL_FEE_RATE, PRE_OPEN_FEE_RATE, LOGISTICS_FEE_RATE, 
+      TRANSFER_FEE_RATE, DEPRECIACTION_FEE_RATE, 
+      LICENSE_FEE_RATE, AD_FEE_RATE, OTHER_SUNDRY_FEE_RATE, 
+      CLOSE_LOSE_FEE_RATE, AD_SUPPOR_FEE_RATE, STOCK_FEE_RATE, 
+      CREATOR, CREATE_TIME, UPDATER, 
+      UPDATE_TIME, DEL_FLAG)
+    values (#{rowId}, #{investmentId},
+      #{waterElectricityGasFeeRate}, #{wrappageFeeRate}, 
+      #{accessoriesFeeRate}, #{promotionFeeRate}, #{exLaborFeeRate}, 
+      #{clothesMakeupFeeRate}, #{maintenanceFeeRate}, 
+      #{dataTrafficeFeeRate}, #{officeFeeRate}, #{posProceduresFeeRate}, 
+      #{goodsSurplusFeeRate}, #{traveFeeRate}, #{businessFeeRate}, 
+      #{otherControlFeeRate}, #{preOpenFeeRate}, #{logisticsFeeRate}, 
+      #{transferFeeRate}, #{depreciactionFeeRate}, 
+      #{licenseFeeRate}, #{adFeeRate}, #{otherSundryFeeRate}, 
+      #{closeLoseFeeRate}, #{adSupporFeeRate}, #{stockFeeRate}, 
+      #{creator}, sysdate(), #{updater}, sysdate(), 'M0015')
+  </insert>
+  
+  <update id="updateInvestmentOtherCostRate" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentOtherCostRate" >
+    update t_sf_est_investment_other_cost_rate
+    set INVESTMENT_ID = #{investmentId},
+      WATER_ELECTRICITY_GAS_FEE_RATE = #{waterElectricityGasFeeRate},
+      WRAPPAGE_FEE_RATE = #{wrappageFeeRate},
+      ACCESSORIES_FEE_RATE = #{accessoriesFeeRate},
+      PROMOTION_FEE_RATE = #{promotionFeeRate},
+      EX_LABOR_FEE_RATE = #{exLaborFeeRate},
+      CLOTHES_MAKEUP_FEE_RATE = #{clothesMakeupFeeRate},
+      MAINTENANCE_FEE_RATE = #{maintenanceFeeRate},
+      DATA_TRAFFICE_FEE_RATE = #{dataTrafficeFeeRate},
+      OFFICE_FEE_RATE = #{officeFeeRate},
+      POS_PROCEDURES_FEE_RATE = #{posProceduresFeeRate},
+      GOODS_SURPLUS_FEE_RATE = #{goodsSurplusFeeRate},
+      TRAVE_FEE_RATE = #{traveFeeRate},
+      BUSINESS_FEE_RATE = #{businessFeeRate},
+      OTHER_CONTROL_FEE_RATE = #{otherControlFeeRate},
+      PRE_OPEN_FEE_RATE = #{preOpenFeeRate},
+      LOGISTICS_FEE_RATE = #{logisticsFeeRate},
+      TRANSFER_FEE_RATE = #{transferFeeRate},
+      DEPRECIACTION_FEE_RATE = #{depreciactionFeeRate},
+      LICENSE_FEE_RATE = #{licenseFeeRate},
+      AD_FEE_RATE = #{adFeeRate},
+      OTHER_SUNDRY_FEE_RATE = #{otherSundryFeeRate},
+      CLOSE_LOSE_FEE_RATE = #{closeLoseFeeRate},
+      AD_SUPPOR_FEE_RATE = #{adSupporFeeRate},
+      STOCK_FEE_RATE = #{stockFeeRate}
+    where ROW_ID = #{rowId}
+  </update>
+  
+  <select id="selectInvestmentOtherCostRate" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentOtherCostRate" parameterType="java.lang.String" >
+    select ROW_ID, INVESTMENT_ID, WATER_ELECTRICITY_GAS_FEE_RATE, WRAPPAGE_FEE_RATE,
+    ACCESSORIES_FEE_RATE, PROMOTION_FEE_RATE, EX_LABOR_FEE_RATE, CLOTHES_MAKEUP_FEE_RATE, 
+    MAINTENANCE_FEE_RATE, DATA_TRAFFICE_FEE_RATE, OFFICE_FEE_RATE, POS_PROCEDURES_FEE_RATE, 
+    GOODS_SURPLUS_FEE_RATE, TRAVE_FEE_RATE, BUSINESS_FEE_RATE, OTHER_CONTROL_FEE_RATE, 
+    PRE_OPEN_FEE_RATE, LOGISTICS_FEE_RATE, TRANSFER_FEE_RATE, DEPRECIACTION_FEE_RATE, 
+    LICENSE_FEE_RATE, AD_FEE_RATE, OTHER_SUNDRY_FEE_RATE, CLOSE_LOSE_FEE_RATE, AD_SUPPOR_FEE_RATE, 
+    STOCK_FEE_RATE
+    from t_sf_est_investment_other_cost_rate
+    where INVESTMENT_ID = #{investmentId}
+  </select>
+  <update id="deleteInvestmentId" parameterType="java.lang.String">
+    UPDATE T_SF_EST_INVESTMENT_OTHER_COST_RATE
+    SET
+    DEL_FLAG = 'M0014'
+    WHERE INVESTMENT_ID = #{investmentId}
+  </update>
+</mapper>

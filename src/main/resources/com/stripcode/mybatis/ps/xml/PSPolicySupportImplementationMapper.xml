@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.ps.dao.PSPolicySupportImplementationMapper">
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation">
+        SELECT
+        T.ROW_ID,
+        T.CHECK_ID,
+        T7.ITEM_NAME SUPPORT_MODE,
+        T2.USER_NAME originator,
+        T3.MACRO_NAME status,
+        T.CREATE_TIME createrTime
+        FROM T_PS_POLICY_SUPPORT_IMPLEMENTATION T
+        LEFT JOIN T_PS_POLICY_SUPPORT_APPLY TPS ON TPS.CHECK_ID=T.CHECK_ID AND TPS.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T7 ON T7.ITEM_CODE=t.SUPPORT_MODE AND T7.ITEM_TYPE='M0102' AND T7.DEL_FLAG='M0015'
+        LEFT JOIN T_SYS_USER T2 ON T2.USER_ID=TPS.ORIGINATOR AND T2.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T3.MACRO_CODE=T7.STATUS AND T3.MACRO_TYPE='STATUS' AND T3.DEL_FLAG='M0015'
+        <where>
+            <if test="checkId != null and checkId != ''">
+                AND T.CHECK_ID LIKE CONCAT('%',#{checkId},'%')
+            </if>
+            <if test="supportMode != null and supportMode != ''">
+                AND T.SUPPORT_MODE LIKE CONCAT('%',#{supportMode},'%')
+            </if>
+            <if test="originator != null and originator != ''">
+                AND TPS.ORIGINATOR LIKE CONCAT('%',#{originator},'%')
+            </if>
+            <if test="createTime != null and createTime != ''">
+                AND T.CREATE_TIME LIKE CONCAT('%',#{createTime},'%')
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <select id="selectList" parameterType="map" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAssessment">
+        SELECT
+        TSF.ROW_ID,
+        TIN.SUPERIOR_COMPANY,
+        TCU.ERP_CODE,
+        TCU.ERP_NAME,
+        TC.PP_CODE,
+        T.CN_SITENAME,
+        T.PP_ID,
+        T.STORE_PROPERTY,
+        TSF.SUPPORT_ITEM,
+        TSF.SUPPORT_MODE,
+        TSF.SALES,
+        TSF.START_DATE,
+        TSF.END_DATE,
+        T4.MACRO_NAME ASSESSMENT_ITEM,
+        TSF.TARGET,
+        TSF.RETURN_RATIO,
+        TSF.RETURN_SALES
+        FROM T_SF_PIPELINE T
+        LEFT JOIN T_SF_POLICY_SUPPORT_ASSESSMENT TSF ON TSF.PP_ID=T.PP_ID AND TSF.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE TC ON TC.PP_ID=T.PP_ID AND TC.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ TMA ON T.ERP_CODE=TMA.ROW_ID AND TMA.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO TCU ON TCU.ERP_CODE=TMA.ERP_CODE AND TCU.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO TIN ON TIN.CUSTOMER_ID= TCU.CUSTOMER_ID AND TIN.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T4.MACRO_CODE=TSF.ASSESSMENT_ITEM AND T4.MACRO_TYPE='ASSESSMENT_INDEX' AND T4.DEL_FLAG='M0015'
+        WHERE T.PP_ID IN
+        <if test="ppIds != null and ppIds != ''">
+            <foreach item="ppIds" collection="ppIds" index="index" open="("
+                     separator="," close=")">
+                #{ppIds}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectRowId" parameterType="java.lang.Integer" resultType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation">
+        SELECT COUNT(0)
+        FROM T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        WHERE ROW_ID=#{rowId}
+    </select>
+    <insert id="insertSupport" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation" >
+        INSERT INTO T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        (
+        ROW_ID,
+        CHECK_ID,
+        STORE_ID,
+        SUPPORT_ITEM,
+        SUPPORT_MODE,
+        SALES,
+        START_DATE,
+        END_DATE2,
+        ASSESSMENT_ITEM,
+        TARGET,
+        RETURN_RATIO,
+        RETURN_SALES,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{checkId},
+        #{storeId},
+        #{supportItem},
+        #{supportMode},
+        #{sales},
+        #{startDate},
+        #{endDate2},
+        #{assessmentItem},
+        #{target},
+        #{returnRatio},
+        #{returnSales},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateSupport" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation" >
+        UPDATE T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        SET
+        ROW_ID =#{rowId},
+        CHECK_ID =#{checkId},
+        SUPPORT_ITEM =#{supportItem},
+        SUPPORT_MODE =#{supportMode},
+        SALES =#{sales},
+        START_DATE =#{startDate},
+        END_DATE2 =#{endDate2},
+        ASSESSMENT_ITEM =#{assessmentItem},
+        TARGET =#{target},
+        RETURN_RATIO =#{returnRatio},
+        RETURN_SALES =#{returnSales},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE STORE_ID =#{storeId} AND DEL_FLAG='M0015'
+    </update>
+    <insert id="insertCheckId" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation" >
+        INSERT INTO T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        (
+        ROW_ID,
+        CHECK_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{checkId},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateCheckId" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation" >
+        UPDATE T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        SET
+        CHECK_ID =#{checkId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE ROW_ID =#{rowId} AND DEL_FLAG='M0015'
+    </update>
+    <select id="queryAll" parameterType="java.lang.String" resultType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation">
+        SELECT
+            TPS.ROW_ID,
+            TPS.CHECK_ID,
+            TPS.STORE_ID,
+            T2.USER_NAME ORIGINATOR,
+            TIN.SUPERIOR_COMPANY,
+            TCU.ERP_CODE,
+            TCU.ERP_NAME,
+            TC.PP_CODE,
+            T.CN_SITENAME,
+            T.PP_ID,
+            T5.MACRO_NAME STORE_PROPERTY,
+            T6.ITEM_NAME SUPPORT_ITEM,
+            T7.ITEM_NAME SUPPORT_MODE,
+            TPS.SALES,
+            TPS.START_DATE,
+            TPS.END_DATE2,
+            T4.MACRO_NAME ASSESSMENT_ITEM,
+            TPS.TARGET,
+            TPS.RETURN_RATIO,
+            TPS.RETURN_SALES,
+            TPS.ACTUAL_RETURN_SALES,
+            TPS.PROCESSING_SCHEME
+        FROM T_PS_POLICY_SUPPORT_IMPLEMENTATION TPS
+        LEFT JOIN T_PS_POLICY_ITEM T6 ON T6.ITEM_CODE=TPS.SUPPORT_ITEM  AND T6.ITEM_TYPE='M0101' AND T6.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T7 ON T7.ITEM_CODE=TPS.SUPPORT_MODE AND T7.ITEM_TYPE='M0102' AND T7.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T4.MACRO_CODE=TPS.ASSESSMENT_ITEM AND T4.MACRO_TYPE='ASSESSMENT_INDEX' AND T4.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_SUPPORT_APPLY T1 ON T1.CHECK_ID =TPS.CHECK_ID AND T1.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_PIPELINE T ON T.PP_ID=TPS.STORE_ID AND T.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON T5.MACRO_CODE=T.STORE_PROPERTY AND T5.MACRO_TYPE='STORE_PROPERTY' AND T5.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE TC ON TC.PP_ID=T.PP_ID AND TC.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ TMA ON T.ERP_CODE=TMA.ROW_ID AND TMA.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO TCU ON TCU.ERP_CODE=TMA.ERP_CODE AND TCU.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO TIN ON TIN.CUSTOMER_ID= TCU.CUSTOMER_ID AND TIN.DEL_FLAG='M0015'
+        LEFT JOIN T_SYS_USER T2 ON T2.USER_ID=T1.ORIGINATOR AND T2.DEL_FLAG='M0015'
+        WHERE Tps.CHECK_ID= #{checkId} AND Tps.DEL_FLAG='M0015'
+    </select>
+    <insert id="insertImplementation" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation" >
+        INSERT INTO T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        (
+        ROW_ID,
+        CHECK_ID,
+        ACTUAL_RETURN_SALES,
+        PROCESSING_SCHEME,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{checkId},
+        #{actualReturnSales},
+        #{processingScheme},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateImplementation" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementation" >
+        UPDATE T_PS_POLICY_SUPPORT_IMPLEMENTATION
+        SET
+        ACTUAL_RETURN_SALES = #{actualReturnSales},
+        PROCESSING_SCHEME = #{processingScheme},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE ROW_ID =#{rowId} AND CHECK_ID =#{checkId}AND DEL_FLAG='M0015'
+    </update>
+    <select id="selectImplementation" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        t_ps_policy_support_implementation
+        WHERE ROW_ID= #{rowId} AND CHECK_ID = #{checkId} AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="queryForPage1" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementationModel">
+        SELECT
+        TSF.ROW_ID,
+        TIN.SUPERIOR_COMPANY,
+        TCU.ERP_CODE,
+        TCU.ERP_NAME,
+        TC.PP_CODE,
+        T.CN_SITENAME,
+        T.PP_ID,
+        T5.MACRO_NAME STORE_PROPERTY,
+        T6.ITEM_NAME SUPPORT_ITEM,
+        T7.ITEM_NAME SUPPORT_MODE,
+        TSF.SALES,
+        TSF.START_DATE,
+        TSF.END_DATE,
+        T4.MACRO_NAME ASSESSMENT_ITEM,
+        TSF.TARGET,
+        TSF.RETURN_RATIO,
+        TSF.RETURN_SALES,
+        TPS.ACTUAL_RETURN_SALES,
+        TPS.PROCESSING_SCHEME
+        FROM T_SF_PIPELINE T
+        LEFT JOIN T_SF_POLICY_SUPPORT_ASSESSMENT TSF ON TSF.PP_ID=T.PP_ID AND TSF.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE TC ON TC.PP_ID=T.PP_ID AND TC.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ TMA ON T.ERP_CODE=TMA.ROW_ID AND TMA.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO TCU ON TCU.ERP_CODE=TMA.ERP_CODE AND TCU.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO TIN ON TIN.CUSTOMER_ID= TCU.CUSTOMER_ID AND TIN.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T4.MACRO_CODE=TSF.ASSESSMENT_ITEM AND T4.MACRO_TYPE='ASSESSMENT_INDEX' AND T4.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON T5.MACRO_CODE=T.STORE_PROPERTY AND T5.MACRO_TYPE='STORE_PROPERTY' AND T5.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T6 ON T6.ITEM_CODE=TSF.SUPPORT_ITEM  AND T6.ITEM_TYPE='M0101' AND T6.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T7 ON T7.ITEM_CODE=TSF.SUPPORT_MODE AND T7.ITEM_TYPE='M0102' AND T7.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_SUPPORT_IMPLEMENTATION TPS ON TPS.ROW_ID=TSF.ROW_ID AND TPS.DEL_FLAG='M0015'
+        WHERE TPS.CHECK_ID=#{checkId} AND T.DEL_FLAG='M0015'
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <insert id="insertPSPolicySupportImplementationModel" parameterType="com.stripcode.mybatis.ps.model.PSPolicySupportImplementationModel">
+        INSERT INTO t_ps_policy_support_implementation(
+        ROW_ID,
+        CHECK_ID,
+        STORE_ID,
+        SUPPORT_ITEM,
+        SUPPORT_MODE,
+        SALES,
+        START_DATE,
+        END_DATE2,
+        ASSESSMENT_ITEM,
+        TARGET,
+        RETURN_RATIO,
+        RETURN_SALES,
+        ACTUAL_RETURN_SALES,
+        PROCESSING_SCHEME,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{checkId},
+        #{storeId},
+        #{supportItem},
+        #{supportMode},
+        #{sales},
+        #{startDate},
+        #{endDate2},
+        #{assessmentItem},
+        #{target},
+        #{returnRatio},
+        #{returnSales},
+        #{actualReturnSales},
+        #{processingScheme},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+</mapper>

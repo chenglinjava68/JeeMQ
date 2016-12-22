@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFSiteInfoMapper">
+
+    <!--新增场地信息-->
+    <insert id="insertSiteInfo" parameterType="com.stripcode.mybatis.sf.model.SFSiteInfo">
+        INSERT INTO T_SF_SITEINFO(
+            ROW_ID,
+            PP_ID,
+            FLOOR,
+            AREA,
+            FACADE_AREA,
+            OPERATING_AREA,
+            BATHROOM_AREA,
+            DEPOT_AREA,
+            RENT_AREA,
+            STAIR_AEEA,
+            STAFF_ROOM,
+            SITE_AREA,
+            OUTSIDE_AREA,
+            OTHER_AREA,
+            DOOR_WIDTH,
+            INTERNAL_DOOR_WIDTH,
+            STORE_DEEP,
+            STOREY_HIGH,
+            IS_BACK_DEPOT,
+            BACK_DEPOT_AREA,
+            BAY,
+            MID_PROPS_HIGH,
+            SIDE_PROPS_HIGH,
+            CUR_BRAND,
+            TEL,
+            CONTACTS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{floor},
+            #{area},
+            #{facadeArea},
+            #{operatingArea},
+            #{bathroomArea},
+            #{depotArea},
+            #{rentArea},
+            #{stairAeea},
+            #{staffRoom},
+            #{siteArea},
+            #{outsideArea},
+            #{otherArea},
+            #{doorWidth},
+            #{internalDoorWidth},
+            #{storeDeep},
+            #{storeyHigh},
+            #{isBackDepot},
+            #{backDepotArea},
+            #{bay},
+            #{midPropsHigh},
+            #{sidePropsHigh},
+            #{curBrand},
+            #{tel},
+            #{contacts},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015',
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+    </insert>
+    <!--新增周边租金信息-->
+    <insert id="insertRentInfo" parameterType="com.stripcode.mybatis.sf.model.SFRentInfo">
+        INSERT INTO T_SF_RENTINFO (
+            ROW_ID,
+            PRO_NAME,
+            AREA,
+            OPEN_DATE,
+            RENTAL,
+            SALES_MTH,
+            SALES_YEAR,
+            LEASE_MONTH,
+            LG_EFFECT,
+            REMARK,
+            PP_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        )VALUES (
+            #{rowId},
+            #{proName},
+            #{area},
+            #{openDate},
+            #{rental},
+            #{salesMth},
+            #{salesYear},
+            #{leaseMonth},
+            #{lgEffect},
+            #{remark},
+            #{ppId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015',
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+    </insert>
+    <!--新增楼层信息-->
+    <insert id="insertFloorInfo" parameterType="com.stripcode.mybatis.sf.model.SFFloorInfo">
+        INSERT INTO T_SF_FLOORINFO(
+            ROW_ID,
+            PP_ID,
+            FLOOR,
+            SIZE,
+            FLOORSLAB,
+            FLOOR_HIGHT,
+            BOTTOM_HIGHT,
+            REMARK,
+            GOODS_CATEGORY,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{floor},
+            #{size},
+            #{floorslab},
+            #{floorHight},
+            #{bottomHight},
+            #{remark},
+            #{goodsCategory},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015',
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+
+    </insert>
+    <!--修改场地信息-->
+    <update id="updateSiteInfo" parameterType="com.stripcode.mybatis.sf.model.SFSiteInfo">
+        UPDATE T_SF_SITEINFO
+              SET   FLOOR = #{floor},
+                    AREA = #{area},
+                    FACADE_AREA = #{facadeArea},
+                    OPERATING_AREA = #{operatingArea},
+                    BATHROOM_AREA = #{bathroomArea},
+                    DEPOT_AREA = #{depotArea},
+                    RENT_AREA = #{rentArea},
+                    STAIR_AEEA = #{stairAeea},
+                    STAFF_ROOM = #{staffRoom},
+                    SITE_AREA = #{siteArea},
+                    OUTSIDE_AREA = #{outsideArea},
+                    OTHER_AREA = #{otherArea},
+                    DOOR_WIDTH = #{doorWidth},
+                    INTERNAL_DOOR_WIDTH = #{internalDoorWidth},
+                    STORE_DEEP = #{storeDeep},
+                    STOREY_HIGH = #{storeyHigh},
+                    IS_BACK_DEPOT = #{isBackDepot},
+                    BACK_DEPOT_AREA = #{backDepotArea},
+                    BAY = #{bay},
+                    MID_PROPS_HIGH = #{midPropsHigh},
+                    SIDE_PROPS_HIGH = #{sidePropsHigh},
+                    CUR_BRAND = #{curBrand},
+                    TEL = #{tel},
+                    CONTACTS = #{contacts},
+                    UPDATER = #{updater},
+                    UPDATE_TIME = sysdate(),
+                    DEF1 = #{def1},
+                    DEF2 = #{def2},
+                    DEF3 = #{def3},
+                    DEF4 = #{def4},
+                    DEF5 = #{def5},
+                    DEF6 = #{def6},
+                    DEF7 = #{def7},
+                    DEF8 = #{def8},
+                    DEF9 = #{def9},
+                    DEF10 = #{def10}
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+    <!--修改周边租金信息-->
+    <update id="updateRentInfo" parameterType="com.stripcode.mybatis.sf.model.SFRentInfo">
+        UPDATE T_SF_RENTINFO
+                SET PRO_NAME = #{proName},
+                    AREA = #{area},
+                    OPEN_DATE = #{openDate},
+                    RENTAL = #{rental},
+                    SALES_MTH = #{salesMth},
+                    SALES_YEAR = #{salesYear},
+                    LEASE_MONTH = #{leaseMonth},
+                    LG_EFFECT = #{lgEffect},
+                    REMARK = #{remark},
+                    UPDATER = #{updater},
+                    UPDATE_TIME = sysdate(),
+                    DEF1 = #{def1},
+                    DEF2 = #{def2},
+                    DEF3 = #{def3},
+                    DEF4 = #{def4},
+                    DEF5 = #{def5},
+                    DEF6 = #{def6},
+                    DEF7 = #{def7},
+                    DEF8 = #{def8},
+                    DEF9 = #{def9},
+                    DEF10 = #{def10}
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <!--修改楼层信息-->
+    <update id="updateFloorInfo" parameterType="com.stripcode.mybatis.sf.model.SFFloorInfo">
+        UPDATE T_SF_FLOORINFO
+                SET FLOOR = #{floor},
+                    SIZE = #{size},
+                    UPDATER = #{updater},
+                    UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <!--查询是否已经存在记录-->
+    <select id="isExistSiteInfo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_SF_SITEINFO WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="isExistRentInfo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_SF_RENTINFO WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="isExistFloorInfo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_SF_FLOORINFO WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <!--查询场地信息-->
+    <select id="querySiteInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFSiteInfo">
+        SELECT
+              ROW_ID,
+            PP_ID,
+            FLOOR,
+            AREA,
+            FACADE_AREA,
+            OPERATING_AREA,
+            BATHROOM_AREA,
+            DEPOT_AREA,
+            RENT_AREA,
+            STAIR_AEEA,
+            STAFF_ROOM,
+            SITE_AREA,
+            OUTSIDE_AREA,
+            OTHER_AREA,
+            DOOR_WIDTH,
+            INTERNAL_DOOR_WIDTH,
+            STORE_DEEP,
+            STOREY_HIGH,
+            IS_BACK_DEPOT,
+            BACK_DEPOT_AREA,
+            BAY,
+            MID_PROPS_HIGH,
+            SIDE_PROPS_HIGH,
+            CUR_BRAND,
+            TEL,
+            CONTACTS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+         FROM T_SF_SITEINFO
+         WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+    <!--查询周边租金信息-->
+    <select id="queryRentInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFRentInfo">
+        SELECT
+            ROW_ID,
+            PRO_NAME,
+            AREA,
+            OPEN_DATE,
+            RENTAL,
+            SALES_MTH,
+            SALES_YEAR,
+            LEASE_MONTH,
+            LG_EFFECT,
+            REMARK,
+            PP_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        FROM T_SF_RENTINFO
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+    <!--查新楼层信息-->
+    <select id="queryFloorInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFFloorInfo">
+        SELECT
+            ROW_ID,
+            PP_ID,
+            FLOOR,
+            SIZE,
+            FLOORSLAB,
+            FLOOR_HIGHT,
+            BOTTOM_HIGHT,
+            REMARK,
+            GOODS_CATEGORY,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        FROM T_SF_FLOORINFO
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="queryFloorInfoDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFFloorInfo">
+        SELECT
+        T.MACRO_NAME floor
+        FROM T_SF_FLOORINFO F
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON F.FLOOR = T.MACRO_CODE AND T.DEL_FLAG = 'M0015'
+        WHERE F.PP_ID = #{ppId} AND F.DEL_FLAG = 'M0015'
+    </select>
+    <!--删除Floor-->
+    <update id="delFloor" parameterType="map">
+        UPDATE T_SF_FLOORINFO
+        SET DEL_FLAG = 'M0014'
+        <where>
+            <if test="isFloorNull != 0">
+
+        ROW_ID NOT IN
+            <foreach collection="rowId" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND PP_ID = #{ppId}
+        </where>
+    </update>
+    <!--删除Rent-->
+    <update id="delRent" parameterType="map">
+        UPDATE T_SF_RENTINFO
+        SET DEL_FLAG = 'M0014'
+        <where>
+            <if test="isRentNull != 0">
+                AND ROW_ID NOT IN
+                <foreach collection="rowId" item="item" index="index"
+                                       open="(" close=")" separator=",">
+                #{item}
+                </foreach>
+            </if>
+            AND PP_ID = #{ppId}
+        </where>
+    </update>
+
+    <select id="loadTableHead" parameterType="java.lang.String" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT
+              MACRO_CODE,
+              MACRO_NAME
+        FROM T_CODE_MACRO_DEFINE
+        WHERE MACRO_CODE = #{storeImage}
+    </select>
+
+    <select id="queryStyleAreaPerInfo" parameterType="java.lang.String" resultType="TreeModel">
+      (
+            SELECT
+                T.MACRO_NAME TAGNAME,
+                S.FLOOR ROWID,
+                'ROOT' PARENTID,
+                S.AREA_PER STRURL,
+                S.SALES_PER STRCLASS,
+                F.SIZE DEF1
+            FROM
+                T_SF_STYLE_AREA_PER_INFO S
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = S.FLOOR
+            AND T.DEL_FLAG = 'M0015'
+            AND T.MACRO_TYPE = 'FLOOR_TYPE'
+            LEFT JOIN t_sf_floorinfo F ON F.FLOOR = S.FLOOR
+            AND F.DEL_FLAG = 'M0015'
+            AND F.PP_ID = #{ppId}
+            WHERE
+                S.PP_ID = #{ppId}
+            AND S.DEL_FLAG = 'M0015'
+        )
+        UNION
+            (
+                SELECT
+                    T.MACRO_NAME,
+                    S.SERIES_SEX,
+                    S.FLOOR,
+                    S.AREA_PER,
+                    S.SALES_PER,
+                    F.SIZE
+                FROM
+                    T_SF_STYLE_AREA_PER_INFO S
+                LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = S.SERIES_SEX
+                AND T.DEL_FLAG = 'M0015'
+                AND T.MACRO_TYPE = 'SEX'
+                LEFT JOIN t_sf_floorinfo F ON F.FLOOR = S.FLOOR
+                AND F.DEL_FLAG = 'M0015'
+                AND F.PP_ID = #{ppId}
+                WHERE
+                    S.PP_ID = #{ppId}
+                AND S.DEL_FLAG = 'M0015'
+                ORDER BY
+                    T.AUTO_NO
+            )
+        UNION
+            (
+                SELECT
+                    T.MACRO_NAME,
+                    S.STYLE,
+                    S.SERIES_SEX,
+                    S.AREA_PER,
+                    S.SALES_PER,
+                    F.SIZE
+                FROM
+                    T_SF_STYLE_AREA_PER_INFO S
+                LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = S.STYLE
+                AND T.DEL_FLAG = 'M0015'
+                AND T.MACRO_TYPE = 'STORE_IMAGE'
+                LEFT JOIN t_sf_floorinfo F ON F.FLOOR = S.FLOOR
+                AND F.DEL_FLAG = 'M0015'
+                AND F.PP_ID = #{ppId}
+                WHERE
+                    S.PP_ID = #{ppId}
+                AND S.DEL_FLAG = 'M0015'
+                ORDER BY
+                    T.AUTO_NO
+            )
+        UNION
+            (
+                SELECT
+                    T.MACRO_NAME,
+                    S.SERIES ROWID,
+                    S.STYLE,
+                    S.AREA_PER,
+                    S.SALES_PER,
+                    F.SIZE
+                FROM
+                    T_SF_STYLE_AREA_PER_INFO S
+                LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = S.SERIES
+                AND T.DEL_FLAG = 'M0015'
+                AND T.PARENT_CODE = STYLE
+                LEFT JOIN t_sf_floorinfo F ON F.FLOOR = S.FLOOR
+                AND F.DEL_FLAG = 'M0015'
+                AND F.PP_ID = #{ppId}
+                WHERE
+                    S.PP_ID = #{ppId}
+                AND S.DEL_FLAG = 'M0015'
+                ORDER BY
+                    T.AUTO_NO
+            )
+    </select>
+    <select id="queryStyleInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFStyleAreaPerInfo">
+        SELECT
+              S.ROW_ID,
+              S.PP_ID,
+              T.MACRO_NAME seriesName,
+              S.FLOOR,
+              S.STYLE,
+              S.SERIES_SEX,
+              S.SERIES,
+              S.AREA_PER,
+              S.SALES_PER
+        FROM T_SF_STYLE_AREA_PER_INFO S
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = S.SERIES AND T.DEL_FLAG = 'M0015'
+        WHERE S.PP_ID = #{ppId} AND S.SERIES_SEX = #{seriesSex} AND S.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

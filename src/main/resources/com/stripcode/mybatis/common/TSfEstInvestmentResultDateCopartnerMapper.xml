@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.TSfEstInvestmentResultDateCopartnerMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sf_est_investment_result_date_copartner
+    where AUTO_NO = #{autoNo,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertInvestmentResultDateCopartner" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentResultDateCopartner" >
+    insert into t_sf_est_investment_result_date_copartner (AUTO_NO, ROW_ID, INVESTMENT_ID,
+      STORE_INCOME_FIR, STORE_INCOME_SEC, STORE_INCOME_THI,
+      STORE_INCOME_FOUR, STORE_INCOME_FIVE, COMPANY_INCOME_FIR,
+      COMPANY_INCOME_SEC, COMPANY_INCOME_THI, COMPANY_INCOME_FOUR,
+      COMPANY_INCOME_FIVE, COPARTNER_UC_FIR, COPARTNER_UC_SEC,
+      COPARTNER_UC_THI, COPARTNER_UC_FOUR, COPARTNER_UC_FIVE,
+      COMPANY_UC_FIR, COMPANY_UC_SEC, COMPANY_UC_THI,
+      COMPANY_UC_FOUR, COMPANY_UC_FIVE, REMARK,
+      CREATOR, CREATE_TIME, UPDATER,
+      UPDATE_TIME, DEL_FLAG, DEF1,
+      DEF2, DEF3, DEF4, DEF5,
+      DEF6, DEF7, DEF8, DEF9,
+      DEF10, STORE_INCOME_TOTAL, COMPANY_INCOME_TOTAL,
+      COPARTNER_UC_TOTAL, COMPANY_UC_TOTAL)
+    values (#{autoNo,jdbcType=INTEGER}, #{rowId}, #{investmentId},
+      #{storeIncomeFir}, #{storeIncomeSec}, #{storeIncomeThi},
+      #{storeIncomeFour}, #{storeIncomeFive}, #{companyIncomeFir},
+      #{companyIncomeSec}, #{companyIncomeThi}, #{companyIncomeFour},
+      #{companyIncomeFive}, #{copartnerUcFir}, #{copartnerUcSec},
+      #{copartnerUcThi}, #{copartnerUcFour}, #{copartnerUcFive},
+      #{companyUcFir}, #{companyUcSec}, #{companyUcThi},
+      #{companyUcFour}, #{companyUcFive}, #{remark},
+      #{creator}, sysdate(), #{updater},
+      sysdate(), #{delFlag}, #{def1},
+      #{def2}, #{def3}, #{def4}, #{def5},
+      #{def6}, #{def7}, #{def8}, #{def9},
+      #{def10}, #{storeIncomeTotal}, #{companyIncomeTotal},
+      #{copartnerUcTotal}, #{companyUcTotal})
+  </insert>
+
+  <update id="updateInvestmentResultDateCopartner" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentResultDateCopartner" >
+    update t_sf_est_investment_result_date_copartner
+    set INVESTMENT_ID = #{investmentId},
+      STORE_INCOME_FIR = #{storeIncomeFir},
+      STORE_INCOME_SEC = #{storeIncomeSec},
+      STORE_INCOME_THI = #{storeIncomeThi},
+      STORE_INCOME_FOUR = #{storeIncomeFour},
+      STORE_INCOME_FIVE = #{storeIncomeFive},
+      COMPANY_INCOME_FIR = #{companyIncomeFir},
+      COMPANY_INCOME_SEC = #{companyIncomeSec},
+      COMPANY_INCOME_THI = #{companyIncomeThi},
+      COMPANY_INCOME_FOUR = #{companyIncomeFour},
+      COMPANY_INCOME_FIVE = #{companyIncomeFive},
+      COPARTNER_UC_FIR = #{copartnerUcFir},
+      COPARTNER_UC_SEC = #{copartnerUcSec},
+      COPARTNER_UC_THI = #{copartnerUcThi},
+      COPARTNER_UC_FOUR = #{copartnerUcFour},
+      COPARTNER_UC_FIVE = #{copartnerUcFive},
+      COMPANY_UC_FIR = #{companyUcFir},
+      COMPANY_UC_SEC = #{companyUcSec},
+      COMPANY_UC_THI = #{companyUcThi},
+      COMPANY_UC_FOUR = #{companyUcFour},
+      COMPANY_UC_FIVE = #{companyUcFive},
+      REMARK = #{remark},
+      STORE_INCOME_TOTAL = #{storeIncomeTotal},
+      COMPANY_INCOME_TOTAL = #{companyIncomeTotal},
+      COPARTNER_UC_TOTAL = #{copartnerUcTotal},
+      COMPANY_UC_TOTAL = #{companyUcTotal}
+    where ROW_ID = #{rowId}
+  </update>
+
+  <select id="selectInvestmentResultDateCopartner" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentResultDateCopartner" parameterType="java.lang.String" >
+    select ROW_ID, INVESTMENT_ID, STORE_INCOME_FIR, STORE_INCOME_SEC, STORE_INCOME_THI,
+    STORE_INCOME_FOUR, STORE_INCOME_FIVE, COMPANY_INCOME_FIR, COMPANY_INCOME_SEC, COMPANY_INCOME_THI, 
+    COMPANY_INCOME_FOUR, COMPANY_INCOME_FIVE, COPARTNER_UC_FIR, COPARTNER_UC_SEC, COPARTNER_UC_THI, 
+    COPARTNER_UC_FOUR, COPARTNER_UC_FIVE, COMPANY_UC_FIR, COMPANY_UC_SEC, COMPANY_UC_THI, 
+    COMPANY_UC_FOUR, COMPANY_UC_FIVE, REMARK, STORE_INCOME_TOTAL, COMPANY_INCOME_TOTAL, COPARTNER_UC_TOTAL, COMPANY_UC_TOTAL
+    from t_sf_est_investment_result_date_copartner
+    where INVESTMENT_ID = #{investmentId}
+    AND DEL_FLAG='M0015'
+  </select>
+  <update id="deleteInvestmentId" parameterType="java.lang.String">
+    UPDATE T_SF_EST_INVESTMENT_RESULT_DATE_COPARTNER
+    SET
+    DEL_FLAG = 'M0014'
+    WHERE INVESTMENT_ID = #{investmentId}
+  </update>
+</mapper>

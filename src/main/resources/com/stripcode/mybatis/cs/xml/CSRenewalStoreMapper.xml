@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSRenewalStoreMapper">
+
+    <select id="selectErpInfoAll" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            ERP.ROW_ID,
+            ERP.CUSTOMER_ID,
+            ERP.ERP_CODE,
+            ERP.ERP_NAME,
+            ERP.ACCREDIT_STARTDATE,
+            ERP.ACCREDIT_ENDDATE,
+            ERP.BASIC_DISCOUNT_RATE,
+            ERP.IS_BUYOUT,
+            T.MACRO_NAME customerProperty,
+            T1.MACRO_NAME superiorCompany,
+            T2.MACRO_NAME brand,
+            T3.MACRO_NAME cooperationMode,
+            T4.MACRO_NAME marketLev,
+            INFO.ID_NUMBER,
+            INFO.COMPANY_NAME,
+            INFO.TEL,
+            INFO.CORPORATION,
+            INFO.ADDRESS,
+            M.MARKET_ID
+        FROM
+          T_CS_CUSTOMER_ERP_INFO ERP
+            LEFT JOIN  T_CS_CUSTOMERINFO INFO ON INFO.CUSTOMER_ID = ERP.CUSTOMER_ID AND INFO.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = INFO.CUSTOMER_PROPERTY AND T.MACRO_TYPE = 'CUSTOMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T1.MACRO_CODE = INFO.SUPERIOR_COMPANY AND T1.MACRO_TYPE = 'SUPERIOR_COMPANY' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON ERP.BRAND = T2.MACRO_CODE AND T2.MACRO_TYPE = 'BRAND' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON ERP.COOPERATION_MODE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'COOPERATION_MODE' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T4 ON ERP.MARKET_LEV = T4.MACRO_CODE AND T4.MACRO_TYPE = 'MARKET_LEV' AND T4.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CS_ERP_MARKET_INFO M ON M.AUTHORIZATION_ID = ERP.ROW_ID AND M.DEL_FLAG = 'M0015'
+        WHERE
+              ERP.CUSTOMER_ID = #{customerId} AND ERP.DEL_FLAG = 'M0015' AND ROW_ID=#{rowId}
+    </select>
+    <select id="selectRenewStoreByCustomerId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.RenewalCustomerStore">
+        SELECT
+            STORE_CODE,
+            CN_STORENAME,
+            OPEN_DATE
+        FROM
+            T_CS_RENEWAL_CUSTOMER_STORE
+        WHERE
+            CUSTOMER_ID = #{customerId} AND DEL_FLAG = 'M0015' AND ROW_ID = #{rowId}
+    </select>
+
+    <select id="renewalStoreByStoreCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_CS_RENEWAL_CUSTOMER_STORE WHERE STORE_CODE =#{storeCode} AND CUSTOMER_ID = #{customerId} AND DEL_FLAG = 'M0015' AND ROW_ID = #{rowId}
+    </select>
+
+    <select id="renewalBusinePlan" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_CS_RENEWAL_BUSINESS_PLAN WHERE CUSTOMER_ID = #{customerId} AND DEL_FLAG = 'M0015'  AND ROW_ID = #{rowId}
+    </select>
+
+    <update id="updateRenewalBusinessPlan" parameterType="com.stripcode.mybatis.cs.model.RenewalBusinessPlan">
+        UPDATE
+              T_CS_RENEWAL_BUSINESS_PLAN
+              SET
+                  SALES = #{sales},
+                  SALES_INCRATE = #{salesIncrate},
+                  FETCH_SALES = #{fetchSales},
+                  FETCH_SALES_INCRATE = #{fetchSalesIncrate},
+                  ALL_SALES_Y1 = #{allSalesY1},
+                  ALL_SALES_Y1_INCRATE = #{allSalesY1Incrate},
+                  ALL_SALES_Y2 = #{allSalesY2},
+                  ALL_SALES_Y2_INCRATE = #{allSalesY2Incrate},
+                  ALL_SALES_Y3 = #{allSalesY3},
+                  ALL_SALES_Y3_INCRATE = #{allSalesY2Incrate},
+                  ALL_FETCH_SALES_Y1 = #{allFetchSalesY1},
+                  ALL_FETCH_SALES_Y1_INCRATE = #{allFetchSalesY1Incrate},
+                  ALL_FETCH_SALES_Y2 = #{allFetchSalesY2},
+                  ALL_FETCH_SALES_Y2_INCRATE = #{allFetchSalesY2Incrate},
+                  ALL_FETCH_SALES_Y3 = #{allFetchSalesY3},
+                  ALL_FETCH_SALES_Y3_INCRATE = #{allFetchSalesY3Incrate},
+                  UPDATER = #{updater},
+                  UPDATE_TIME = #{updateTime}
+        WHERE CUSTOMER_ID = #{customerId} AND ROW_ID=#{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <insert id="insertRenewalBusinessPlan" parameterType="com.stripcode.mybatis.cs.model.RenewalBusinessPlan">
+        INSERT INTO
+              T_CS_RENEWAL_BUSINESS_PLAN(
+                  ROW_ID,
+                  CUSTOMER_ID,
+                  SALES,
+                  SALES_INCRATE,
+                  FETCH_SALES,
+                  FETCH_SALES_INCRATE,
+                  ALL_SALES_Y1,
+                  ALL_SALES_Y1_INCRATE,
+                  ALL_SALES_Y2,
+                  ALL_SALES_Y2_INCRATE,
+                  ALL_SALES_Y3,
+                  ALL_SALES_Y3_INCRATE,
+                  ALL_FETCH_SALES_Y1,
+                  ALL_FETCH_SALES_Y1_INCRATE,
+                  ALL_FETCH_SALES_Y2,
+                  ALL_FETCH_SALES_Y2_INCRATE,
+                  ALL_FETCH_SALES_Y3,
+                  ALL_FETCH_SALES_Y3_INCRATE,
+                  CREATOR,
+                  CREATE_TIME,
+                  UPDATER,
+                  UPDATE_TIME,
+                  DEL_FLAG
+              )VALUES(
+                  #{rowId},
+                  #{customerId},
+                  #{sales},
+                  #{salesIncrate},
+                  #{fetchSales},
+                  #{fetchSalesIncrate},
+                  #{allSalesY1},
+                  #{allSalesY1Incrate},
+                  #{allSalesY2},
+                  #{allSalesY2Incrate},
+                  #{allSalesY3},
+                  #{allSalesY3Incrate},
+                  #{allFetchSalesY1},
+                  #{allFetchSalesY1Incrate},
+                  #{allFetchSalesY2},
+                  #{allFetchSalesY2Incrate},
+                  #{allFetchSalesY3},
+                  #{allFetchSalesY3Incrate},
+                  #{creator},
+                  #{createTime},
+                  #{updater},
+                  #{updateTime},
+                  'M0015'
+              )
+    </insert>
+
+    <update id="updateRenewalStore" parameterType="com.stripcode.mybatis.cs.model.RenewalCustomerStore">
+        UPDATE
+
+        T_CS_RENEWAL_CUSTOMER_STORE
+
+        SET
+        SALES = #{sales},
+        INCRATE = #{incrate},
+        SALES_YEAR1 = #{salesYear1},
+        SALES_YEAR2 = #{salesYear2},
+        SALES_YEAR3 = #{salesYear3},
+        SALES_YEAR1_INCRATE = #{salesYear1Incrate},
+        SALES_YEAR2_INCRATE = #{salesYear2Incrate},
+        SALES_YEAR3_INCRATE = #{salesYear3Incrate},
+        CREATOR = #{creator},
+        CREATE_TIME = #{createTime},
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE
+        CUSTOMER_ID = #{customerId}  AND  STORE_CODE = #{storeCode} AND DEL_FLAG = 'M0015' AND ROW_ID = #{rowId}
+    </update>
+
+    <insert id="insertRenewalStore" parameterType="com.stripcode.mybatis.cs.model.RenewalCustomerStore">
+        INSERT INTO
+        T_CS_RENEWAL_CUSTOMER_STORE(
+            ROW_ID,
+            CUSTOMER_ID,
+            STORE_CODE,
+            CN_STORENAME,
+            OPEN_DATE,
+            SALES,
+            INCRATE,
+            SALES_YEAR1,
+            SALES_YEAR1_INCRATE,
+            SALES_YEAR2,
+            SALES_YEAR2_INCRATE,
+            SALES_YEAR3,
+            SALES_YEAR3_INCRATE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{customerId},
+            #{storeCode},
+            #{cnStoreName},
+            #{openDate},
+            #{sales},
+            #{incrate},
+            #{salesYear1},
+            #{salesYear1Incrate},
+            #{salesYear2},
+            #{salesYear2Incrate},
+            #{salesYear3},
+            #{salesYear3Incrate},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFFinalAccountsMapper">
+    <select id="selectAccountsCostList" resultType="com.stripcode.mybatis.sf.model.SFFinalAccountsCost" parameterType="java.lang.String">
+     SELECT
+                T.COST_CLS,
+                T.BUDGET_TYPE,
+                T.ITEM_CODE,
+                T.ITEM_NAME,
+                T.IS_EDIT,
+                C.ITEM_NAME otherName,
+                D.BUDGET_COST,
+                B.FINAL_COST
+        FROM T_SYS_COST_ITEM T
+                LEFT JOIN (
+                SELECT T2.*,T1.PP_ID FROM T_SF_BUDGET T1
+                INNER JOIN T_SF_BUDGET_COST T2
+                ON T1.ROW_ID = T2.BUDGET_ID
+                WHERE T1.PP_ID = #{ppId}
+                )D
+                ON T.ITEM_CODE = D.ITEM_CODE
+                  LEFT JOIN (
+                SELECT T2.* FROM T_SF_PROJECT_ESTIMATION T1
+                INNER JOIN T_SF_PROJECT_ESTIMATION_COST T2
+                ON T1.ROW_Id = T2.EST_ID
+                WHERE T1.PP_ID = #{ppId}
+                )  C
+                ON D.ITEM_CODE = C.ITEM_CODE
+                LEFT JOIN (
+            SELECT T2.*,T1.PP_ID FROM T_SF_FINAL_ACCOUNTS T1
+            INNER JOIN T_SF_FINAL_ACCOUNTS_COST T2
+            ON T1.ROW_ID = T2.BUDGET_ID
+            WHERE T1.PP_ID = #{ppId}
+                ) B
+                ON B.ITEM_CODE = T.ITEM_CODE
+
+                WHERE T.BUDGET_TYPE = 'M0332'
+                ORDER BY T.SORT_NO
+    </select>
+
+    <insert id="insertAccountsCost" parameterType="com.stripcode.mybatis.sf.model.SFFinalAccountsCost">
+        INSERT INTO
+        T_SF_FINAL_ACCOUNTS_COST
+            (
+            ROW_ID,
+            BUDGET_ID,
+            ITEM_CODE,
+            BUDGET_COST,
+            FINAL_COST,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{budgetId},
+            #{itemCode},
+            #{budgetCost},
+            #{finalCost},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="updateAccountsCost"   parameterType="com.stripcode.mybatis.sf.model.SFFinalAccountsCost">
+        UPDATE
+            T_SF_FINAL_ACCOUNTS_COST T
+        SET
+            T.FINAL_COST = #{finalCost},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = sysdate()
+        WHERE T.ITEM_CODE = #{itemCode} AND T.BUDGET_ID =#{budgetId} AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsAccountsCost"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(0)
+        FROM
+            T_SF_FINAL_ACCOUNTS_COST T
+        WHERE  T.ITEM_CODE = #{itemCode} AND T.BUDGET_ID =#{budgetId} AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="selectBudgetConsUnit" resultType="com.stripcode.mybatis.sf.model.SFBudGetConsUnit" parameterType="java.lang.String">
+        SELECT
+            T.ROW_ID,
+            T.CONS_UNIT,
+            T.REPORT_COST,
+            T.CONTACTS,
+            T.PHONE,
+            T2.MACRO_NAME isCooperation,
+            T3.MACRO_NAME assessment,
+            T.REMARK
+        FROM
+            T_SF_BUDGET_CONS_UNIT T
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T2.MACRO_CODE=T.IS_COOPERATION AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T3.MACRO_CODE=T.ASSESSMENT AND T2.DEL_FLAG = 'M0015'
+        WHERE
+            T.BUDGET_ID=(SELECT T1.ROW_ID FROM T_SF_BUDGET T1 WHERE T1.PP_ID=#{ppId} )
+        AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="selectFinalAccounts" resultType="com.stripcode.mybatis.sf.model.SFFinalAccounts" parameterType="java.lang.String">
+        SELECT
+            T.ROW_ID,
+            T.PP_ID,
+            T.FINAL_COST,
+            T.IS_CONTAIN_UTILITIES,
+            T.IS_CONTAIN_EXCEEDED_EST_COST,
+            T.IS_EXCEEDED,
+            T.EXCESS_COST_PCT,
+            T.COST_AUDIT_DATE,
+            T.AUDIT_PERSON,
+            T.IS_AGREE,
+            T.CONS_AUDIT_DATE,
+            T.REASON,
+            T.CONTRACT_COST
+        FROM
+            T_SF_FINAL_ACCOUNTS T
+        WHERE
+              T.PP_ID =#{ppId}
+        AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertFinalAccounts" parameterType="com.stripcode.mybatis.sf.model.SFFinalAccounts">
+        INSERT INTO
+            T_SF_FINAL_ACCOUNTS
+            (
+                ROW_ID,
+                PP_ID,
+                FINAL_COST,
+                IS_CONTAIN_UTILITIES,
+                IS_CONTAIN_EXCEEDED_EST_COST,
+                IS_EXCEEDED,
+                EXCESS_COST_PCT,
+                COST_AUDIT_DATE,
+                AUDIT_PERSON,
+                IS_AGREE,
+                CONS_AUDIT_DATE,
+                REASON,
+                CONTRACT_COST,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{finalCost},
+            #{isContainUtilities},
+            #{isContainExceededEstCost},
+            #{isExceeded},
+            #{excessCostPct},
+            #{costAuditDate},
+            #{auditPerson},
+            #{isAgree},
+            #{consAuditDate},
+            #{reason},
+            #{contractCost},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="updateFinalAccounts"   parameterType="com.stripcode.mybatis.sf.model.SFBudGet">
+        UPDATE
+             T_SF_FINAL_ACCOUNTS T
+        SET
+            T.FINAL_COST = #{finalCost},
+            T.IS_CONTAIN_UTILITIES = #{isContainUtilities},
+            T.IS_CONTAIN_EXCEEDED_EST_COST = #{isContainExceededEstCost},
+            T.IS_EXCEEDED = #{isExceeded},
+            T.EXCESS_COST_PCT = #{excessCostPct},
+            T.COST_AUDIT_DATE = #{costAuditDate},
+            T.AUDIT_PERSON = #{auditPerson},
+            T.IS_AGREE = #{isAgree},
+            T.CONS_AUDIT_DATE = #{consAuditDate},
+            T.REASON = #{reason},
+            T.CONTRACT_COST = #{contractCost},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = sysdate()
+        WHERE T.PP_ID = #{ppId} AND T.ROW_Id=#{rowId} AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsFinalAccounts"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+            COUNT(0)
+        FROM
+            T_SF_FINAL_ACCOUNTS T
+        WHERE  T.PP_ID = #{ppId} AND T.ROW_ID=#{rowId} AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="selectPipeline" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" parameterType="java.lang.String">
+        SELECT
+            T.OPERATING_AREA,
+            T.RENT_AREA,
+            T.BACK_DEPOT_AREA,
+            T3.PP_CODE,
+            T1.CN_SITENAME,
+            T2.MACRO_NAME channelType
+        FROM
+        T_SF_SITEINFO T
+        LEFT JOIN T_SF_PIPELINE T1 ON T.PP_ID=T1.PP_ID AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE T3 ON T1.PP_ID=T3.PP_ID AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T2.MACRO_CODE=T1.CHANNEL_TYPE AND T2.DEL_FLAG = 'M0015'
+        WHERE
+        T.PP_ID=#{ppId}
+        AND T.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

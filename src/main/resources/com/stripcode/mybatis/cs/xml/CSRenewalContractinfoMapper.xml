@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSRenewalContractinfoMapper">
+    <select id="queryContractInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSRenewalContractinfo">
+        SELECT
+        ROW_ID,
+        OPTIMAUTH_ID,
+        SIGN_DATE
+        FROM T_CS_RENEWAL_CONTRACTINFO
+        WHERE OPTIMAUTH_ID = #{optimauthd} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertContractInfo" parameterType="com.stripcode.mybatis.cs.model.CSRenewalContractinfo">
+        INSERT INTO T_CS_RENEWAL_CONTRACTINFO(
+        ROW_ID,
+        OPTIMAUTH_ID,
+        SIGN_DATE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{optimauthId},
+        #{signDate},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    
+    <update id="updateContractInfo" parameterType="com.stripcode.mybatis.cs.model.CSRenewalContractinfo">
+        UPDATE T_CS_RENEWAL_CONTRACTINFO
+        SET SIGN_DATE = #{signDate},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE ROW_ID = #{rowId} AND OPTIMAUTH_ID = #{optimauthId}
+    </update>
+
+    <select id="selectAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractAttachment">
+        SELECT
+        C.ROW_ID,
+        C.OPTIMAUTH_ID,
+        A.CONTRACT_NAME,
+        U.USER_NAME creater,
+        A.CREATE_TIME createrTime,
+        A.ATTACH_ID,
+        D.DOC_NAME fileName,
+        D.FILE_PATH filePath
+        FROM T_CS_RENEWAL_CONTRACTINFO C
+        LEFT JOIN T_CS_CONTRACT_APPLY_ATTACHMENT A ON A.APPLY_ID = C.ROW_ID AND A.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED D ON A.ATTACH_ID = D.ATTACH_ID AND D.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON u.USER_ID = C.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+        C.OPTIMAUTH_ID =#{optimauthId}
+        AND C.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

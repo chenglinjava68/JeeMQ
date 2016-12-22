@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFStoreHandoverAttachmentMapper" >
+
+    <select id="queryHandoverAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFStoreHandoverAttachment">
+        SELECT
+        A.TITLE,
+        H.ROW_ID,
+        H.HANDOVER_ID,
+        A.TEMPLATE_ID,
+        H.ATTACH_ID,
+        U1.USER_NAME creatorName,
+        H.CREATE_TIME creatorTime,
+        U2.USER_NAME updaterName,
+        H.UPDATE_TIME updaterTime
+        LEFT JOIN T_SF_STORE_HANDOVER_ATTACHMENT H ON H.TEMPLATE_ID = A.TEMPLATE_ID AND H.HANDOVER_ID = #{handoverId} AND H.DEL_FLAG='M0015'
+        LEFT JOIN T_SYS_USER U1 ON U1.USER_ID = H.CREATOR AND U1.DEL_FLAG ='M0015'
+        LEFT JOIN T_SYS_USER U2 ON U2.USER_ID = H.UPDATER AND U2.DEL_FLAG ='M0015'
+        WHERE A.PAGE_ID = 'SF30_048' AND A.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertStoreHandoverAttachment" parameterType="com.stripcode.mybatis.sf.model.SFStoreHandoverAttachment">
+        INSERT INTO T_SF_STORE_HANDOVER_ATTACHMENT(
+        ROW_ID,
+        HANDOVER_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{handoverId},
+        #{templateId},
+        #{attachId},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+    <update id="updateStoreHandoverAttachment" parameterType="com.stripcode.mybatis.sf.model.SFStoreHandoverAttachment">
+        UPDATE T_SF_STORE_HANDOVER_ATTACHMENT
+        SET
+        TEMPLATE_ID = #{templateId},
+        ATTACH_ID = #{attachId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE ROW_ID = #{rowId} AND HANDOVER_ID = #{handoverId}
+    </update>
+</mapper>

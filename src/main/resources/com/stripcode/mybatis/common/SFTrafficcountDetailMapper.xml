@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFTrafficcountDetailMapper">
+
+    <select id="selectTrafficcountDetail" resultType="com.stripcode.mybatis.sf.model.SFTrafficcountDetail" parameterType="java.lang.String">
+        SELECT
+        TEST_ID,
+        DAY1,
+        DAY2,
+        DAY3,
+        TIME_INTERVAL,
+        PEDESTRIAN_FLOW
+        FROM
+        T_SF_TRAFFICCOUNT_DETAIL
+        where TEST_ID = #{testId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertTrafficcountDetail" parameterType="com.stripcode.mybatis.sf.model.SFTrafficcountDetail">
+        INSERT INTO T_SF_TRAFFICCOUNT_DETAIL(
+        TEST_ID,
+        DAY1,
+        DAY2,
+        DAY3,
+        TIME_INTERVAL,
+        PEDESTRIAN_FLOW,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{testId},
+        #{day1},
+        #{day2},
+        #{day3},
+        #{timeInterval},
+        #{pedestrianFlow},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+</mapper>

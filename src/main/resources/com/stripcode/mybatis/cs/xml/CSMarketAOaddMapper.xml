@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSMarketAOaddMapper">
+
+    <select id="selectAuthorInfoById" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        SELECT
+            cei.DISCOUNT_RATE,
+            cei.DEPOSIT,
+            cei.PLEDGE,
+            cei.GOODS_PLEDGE,
+            cei.INITIAL_FEE,
+            cei.ACCREDIT_STARTDATE,
+            cei.ACCREDIT_ENDDATE,
+            cei.IS_BUYOUT,
+            cei.BRAND,
+            /*cei.ERP_CODE,*/
+            cei.REMARK,
+            cei.COOPERATION_MODE,
+            cei.MARKET_LEV,
+            TA.INVEST_FUNDS,
+            TA.COST_BACK,
+            TA.OTHER_BRAND,
+            TC.DIRECTOR,
+            cei.IS_NEW_ERPID,
+            cei.SPLIT_RATE,
+            cei.REMARK,
+            cei.ERP_NAME,
+            cei.ROW_ID AUTHORIZATION_ID,
+            cei.OPTIMAUTH_ID,
+            cei.DISCOUNT_RATE_MODE,
+            TC.ROW_ID
+        FROM
+              T_CS_MARKET_OPTIMAUTH TC
+        LEFT JOIN
+            T_CS_NEW_MARKETAUZ cei ON TC.ROW_ID = cei.OPTIMAUTH_ID AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN
+            T_CS_PLAN_INVESTMENT TA ON TC.ROW_ID = TA.OPTIMAUTH_ID AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN
+            T_SYS_USER U ON U.USER_ID = TC.DIRECTOR AND U.DEL_FLAG = 'M0015'
+        <where>
+             AND TC.CUSTOMER_ID = #{customerId} AND TC.ROW_ID = #{rowId} AND cei.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="AutoCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+       SELECT
+          COUNT(1)
+        FROM
+           T_CS_MARKET_OPTIMAUTH TC
+        LEFT JOIN T_CS_NEW_MARKETAUZ TS ON TS.OPTIMAUTH_ID=TC.ROW_ID
+        WHERE  TC.CUSTOMER_ID= #{customerId} AND TC.ROW_ID = #{rowId}
+    </select>
+
+    <insert id="insertAuto" parameterType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+            INSERT INTO
+            T_CS_MARKET_OPTIMAUTH
+         (
+            ROW_ID,
+            CUSTOMER_ID,
+            BRAND,
+            ERP_NAME,
+            DIRECTOR,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            PRO_STATUS,
+            CURRENT_NODE,
+            DEL_FLAG,
+            OPTIMIZED_TYPE
+         )
+        VALUES (
+            #{optimauthId},
+            #{customerId},
+            #{brand},
+            #{erpName},
+            #{director},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0097',
+            'M0088',
+            'M0015',
+            'jeemq100501'
+        )
+    </insert>
+    <select id="selectMarketIds"  resultType="com.stripcode.mybatis.cs.model.CSErpMarketMap">
+        SELECT
+        TCS.MARKET_ID
+        FROM  T_CS_ERP_MARKET_MAP TCS
+               INNER JOIN T_CS_NEW_MARKETAUZ TCN
+               ON TCS.AUTHORIZATION_ID = TCN.ROW_ID
+               AND TCN.DEL_FLAG='M0015'
+        WHERE TCN.OPTIMAUTH_ID  = #{rowId} AND TCS.DEL_FLAG='M0015'
+    </select>
+    <select id="selectMarketList" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo" parameterType="java.lang.String">
+            SELECT
+            DISTINCT
+            CP.ROW_ID,
+            CP.MARKET_ID,
+            CP.MARKET_NAME,
+            CP.COUNTRY,
+            CP.PROVINCE,
+            CP.CITY,
+            CP.DISTRICT,
+            CP.STREET,
+            CP.REGION
+            FROM
+            T_MP_MARKETINFO CP1
+            INNER JOIN T_MP_MARKETINFO CP
+            ON CP.MARKET_ID like concat(CP1.MARKET_ID,'%')
+            AND CP.`level` = 'M0011'
+          WHERE CP1.MARKET_ID IN
+            <foreach item="marketIds" collection="marketIds" index="index" open="("
+                     separator="," close=")">
+                #{marketIds}
+            </foreach>
+        ORDER BY CP.MARKET_ID
+    </select>
+
+    <insert id="insertBatchMarket" parameterType="com.stripcode.mybatis.cs.model.CSErpMarketMap">
+        INSERT INTO
+        T_CS_ERP_MARKET_MAP
+        (
+            ROW_ID,
+            AUTHORIZATION_ID,
+            MARKET_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )
+        VALUES (
+            #{rowId},
+            #{authorizationId},
+            #{marketId},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateBatchMarket" parameterType="com.stripcode.mybatis.cs.model.CSErpMarketMap">
+         UPDATE
+          T_CS_ERP_MARKET_MAP
+        SET
+            MARKET_ID = #{marketId},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+        WHERE
+           AUTHORIZATION_ID = #{authorizationId}
+           AND MARKET_ID=#{marketId}
+        AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="MarketCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+          COUNT(1)
+        FROM
+          T_CS_ERP_MARKET_MAP T1
+        LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T2.OPTIMAUTH_ID = T1.AUTHORIZATION_ID
+        WHERE T1.AUTHORIZATION_ID = #{authorizationId} AND T1.MARKET_ID= #{marketId}
+        AND T1.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        INSERT INTO
+            T_CS_NEW_MARKETAUZ
+         (
+            ROW_ID,
+            OPTIMAUTH_ID,
+            SPLIT_RATE,
+            DISCOUNT_RATE_MODE,
+            BRAND,
+            COOPERATION_MODE,
+            DISCOUNT_RATE,
+            DEPOSIT,
+            PLEDGE,
+            GOODS_PLEDGE,
+            INITIAL_FEE,
+            ACCREDIT_STARTDATE,
+            ACCREDIT_ENDDATE,
+            IS_BUYOUT,
+            MARKET_LEV,
+            IS_NEW_ERPID,
+            REMARK,
+            ERP_NAME,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+         )
+        VALUES (
+            #{rowId},
+            #{optimauthId},
+            #{splitRate},
+            #{discountRateMode},
+            #{brand},
+            #{cooperationMode},
+            #{discountRate},
+            #{deposit},
+            #{pledge},
+            #{goodsPledge},
+            #{initialFee},
+            #{accreditStartDate},
+            #{accreditEndDate},
+            #{isBuyout},
+            #{marketLev},
+            #{isNewErpId},
+            #{remark},
+            #{erpName},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        UPDATE
+		   T_CS_NEW_MARKETAUZ
+	    SET
+            BRAND =#{brand},
+            USER_ID =#{userId},
+            COOPERATION_MODE =#{cooperationMode},
+            SPLIT_RATE =#{splitRate},
+            DISCOUNT_RATE_MODE =#{discountRateMode},
+            DISCOUNT_RATE =#{discountRate},
+            DEPOSIT =#{deposit},
+            PLEDGE =#{pledge},
+            GOODS_PLEDGE =#{goodsPledge},
+            INITIAL_FEE =#{initialFee},
+            ACCREDIT_STARTDATE =#{accreditStartDate},
+            ACCREDIT_ENDDATE =#{accreditEndDate},
+            IS_BUYOUT =#{isBuyout},
+            MARKET_LEV =#{marketLev},
+            IS_NEW_ERPID = #{isNewErpId},
+            REMARK =#{remark},
+            ERP_NAME =#{erpName},
+            CREATOR = #{creator},
+            CREATE_TIME = #{createTime},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+	    WHERE OPTIMAUTH_ID = #{optimauthId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectCustomerName"  resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+          SELECT customer_id,CORPORATION FROM (
+            SELECT customer_id,CORPORATION FROM
+            T_CS_CUSTOMERINFO
+            WHERE del_flag = 'M0015'
+            AND CUSTOMER_PROPERTY = 'M0018'
+            UNION ALL
+            SELECT customer_id,COMPANY_NAME FROM
+            T_CS_CUSTOMERINFO
+            WHERE del_flag = 'M0015'
+            AND CUSTOMER_PROPERTY IN( 'M0016','M0017')
+            )A
+            ORDER BY CONVERT(CORPORATION USING GBK)
+    </select>
+
+    <select id="erpCodeList" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+       SELECT
+            T.ERP_CODE,
+            T.ERP_NAME
+        FROM
+            T_CS_CUSTOMER_ERP_INFO T
+    </select>
+
+    <select id="selectErpCodeList" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+      SELECT
+            T1.ERP_CODE,
+            T1.ERP_NAME
+       FROM T_CS_CUSTOMER_ERP_INFO T1
+      /* LEFT JOIN T_CS_MARKET_OPTIMAUTH T ON T1.CUSTOMER_ID =T.CUSTOMER_ID AND T1.DEL_FLAG='M0015'*/
+       /*LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T2.OPTIMAUTH_ID= T.ROW_ID AND T2.DEL_FLAG='M0015'*/
+       WHERE  T1.CUSTOMER_ID= #{customerId} AND T1.DEL_FLAG='M0015'
+    </select>
+
+    <update id="updateMarketDelFlag">
+        UPDATE T_CS_ERP_MARKET_MAP SET DEL_FLAG = 'M0014'
+        <where>
+        <if test='marketId != null and marketId.length!= 0'>
+                MARKET_ID NOT IN
+        <foreach collection="marketId" item="marketId" index="index"
+                 open="(" close=")" separator=",">
+            #{marketId}
+        </foreach>
+        </if>
+         AND AUTHORIZATION_ID = #{authorizationId} AND DEL_FLAG = 'M0015'
+        </where>
+    </update>
+    <select id="selectAll"  resultType="com.stripcode.mybatis.cs.model.TCsTaskCompletion">
+        SELECT
+            T1.TASK_ID
+        FROM
+          T_CF_TASK_TEMPLATE T1
+    </select>
+    <insert id="insertCompletion" parameterType="com.stripcode.mybatis.cs.model.CSErpMarketMap">
+        INSERT INTO
+        T_CS_TASK_COMPLETION
+        (
+        ROW_ID,
+        OPTIMAUTH_ID,
+        TASK_ID,
+        IS_FINISHED,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{optimauthId},
+        #{taskId},
+        #{creator},
+        #{createTime},
+        #{updater},
+        #{updateTime},
+        'M0015'
+        )
+    </insert>
+
+    <select id="selectErpCode" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        SELECT
+            T.CUSTOMER_ID,
+            T.ERP_CODE,
+            T.ERP_NAME,
+            T.USER_ID,
+            T.IS_BUYOUT,
+            T.INITIAL_FEE,
+            T.GOODS_PLEDGE,
+            T.PLEDGE,
+            T.DEPOSIT,
+            T.MARKET_LEV marketLevCode,
+            T3.MACRO_NAME marketLev,
+            T.BRAND brandCode,
+            T1.MACRO_NAME brand,
+            T.ACCREDIT_ENDDATE,
+            T.ACCREDIT_STARTDATE,
+            T.BASIC_DISCOUNT_RATE discountRate,
+            T.COOPERATION_MODE cooperationModeCode,
+            T2.MACRO_NAME cooperationMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO T
+            LEFT JOIN T_SYS_USER U ON U.USER_ID = T.USER_ID AND U.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.COOPERATION_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'COOPERATION_MODEL' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.MARKET_LEV = T3.MACRO_CODE AND T3.MACRO_TYPE = 'MARKET_LEVEL' AND T3.DEL_FLAG = 'M0015'
+        <where>
+            T.CUSTOMER_ID = #{customerId}
+            AND T.ERP_CODE = #{erpCode} AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectForExportMarketInfo" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+            CP.MARKET_ID,
+            CP.MARKET_NAME,
+            CP.COUNTRY,
+            CP.PROVINCE,
+            CP.CITY,
+            CP.DISTRICT,
+            CP.STREET,
+            E1.customerNumber
+        FROM
+            T_MP_MARKETINFO CP
+        LEFT JOIN
+        (SELECT
+            A.MARKET_ID,
+        COUNT(DISTINCT C.CUSTOMER_ID) customerNumber,
+        COUNT(DISTINCT C.BRAND) brandNumber
+        FROM
+            T_MP_MARKETINFO A
+        INNER JOIN T_CS_ERP_MARKET_INFO B
+        ON B.MARKET_ID LIKE CONCAT(A.MARKET_ID, '%')
+        INNER JOIN T_CS_CUSTOMER_ERP_INFO C
+        ON B.AUTHORIZATION_ID = C.ROW_ID
+        GROUP BY A.MARKET_ID) E1
+        ON CP.MARKET_ID = E1.MARKET_ID
+        ORDER BY CP.MARKET_ID
+    </select>
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+            CP.ROW_ID,
+            CP.MARKET_ID,
+            CP.MARKET_NAME,
+            CP.PARENT_ID,
+            CP.COUNTRY,
+            CP.PROVINCE,
+            CP.CITY,
+            CP.DISTRICT,
+            CP.STREET,
+            CP.REGION,
+            CP.LEVEL,
+            CP.IS_CITYCOMP
+        FROM
+        T_MP_MARKETINFO CP
+        <where> CP.MARKET_ID NOT IN
+            <if test="marketIds != null and marketIds != ''">
+                <foreach item="marketIds" collection="marketIds" index="index" open="("
+                         separator="," close=")">
+                    #{marketIds}
+                </foreach>
+            </if>
+            <if test="marketName!=null and marketName!=''">
+                AND MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
+            </if>
+            <if test="region!=null and region!=''">
+                AND CP.MARKET_ID  LIKE CONCAT('%',#{region},'%')
+            </if>
+            <if test="marketId!=null and marketId!=''">
+                AND CP.MARKET_ID LIKE CONCAT('%',#{marketId},'%')
+            </if>
+            <if test="province!=null and province!=''">
+                <choose>
+                    <when test="city!=null and city!=''">
+                        <choose>
+                            <when test="district!=null and district!=''">
+                                <choose>
+                                    <when test="street!=null and street!=''">
+                                        AND CP.MARKET_ID  LIKE CONCAT(#{street},'%')
+                                    </when>
+                                    <otherwise>
+                                        AND CP.MARKET_ID  LIKE CONCAT(#{district},'%')
+                                    </otherwise>
+                                </choose>
+                            </when>
+                            <otherwise>
+                                AND CP.MARKET_ID  LIKE CONCAT(#{city},'%')
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        AND CP.MARKET_ID   LIKE CONCAT(#{province},'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="level!=null and level!=''">
+                AND LEVEL = #{level}
+            </if>
+            AND CP.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY CP.MARKET_ID
+    </select>
+    <select id="selectDiscountSplit" resultType="com.stripcode.mybatis.cs.model.CSMarketDiscountSplit" parameterType="java.lang.String">
+        SELECT
+          T5.MACRO_CODE,
+          T5.MACRO_NAME,
+          T2.SPLIT_RATE,
+          T2.DISCOUNT_RATE
+        FROM
+             T_CODE_MACRO_DEFINE T5
+        LEFT JOIN
+             (
+        SELECT T.STYLE,T.SPLIT_RATE, T.DISCOUNT_RATE ,T.AUTHORIZATION_ID
+        FROM
+              T_CS_MARKET_DISCOUNT_SPLIT T
+        INNER JOIN T_CS_NEW_MARKETAUZ T1 ON T1.ROW_ID = T.AUTHORIZATION_ID AND T1.DEL_FLAG = 'M0015' AND T1.OPTIMAUTH_ID = #{optimauthId}
+        WHERE T.DEL_FLAG = 'M0015'
+             ) T2
+	       ON T2.STYLE = T5.MACRO_CODE
+        WHERE T5.MACRO_TYPE = 'STORE_IMAGE'
+		AND T5.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertDiscountSplit" parameterType="com.stripcode.mybatis.cs.model.CSMarketDiscountSplit">
+        INSERT INTO
+        T_CS_MARKET_DISCOUNT_SPLIT
+        (
+        ROW_ID,
+        AUTHORIZATION_ID,
+        STYLE,
+        <if test="splitRate!=null and splitRate!=''">
+            SPLIT_RATE,
+        </if>
+        <if test="discountRate!=null and discountRate!=''">
+            DISCOUNT_RATE,
+        </if>
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{authorizationId},
+        #{macroCode},
+        <if test="splitRate!=null and splitRate!=''">
+            #{splitRate},
+        </if>
+        <if test="discountRate!=null and discountRate!=''">
+            #{discountRate},
+        </if>
+        #{creator},
+        #{createTime},
+        #{updater},
+        #{updateTime},
+        'M0015'
+        )
+    </insert>
+    <update id="updateDiscountSplit" parameterType="com.stripcode.mybatis.cs.model.CSMarketDiscountSplit">
+        UPDATE
+        T_CS_MARKET_DISCOUNT_SPLIT
+        SET
+        <if test="splitRate!=null and splitRate!=''">
+        SPLIT_RATE =#{splitRate},
+        </if>
+        <if test="discountRate!=null and discountRate!=''">
+            DISCOUNT_RATE =#{discountRate},
+        </if>
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE AUTHORIZATION_ID = #{authorizationId} AND STYLE = #{macroCode} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsDiscountSplit" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+          COUNT(0)
+        FROM
+          T_CS_MARKET_DISCOUNT_SPLIT
+          WHERE AUTHORIZATION_ID = #{authorizationId} AND STYLE = #{style} AND DEL_FLAG='M0015'
+    </select>
+</mapper>

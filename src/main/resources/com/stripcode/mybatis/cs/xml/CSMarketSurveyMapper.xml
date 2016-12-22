@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSMarketSurveyMapper">
+    <select id="MarketSurveyList" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSSysAttachedTemplate">
+        SELECT
+            U.USER_NAME creater,
+            C.UPDATE_TIME createrTime,
+            TC.TITLE,
+            TC.CAN_UPLOAD,
+            TC.CAN_DOWNLOAD,
+            TC.CAN_DELETE,
+            T.ATTACH_ID,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            TC.TEMPLATE_ID
+        FROM
+        T_SYS_ATTACHEDTEMPLATE TC
+        LEFT JOIN T_CS_MARKET_SURVEY T ON T.TEMPLATE_ID = TC.TEMPLATE_ID AND T.DEL_FLAG = 'M0015'AND OPTIMAUTH_ID =#{optimauthId}
+        LEFT JOIN T_SYS_COMMONATTACHED C ON T.ATTACH_ID = C.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = C.CREATOR AND U.DEL_FLAG = 'M0015'
+         WHERE
+                TC.PAGE_ID='CS20_019'AND TC.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertSurvey" parameterType="com.stripcode.mybatis.cs.model.CSMarketSurvey">
+        INSERT INTO
+                T_CS_MARKET_SURVEY(
+                ROW_ID,
+                OPTIMAUTH_ID,
+                TEMPLATE_ID,
+                ATTACH_ID,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+                )VALUES(
+                #{rowId},
+                #{optimauthId},
+                #{templateId},
+                #{attachId},
+                #{creator},
+                #{createTime},
+                #{updater},
+                #{updateTime},
+                'M0015'
+                )
+    </insert>
+
+    <insert id="updateSurvey" parameterType="com.stripcode.mybatis.cs.model.CSMarketSurvey">
+        UPDATE
+            T_CS_MARKET_SURVEY
+        SET
+            TEMPLATE_ID = #{templateId},
+            ATTACH_ID = #{attachId},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+        WHERE
+             OPTIMAUTH_ID =#{optimauthId} AND DEL_FLAG = 'M0015'
+    </insert>
+
+    <select id="SurveyCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+            SELECT
+              COUNT(0)
+            FROM
+                T_CS_MARKET_SURVEY T
+            WHERE
+                T.OPTIMAUTH_ID=#{optimauthId}
+    </select>
+
+</mapper>

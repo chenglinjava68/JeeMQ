@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSErpIDMapper">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+       SELECT
+            Tcs.CORPORATION,
+            Tcs.TEL,
+            Tcs.ID_NUMBER,
+            Tcs.ADDRESS,
+            Tcs.POST_ADDRESS,
+            Tcs.COMPANY_NAME,
+            Tcs.SUPERIOR_COMPANY,
+            Tcer.ERP_CODE,
+            Tcer.ERP_NAME,
+            Tcer.CUSTOMER_ID,
+            Tcer.ACCREDIT_ENDDATE,
+            Tcer.ACCREDIT_STARTDATE,
+            Tcer.BASIC_DISCOUNT_RATE,
+            Tcer.DISCOUNT_RATE_MODE,
+            Tcer.SPLIT_RATE,
+            T1.MACRO_NAME cooperationMode,
+            T2.MACRO_NAME customerProperty,
+            T3.MACRO_NAME discountRateMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO Tcer
+        LEFT JOIN T_CS_CUSTOMERINFO Tcs ON Tcer.CUSTOMER_ID = Tcs.CUSTOMER_ID AND Tcs.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON Tcer.COOPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'COOPERATION_MODEL' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON Tcs.CUSTOMER_PROPERTY = T2.MACRO_CODE AND T2.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON Tcer.DISCOUNT_RATE_MODE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T3.DEL_FLAG = 'M0015'
+        <where>
+            AND Tcer.ERP_CODE = #{erpCode}
+            AND Tcer.ROW_ID = #{rowId}
+            AND Tcer.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectCustomerSplit" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSMarketCustomerDiscountSplit">
+        SELECT
+        Tcs.SPLIT_RATE,
+        Tcs.DISCOUNT_RATE,
+        T2.MACRO_NAME style
+        FROM
+        T_CS_MARKET_CUSTOMER_DISCOUNT_SPLIT Tcs
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO Tcer  ON Tcer.ROW_ID = Tcs.AUTHORIZATION_ID AND Tcs.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON Tcs.STYLE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'STORE_IMAGE' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            AND Tcer.ERP_CODE = #{erpCode}
+            AND Tcer.ROW_ID = #{rowId}
+            AND Tcer.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="selectCpMInfoForID" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+            CP.MARKET_ID,
+            CP.MARKET_NAME,
+            CP.COUNTRY,
+            MI.ACCREDIT_STARTDATE,
+            MI.ACCREDIT_ENDDATE,
+            CP.region,
+            CP.province,
+            CP.city,
+            CP.district,
+            T5.MACRO_NAME brand,
+            CP.street
+        FROM
+            T_MP_MARKETINFO CP
+        LEFT JOIN T_CS_ERP_MARKET_INFO MI ON MI.MARKET_ID  = CP.MARKET_ID AND MI.DEL_FLAG ='M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO CEI ON CEI.ROW_ID = MI.AUTHORIZATION_ID AND CEI.DEL_FLAG ='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE  T5 ON CEI.BRAND = T5.MACRO_CODE AND T5.MACRO_TYPE = 'BRAND' AND T5.DEL_FLAG = 'M0015'
+        <where>
+            AND CEI.CUSTOMER_ID = #{customerId}
+            AND CP.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectList" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSMarketContract">
+        SELECT
+            TC.CONTRACT_NAME,
+            TC.ATTACH_ID,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            TC.SIGN_DATE
+        FROM
+            T_CS_MARKET_CONTRACT TC
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO TSC ON TSC.ROW_ID  = TC.AUTHORIZATION_ID AND TSC.DEL_FLAG ='M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED C ON TC.ATTACH_ID = C.ATTACH_ID
+        <where>
+            AND TSC.CUSTOMER_ID = #{customerId}
+            AND TSC.ERP_CODE = #{erpCode}
+            AND TC.DEL_FLAG = 'M0015'
+            ORDER BY  TC.SIGN_DATE DESC
+        </where>
+    </select>
+</mapper>

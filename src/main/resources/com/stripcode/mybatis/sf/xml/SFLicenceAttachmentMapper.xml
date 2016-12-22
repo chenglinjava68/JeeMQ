@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFLicenceAttachmentMapper">
+    <select id="queryAll" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLicenceAttachment">
+        SELECT
+              T.TITLE templateName,
+              L.ROW_ID,
+              L.PP_ID,
+              T.TEMPLATE_ID,
+              L.ATTACH_ID,
+              L.STATUS,
+              L.APPROVAL_DATE,
+              L.DESCRIPTION,
+              L.UPDATE_TIME time,
+              U.USER_NAME updaterName
+        FROM T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_LICENCE_ATTACHMENT L ON L.TEMPLATE_ID = T.TEMPLATE_ID AND L.PP_ID = #{ppId} AND L.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON L.UPDATER = U.USER_ID AND U.DEL_FLAG = 'M0015'
+        WHERE T.DEL_FLAG = 'M0015' AND T.PAGE_ID = 'SF30_072'
+    </select>
+    
+    <insert id="insertLicenceAttachment" parameterType="com.stripcode.mybatis.sf.model.SFLicenceAttachment">
+        INSERT INTO T_SF_LICENCE_ATTACHMENT(
+            ROW_ID,
+            PP_ID,
+            TEMPLATE_ID,
+            ATTACH_ID,
+            STATUS,
+            APPROVAL_DATE,
+            DESCRIPTION,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{templateId},
+            #{attachId},
+            #{status},
+            #{approvalDate},
+            #{description},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateLicenceAttachment" parameterType="com.stripcode.mybatis.sf.model.SFLicenceAttachment">
+        UPDATE T_SF_LICENCE_ATTACHMENT
+        SET TEMPLATE_ID = #{templateId},
+        ATTACH_ID = #{attachId},
+        STATUS = #{status},
+        APPROVAL_DATE = #{approvalDate},
+        DESCRIPTION = #{description},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+
+</mapper>

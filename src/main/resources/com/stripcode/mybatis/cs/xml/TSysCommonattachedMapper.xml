@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.cs.dao.TSysCommonattachedMapper">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    DELETE
+      FROM
+          t_sys_commonattached
+      WHERE
+          ATTACH_ID = #{attachId}
+  </delete>
+  <insert id="insert" parameterType="TSysCommonattached">
+    INSERT INTO t_sys_commonattached (
+      AUTO_NO,
+      ATTACH_ID,
+      PAGE_ID,
+      DOC_NAME,
+      FILE_NAME,
+      IS_TEMPLETE,
+      TEMPLETE_ID,
+      FILE_PATH,
+      COMMENTS,
+      CREATE_DATE,
+      MODIFY_DATE,
+      OWNER,
+      STATUS,
+      FILE_SIZE,
+      FILE_TYPE,
+      VERSION_NO,
+      KEY_ID,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+  )
+  VALUES
+      (
+          #{autoNo},
+          #{attachId},
+          #{pageId},
+          #{docName},
+          #{fileName},
+          #{isTemplete},
+          #{templeteId},
+          #{filePath},
+          #{comments},
+          #{createDate},
+          #{modifyDate},
+          #{owner},
+          #{status},
+          #{fileSize},
+          #{fileType},
+          #{versionNo},
+          #{keyId},
+          #{creator},
+          sysdate(),
+          #{updater},
+          sysdate(),
+          #{delFlag},
+          #{def1},
+          #{def2},
+          #{def3},
+          #{def4},
+          #{def5},
+          #{def6},
+          #{def7},
+          #{def8},
+          #{def9},
+          #{def10}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysCommonattached">
+   UPDATE t_sys_commonattached
+    SET
+        PAGE_ID = #{pageId},
+        DOC_NAME = #{docName},
+        FILE_NAME = #{fileName},
+        IS_TEMPLETE = #{isTemplete},
+        TEMPLETE_ID = #{templeteId},
+        FILE_PATH = #{filePath},
+        COMMENTS = #{comments},
+        OWNER = #{owner},
+        STATUS = #{status},
+        FILE_SIZE = #{fileSize},
+        FILE_TYPE = #{fileType},
+        KEY_ID = #{keyId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate(),
+        DEL_FLAG = #{delFlag},
+        DEF1 = #{def1},
+        DEF2 = #{def2},
+        DEF3 = #{def3},
+        DEF4 = #{def4},
+        DEF5 = #{def5},
+        DEF6 = #{def6},
+        DEF7 = #{def7},
+        DEF8 = #{def8},
+        DEF9 = #{def9},
+        DEF10 = #{def10}
+          WHERE
+              ATTACH_ID = #{attachId}
+  </update>
+  <update id="updateByPrimaryKeyNew" parameterType="TSysCommonattached">
+   UPDATE t_sys_commonattached
+    SET
+        PAGE_ID = #{pageId},
+        DOC_NAME = #{docName},
+        FILE_NAME = #{fileName},
+        IS_TEMPLETE = #{isTemplete},
+        TEMPLETE_ID = #{templeteId},
+        FILE_PATH = #{filePath},
+        COMMENTS = #{comments},
+        OWNER = #{owner},
+        STATUS = #{status},
+        FILE_SIZE = #{fileSize},
+        FILE_TYPE = #{fileType},
+        KEY_ID = #{keyId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate(),
+        DEL_FLAG = #{delFlag},
+        DEF1 = #{def1},
+        DEF2 = #{def2},
+        DEF3 = #{def3},
+        DEF4 = #{def4},
+        DEF5 = #{def5},
+        DEF6 = #{def6},
+        DEF7 = #{def7},
+        DEF8 = #{def8},
+        DEF9 = #{def9},
+        DEF10 = #{def10}
+          WHERE
+              VERSION_NO = #{versionNo}
+  </update>
+  <update id="deleteByVersionNo" parameterType="TSysCommonattached">
+   UPDATE t_sys_commonattached
+    SET
+        DEL_FLAG = 'M0014'
+          WHERE
+              VERSION_NO = #{versionNo}
+  </update>
+  <select id="selectAll" resultType="TSysCommonattached">
+   SELECT
+        AUTO_NO,
+        ATTACH_ID,
+        PAGE_ID,
+        DOC_NAME,
+        FILE_NAME,
+        IS_TEMPLETE,
+        TEMPLETE_ID,
+        FILE_PATH,
+        COMMENTS,
+        CREATE_DATE,
+        MODIFY_DATE,
+        OWNER,
+        STATUS,
+        FILE_SIZE,
+        FILE_TYPE,
+        VERSION_NO,
+        KEY_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_COMMONATTACHED
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="TSysCommonattached">
+   SELECT
+        AUTO_NO,
+        ATTACH_ID,
+        PAGE_ID,
+        DOC_NAME,
+        FILE_NAME,
+        IS_TEMPLETE,
+        TEMPLETE_ID,
+        FILE_PATH,
+        COMMENTS,
+        CREATE_DATE,
+        MODIFY_DATE,
+        OWNER,
+        STATUS,
+        FILE_SIZE,
+        FILE_TYPE,
+        VERSION_NO,
+        KEY_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_COMMONATTACHED
+        where VERSION_NO = #{versionNo}
+        AND DEL_FLAG = 'M0015'
+  </select>
+  <select id="selectByAttachId" parameterType="java.lang.String" resultType="TSysCommonattached">
+   SELECT
+        T.AUTO_NO,
+        T.ATTACH_ID,
+        T.PAGE_ID,
+        T.DOC_NAME,
+        T.FILE_NAME,
+        T.IS_TEMPLETE,
+        T.TEMPLETE_ID,
+        T.FILE_PATH,
+        T.COMMENTS,
+        T.CREATE_DATE,
+        T.MODIFY_DATE,
+        T1.USER_NAME OWNER,
+        T.STATUS,
+        T.FILE_SIZE,
+        T.FILE_TYPE,
+        T.VERSION_NO,
+        T.KEY_ID,
+        T.CREATOR,
+        T.CREATE_TIME,
+        T.UPDATER,
+        T.UPDATE_TIME,
+        T.DEL_FLAG,
+        T.DEF1,
+        T.DEF2,
+        T.DEF3,
+        T.DEF4,
+        T.DEF5,
+        T.DEF6,
+        T.DEF7,
+        T.DEF8,
+        T.DEF9,
+        T.DEF10
+    FROM
+        T_SYS_COMMONATTACHED T
+        LEFT JOIN T_SYS_USER T1 ON T1.USER_ID = T.UPDATER AND T1.DEL_FLAG = 'M0015'
+        where ATTACH_ID = #{attachId}
+        AND T.DEL_FLAG = 'M0015'
+  </select>
+  <select id="isExists" parameterType="TSysCommonattached" resultType="java.lang.Integer">
+  SELECT
+      count('X')
+  FROM
+      T_SYS_COMMONATTACHED
+  WHERE
+      ATTACH_ID = #{attachId}
+  </select>
+  <select id="isExistsNew" parameterType="TSysCommonattached" resultType="java.lang.Integer">
+  SELECT
+      count('X')
+  FROM
+      T_SYS_COMMONATTACHED
+  WHERE
+      VERSION_NO = #{versionNo}
+  </select>
+    <select parameterType="java.lang.String" resultType="map" id="getTemlateFilePath">
+       SELECT B.FILE_PATH fieldId,B.DOC_NAME fileName,B.ATTACH_ID attachId
+        FROM
+        T_SYS_COMMONATTACHED B
+        WHERE B.ATTACH_ID = #{attachId}
+    </select>
+</mapper>

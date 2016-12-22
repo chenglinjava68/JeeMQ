@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFStoreHandoverMapper" >
+
+    <select id="queryStoreHandoverInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFStoreHandover">
+        SELECT
+        ROW_ID,
+        PP_ID,
+        CONTACTER,
+        POSITION,
+        LANDLINE,
+        PHONE,
+        ADDRESS,
+        IS_RECOMMEND,
+        RECD_INSTRUCTION,
+        PLAN_DATE,
+        ACTUAL_DATE,
+        IS_SIGN_INSTALLED,
+        SIGN_INSTRUCTION,
+        IS_CLEAN_COST,
+        CLEAN_COST_INSTRUCTION,
+        IS_PAY_PRO_COST,
+        PRO_COST_INSTRUCTION,
+        IS_WE_COST,
+        WE_COST_INSTRUCTION,
+        IS_SHARING_SITE,
+        SHARING_SITE_INSTRUCTION,
+        IS_STANDARD_ESCAPE,
+        STANDARD_ESCAPE_INSTRUCTION,
+        IS_OTHER,
+        OTHER_INSTRUCTION
+        FROM T_SF_STORE_HANDOVER
+        WHERE PP_ID=#{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertStoreHandover" parameterType="com.stripcode.mybatis.sf.model.SFStoreHandover">
+        INSERT INTO T_SF_STORE_HANDOVER(
+        ROW_ID,
+        PP_ID,
+        CONTACTER,
+        POSITION,
+        LANDLINE,
+        PHONE,
+        ADDRESS,
+        IS_RECOMMEND,
+        RECD_INSTRUCTION,
+        PLAN_DATE,
+        ACTUAL_DATE,
+        IS_SIGN_INSTALLED,
+        SIGN_INSTRUCTION,
+        IS_CLEAN_COST,
+        CLEAN_COST_INSTRUCTION,
+        IS_PAY_PRO_COST,
+        PRO_COST_INSTRUCTION,
+        IS_WE_COST,
+        WE_COST_INSTRUCTION,
+        IS_SHARING_SITE,
+        SHARING_SITE_INSTRUCTION,
+        IS_STANDARD_ESCAPE,
+        STANDARD_ESCAPE_INSTRUCTION,
+        IS_OTHER,
+        OTHER_INSTRUCTION,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{ppId},
+        #{contacter},
+        #{position},
+        #{landline},
+        #{phone},
+        #{address},
+        #{isRecommend},
+        #{recdInstruction},
+        #{planDate},
+        #{actualDate},
+        #{isSignInstalled},
+        #{signInstruction},
+        #{isCleanCost},
+        #{cleanCostInstruction},
+        #{isPayProCost},
+        #{proCostInstruction},
+        #{isWeCost},
+        #{weCostInstruction},
+        #{isSharingSite},
+        #{sharingSiteInstruction},
+        #{isStandardEscape},
+        #{standardEscapeInstruction},
+        #{isOther},
+        #{otherInstruction},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+    <update id="updateStoreHandover" parameterType="com.stripcode.mybatis.sf.model.SFStoreHandover">
+        UPDATE T_SF_STORE_HANDOVER
+        SET
+        CONTACTER = #{contacter},
+        POSITION = #{position},
+        LANDLINE = #{landline},
+        PHONE = #{phone},
+        ADDRESS = #{address},
+        IS_RECOMMEND = #{isRecommend},
+        RECD_INSTRUCTION = #{recdInstruction},
+        PLAN_DATE = #{planDate},
+        ACTUAL_DATE = #{actualDate},
+        IS_SIGN_INSTALLED = #{isSignInstalled},
+        SIGN_INSTRUCTION = #{signInstruction},
+        IS_CLEAN_COST = #{isCleanCost},
+        CLEAN_COST_INSTRUCTION = #{cleanCostInstruction},
+        IS_PAY_PRO_COST = #{isPayProCost},
+        PRO_COST_INSTRUCTION = #{proCostInstruction},
+        IS_WE_COST = #{isWeCost},
+        WE_COST_INSTRUCTION = #{weCostInstruction},
+        IS_SHARING_SITE = #{isSharingSite},
+        SHARING_SITE_INSTRUCTION = #{sharingSiteInstruction},
+        IS_STANDARD_ESCAPE = #{isStandardEscape},
+        STANDARD_ESCAPE_INSTRUCTION = #{standardEscapeInstruction},
+        IS_OTHER = #{isOther},
+        OTHER_INSTRUCTION = #{otherInstruction},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE ROW_ID = #{rowId} AND PP_ID = #{ppId} AND DEL_FLAG='M0015'
+    </update>
+</mapper>

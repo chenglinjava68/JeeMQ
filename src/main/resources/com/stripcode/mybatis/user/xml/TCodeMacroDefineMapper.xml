@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.TCodeMacroDefineMapper" >
+  <select id="selectForUser" resultType="TCodeMacroDefine" >
+   SELECT
+      MACRO_CODE,
+      MACRO_NAME,
+      MACRO_TYPE
+    FROM
+        T_CODE_MACRO_DEFINE
+    WHERE
+    DEL_FLAG = 'M0015'
+    AND STATUS = 'M0043'
+    AND MACRO_TYPE IN (
+        'STATUS',
+        'SEX',
+        'WORK_STATUS',
+        'DEPARTMENT'
+    )
+     ORDER BY
+        MACRO_NO;
+  </select>
+
+  <select id="selectForCustomer" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS = 'M0043'
+    AND MACRO_TYPE IN ('CUSTORMER_PROPERTY','EDUCATION_DEGREE','ACCOUNT_BANK','CUSTOMER_TYPE','SUPERIOR_COMPANY','USER_STATUS','SEX','HOME_STYLE')
+    ORDER BY MACRO_NO ;
+  </select>
+
+  <select id="selectForMarket" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS = 'M0043'
+     AND MACRO_TYPE IN ('BRAND','DATA_LEVEL','YES_NO')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForCustomerErp" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND MACRO_TYPE IN ('BRAND','COOPERATION_MODEL','DISCOUNT_RATE_METHOD')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForOptimauth" resultType="TCodeMacroDefine" >
+   SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND MACRO_TYPE IN ('SUPERIOR_COMPANY','CUSTORMER_PROPERTY','MARKET_NEW_PIPELINE_STATUS','BRAND')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForMarketAOadd" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND  MACRO_TYPE IN ('BRAND','COOPERATION_MODEL','MARKET_LEVEL','YES_NO','DISCOUNT_RATE_METHOD')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForDesign" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND  MACRO_TYPE IN ('FAÇADE_ENTRANCE','SHOW_WINDOW','SMALLPOX','STAIRS','PROP','AIR_CONDITIONER','CASHIER','LIFT','ESCALATOR','WAREHOUSE','TOILET','WHETHER_NEED','SHOP_DOOR_FORM','YES_NO','UN_FETCH_REASON')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForHousePaper" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND  MACRO_TYPE IN ('UN_FETCH_REASON','YES_NO')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForProgress" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND  MACRO_TYPE IN ('DEV_SHEDULE_JOIN')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectForStore" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND MACRO_TYPE IN ('BRAND','OPERATION_MODE','STORE_PROPERTY','CHANNEL_TYPE')
+    ORDER BY MACRO_NO ;
+  </select>
+  <select id="selectSFPipeline" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND MACRO_TYPE IN ('OPERATION_MODE','BRAND','CHANNEL_TYPE','STORE_IMAGE','STORE_PROPERTY','COOPERATION_MODEL','CN_SITENAME','SEX','YES_NO','JOIN_SF_PIPELINE','DEL_FLAG')
+    ORDER BY MACRO_NO;
+  </select>
+    <select id="selectPSPolicySupportImplementation" resultType="TCodeMacroDefine">
+        SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND MACRO_TYPE IN ('STORE_PROPERTY','ASSESSMENT_INDEX','DEL_FLAG')
+    ORDER BY MACRO_NO;
+    </select>
+    <select id="selectSYSEstInvestmentModel" resultType="TCodeMacroDefine" >
+         SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS ='M0043'
+        AND MACRO_TYPE IN ('BRAND','CALCULATION_MODEL_TYPE','STATUS')
+        ORDER BY MACRO_NO;
+    </select>
+    <select id="selectSFLandlordInterest" resultType="TCodeMacroDefine" >
+        SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS ='M0043'
+        AND MACRO_TYPE IN ('COOPERATE_WILLINGNESS','DEL_FLAG')
+        ORDER BY MACRO_NO;
+    </select>
+    <select id="selectPolicySupportDetail" resultType="TCodeMacroDefine" >
+        SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS ='M0043'
+        AND MACRO_TYPE IN ('ASSESSMENT_INDEX','DEL_FLAG')
+        ORDER BY MACRO_NO;
+    </select>
+  <select id="selectForUserRight" resultType="TCodeMacroDefine" >
+    SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+    FROM T_CODE_MACRO_DEFINE
+    WHERE STATUS ='M0043'
+    AND MACRO_TYPE ='BRAND'
+    ORDER BY MACRO_NO;
+  </select>
+    <select id="selectAgreeRefuleList" resultType="TCodeMacroDefine" >
+        SELECT MACRO_CODE, MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS ='M0043'
+        AND MACRO_TYPE ='AUDIT_STATUS'
+        ORDER BY MACRO_NO;
+    </select>
+
+  <select id="selectForRangeTree" resultType="TreeModel">
+   SELECT
+        M.MACRO_CODE rowId,
+        M.MACRO_NAME tagName,
+        'M0000' parentId
+    FROM
+        t_code_macro_define M
+    WHERE
+        MACRO_TYPE = 'BRAND'
+    UNION ALL
+        SELECT
+            B.ROW_ID,
+            B.BRANCHES_NAME_CN,
+            B.BRAND
+        FROM
+            T_SYS_BRANCH_OFFICE B
+        LEFT JOIN t_code_macro_define M ON MACRO_TYPE = 'BRAND'
+        AND B.BRAND = M.MACRO_CODE
+        AND M.DEL_FLAG = 'M0015'
+        AND B.DEL_FLAG = 'M0015'
+        UNION ALL
+            SELECT
+                C.CUSTOMER_ID,
+                C.CORPORATION,
+                B.ROW_ID
+            FROM
+                T_CS_CUSTOMER_OFFICE_MAPPING M
+            INNER JOIN T_CS_CUSTOMERINFO C ON M.CUSTOMER_ID = C.CUSTOMER_ID
+            AND C.DEL_FLAG = 'M0015'
+            INNER JOIN T_SYS_BRANCH_OFFICE B ON M.OFFICE_ID = B.ROW_ID
+            AND B.DEL_FLAG = 'M0015'
+  </select>
+  <select id="queryStatusList" resultType="TCodeMacroDefine">
+    SELECT
+      MACRO_CODE,
+      MACRO_NAME,
+      MACRO_TYPE
+    FROM
+        T_CODE_MACRO_DEFINE
+    WHERE
+        MACRO_TYPE = 'STATUS'
+    AND DEL_FLAG = 'M0015'
+    ORDER BY
+        MACRO_NO;
+  </select>
+  <select id="querySexList" resultType="TCodeMacroDefine">
+   SELECT
+      MACRO_CODE,
+      MACRO_NAME,
+      MACRO_TYPE
+  FROM
+      T_CODE_MACRO_DEFINE
+  WHERE
+      MACRO_TYPE = 'SEX'
+  AND DEL_FLAG = 'M0015'
+  ORDER BY
+      MACRO_NO;
+  </select>
+    <select id="queryYesNoList" resultType="TCodeMacroDefine">
+        SELECT
+        MACRO_CODE,
+        MACRO_NAME,
+        MACRO_TYPE
+        FROM
+        T_CODE_MACRO_DEFINE
+        WHERE
+        MACRO_TYPE = 'YES_NO'
+        AND DEL_FLAG = 'M0015'
+        ORDER BY
+        MACRO_NO;
+    </select>
+    <select id="queryStoreTaxRateList" resultType="TCodeMacroDefine">
+        SELECT
+        MACRO_CODE,
+        MACRO_NAME,
+        MACRO_TYPE
+        FROM
+        T_CODE_MACRO_DEFINE
+        WHERE
+        MACRO_TYPE = 'STORE_TAX_RATE'
+        AND DEL_FLAG = 'M0015'
+        ORDER BY
+        MACRO_NO;
+    </select>
+    <select id="queryForSiteArea" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT
+      MACRO_CODE,
+      MACRO_NAME,
+      MACRO_TYPE
+  FROM
+      T_CODE_MACRO_DEFINE
+  WHERE
+      STATUS = 'M0043'AND
+      MACRO_TYPE IN ('YES_NO','FLOOR_TYPE')
+  AND DEL_FLAG = 'M0015'
+  ORDER BY
+      MACRO_NO;
+    </select>
+
+    <select id="queryForLocation" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('YES_NO','BUSINESS_TYPE','PRIORITY','MATURITY','INCOME_LEVEL','IDEAL','SITE_LOCATION','OPERATE_TYPE','VISIBILITY','SIGNATURE_EFFECTIVENESS','FLOOR_TYPE')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForEstInvestment" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('CALCULATION_MODEL_TYPE')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForFlan" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('CHANNEL_TYPE')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForRentalProposal" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('RENT_MODE')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForLandlord" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('RENT_MODE','YES_NO')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+    <select id="selectForRenStore" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('RENT_MODE','RENT_TYPE','RENTAL_SETTLMENT','HAVE_NOT','YES_NO','CONTRACT_MODE','EVALUATION','WHETHER_AGREE','WHETHER_CONTAIN')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForTradezone" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('YES_NO','IDEAL','TRADEZONE_TYPE','HOUSEHOLD_INCOME_LEVEL','OFFICE_WORKER_SITUATION','STUDENT_SITUATION','RETAIL_ACTIVITY_INTENSITY','PRIORITY','MATURITY','VISIBILITY','INCOME_LEVEL','CAN_APPROACH','PROPERTY_SCORE','KEY_WORD','INVESTMENT_TYPE','NATIONAL_DEVELOPMENT_ZONE','SHOPPING_LEVEL')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForEstInvestmentDetails" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND PARENT_CODE = #{parentCode}
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="selectForConsSurvey" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('INCOME_MODE','PROPERTY_FORM','STRUCTURE_TYPE','IS_BASEMENT','YES_NO','DRAWING_SIZE','OUTER_WALL','INTERIOR_WALL','GROUND','CEILING','EQUIPMENT_DEAL','MATERIAL','ROOM_STORE_BACK','WATER_QUANTITY','WATER_PRESSURE','WATER_PIPE_DIAMETER','TOLIET_MGR','TOLIET_OPEN_HOURS','SUMMER_OUTDOOR_TEMP','WINTER_OUTDOOR_TEMP','AIR_CONDITION_SUPPLY','AIR_CONDITION_MODE','EFFECT','SIGN_FIRM','SIGN_VISIBILITY_LEFT_RIGHT','INDEPENDENT_INDEX_SIGN','STORE_IMAGE','HAVE_NOT','STRUCTURE_IMPROVEMENT','CABLE_LAYING')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+
+    <select id="queryForContractApply" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME,MACRO_TYPE
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043' AND MACRO_TYPE IN ('YES_NO','UN_FETCH_REASON')
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+    <select id="selectByMacroType" parameterType="java.lang.String" resultType="com.stripcode.mybatis.user.model.TCodeMacroDefine">
+        SELECT  MACRO_CODE,MACRO_NAME
+        FROM T_CODE_MACRO_DEFINE
+        WHERE STATUS = 'M0043'
+        AND MACRO_TYPE = #{macroType}
+        AND DEL_FLAG = 'M0015'
+        ORDER BY MACRO_NO;
+    </select>
+</mapper>

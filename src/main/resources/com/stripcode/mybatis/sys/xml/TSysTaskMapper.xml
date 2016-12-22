@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sys.dao.TSysTaskMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sys_task
+    where AUTO_NO = #{autoNo,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.stripcode.mybatis.sys.model.TSysTask" >
+    insert into t_sys_task (AUTO_NO, TASK_TYPE, PROCESS_ID, 
+      BUSINESS_ID, TASK_STATUS, APPLICANT, ROW_ID,
+      CREATOR, CREATE_TIME, UPDATER, 
+      UPDATE_TIME, DEL_FLAG, DEF1, 
+      DEF2, DEF3, DEF4, DEF5, 
+      DEF6, DEF7, DEF8, DEF9, 
+      DEF10)
+    values (#{autoNo,jdbcType=INTEGER}, #{taskType,jdbcType=VARCHAR}, #{processId,jdbcType=VARCHAR}, 
+      #{businessId,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR}, #{applicant,jdbcType=VARCHAR}, #{rowId,jdbcType=VARCHAR},
+      #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}, #{def1,jdbcType=VARCHAR}, 
+      #{def2,jdbcType=VARCHAR}, #{def3,jdbcType=VARCHAR}, #{def4,jdbcType=VARCHAR}, #{def5,jdbcType=VARCHAR}, 
+      #{def6,jdbcType=VARCHAR}, #{def7,jdbcType=VARCHAR}, #{def8,jdbcType=VARCHAR}, #{def9,jdbcType=VARCHAR}, 
+      #{def10,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.stripcode.mybatis.sys.model.TSysTask" >
+    update t_sys_task
+    set TASK_TYPE = #{taskType,jdbcType=VARCHAR},
+      PROCESS_ID = #{processId,jdbcType=VARCHAR},
+      BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+      TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+      APPLICANT = #{applicant,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=VARCHAR},
+      DEF1 = #{def1,jdbcType=VARCHAR},
+      DEF2 = #{def2,jdbcType=VARCHAR},
+      DEF3 = #{def3,jdbcType=VARCHAR},
+      DEF4 = #{def4,jdbcType=VARCHAR},
+      DEF5 = #{def5,jdbcType=VARCHAR},
+      DEF6 = #{def6,jdbcType=VARCHAR},
+      DEF7 = #{def7,jdbcType=VARCHAR},
+      DEF8 = #{def8,jdbcType=VARCHAR},
+      DEF9 = #{def9,jdbcType=VARCHAR},
+      DEF10 = #{def10,jdbcType=VARCHAR}
+    where AUTO_NO = #{autoNo,jdbcType=INTEGER}
+  </update>
+  <select id="queryForPage"  parameterType="map" resultType="com.stripcode.mybatis.sys.model.TSysTask" >
+    select t.ROW_ID TASK_ID, t.TASK_TYPE, t.PROCESS_ID, t.BUSINESS_ID, t.TASK_STATUS, t4.USER_NAME APPLICANT,
+    t1.STATUS,t1.COMMENTS,t3.ID_ OA_TASK_ID,t2.PROC_DEF_ID_ PROC_DEF_ID
+    from t_sys_task t
+    left join t_sys_approve_info t1 on t.ROW_ID = t1.TASK_ID
+    left join ACT_RU_EXECUTION t2 on t.row_id = t2.BUSINESS_KEY_ and t.process_id = t2.PROC_INST_ID_
+    left join ACT_RU_TASK t3 on t2.PROC_INST_ID_ = t3.PROC_INST_ID_ and t2.id_ = t3.EXECUTION_ID_
+	left join T_SYS_USER t4 on t.APPLICANT=t4.USER_ID
+  </select>
+</mapper>

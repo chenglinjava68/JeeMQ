@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMAttachMentInfoMapper">
+    <!--查询店铺附件集合-->
+    <select id="selectForAttachMentInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMAttachMentInfo">
+        SELECT
+            C.TITLE title,
+            A.UPDATE_TIME updateDate,
+            B.DOC_NAME fileName,
+            B.FILE_PATH fieldId
+        FROM
+            T_AM_ATTACHMENT A
+            LEFT JOIN T_SYS_COMMONATTACHED B ON B.ATTACH_ID = A.ATTACH_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_ATTACHEDTEMPLATE C ON C.TEMPLATE_ID = A.TEMPLATE_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+          A.STORE_ID = #{storeId}
+          AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺附件集合-->
+    <insert id="insertAMAttachMentInfo" parameterType="com.stripcode.mybatis.am.model.AMAttachMentInfo">
+        INSERT INTO
+            T_AM_ATTACHMENT
+            (
+            STORE_ID,
+            ATTACH_ID,
+            TEMPLATE_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES
+            (
+            #{storeId},
+            #{attachId},
+            #{templateId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+            )
+    </insert>
+</mapper>

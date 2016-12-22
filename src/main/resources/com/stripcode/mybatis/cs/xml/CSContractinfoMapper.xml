@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSContractinfoMapper">
+
+    <select id="selectErpAndCustomerInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        SELECT
+            Tcer.ROW_ID,
+            TMO.CUSTOMER_ID,
+            Tcer.ERP_CODE,
+            Tcer.ERP_NAME,
+            Tcer.ACCREDIT_ENDDATE,
+            Tcer.ACCREDIT_STARTDATE,
+            Tcer.DISCOUNT_RATE,
+            Tcer.SPLIT_RATE,
+            T.MACRO_NAME brand,
+            T2.MACRO_NAME marketLev,
+            T1.MACRO_NAME cooperationMode,
+            T3.MACRO_NAME isBuyout,
+            T4.MACRO_NAME isNewErpId,
+            Tcer.COOPERATION_MODE cooperationModeCode,
+            T5.MACRO_NAME discountRateMode
+        FROM
+        T_CS_NEW_MARKETAUZ Tcer
+        LEFT JOIN T_CS_MARKET_OPTIMAUTH TMO ON TMO.ROW_ID = Tcer.OPTIMAUTH_ID AND TMO.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON Tcer.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND'  AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON Tcer.COOPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'COOPERATION_MODEL' AND  T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON Tcer.MARKET_LEV = T2.MACRO_CODE AND T2.MACRO_TYPE = 'MARKET_LEVEL' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON Tcer.IS_BUYOUT = T3.MACRO_CODE AND T3.MACRO_TYPE = 'YES_NO' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON Tcer.IS_NEW_ERPID = T4.MACRO_CODE AND T4.MACRO_TYPE = 'YES_NO' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON Tcer.DISCOUNT_RATE_MODE = T5.MACRO_CODE AND T5.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T5.DEL_FLAG = 'M0015'
+        <where>
+            AND  Tcer.OPTIMAUTH_ID= #{optimauthId}
+            AND  Tcer.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="selectAll" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractAttachment">
+        SELECT
+              C.ROW_ID,
+              C.OPTIMAUTH_ID,
+              A.CONTRACT_NAME,
+              U.USER_NAME creater,
+              A.CREATE_TIME createrTime,
+              D.DOC_NAME fileName,
+              D.FILE_PATH filePath
+        FROM T_CS_CONTRACT_APPLY C
+        LEFT JOIN T_CS_CONTRACT_APPLY_ATTACHMENT A ON A.ROW_ID = C.ROW_ID AND A.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED D ON A.ATTACH_ID = D.ATTACH_ID AND D.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON u.USER_ID = C.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+            C.OPTIMAUTH_ID =#{optimauthId}
+            AND C.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertContractInfo" parameterType="com.stripcode.mybatis.cs.model.CSContractApply">
+        INSERT INTO  T_CS_CONTRACT_APPLY(
+            ROW_ID,
+            OPTIMAUTH_ID,
+            SUBMIT_BY,
+            POSITION_ID,
+            POSITION_NAME,
+            PROGRESS,
+            COMMENTS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{optimauthId},
+            #{submitBy},
+            #{positionId},
+            #{positionName},
+            #{progress},
+            #{comments},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <insert id="insertContractAttachment" parameterType="com.stripcode.mybatis.cs.model.CSContractAttachment">
+        INSERT INTO T_CS_CONTRACT_APPLY_ATTACHMENT(
+            ROW_ID,
+            APPLY_ID,
+            TEMPLATE_ID,
+            CONTRACT_NAME,
+            ATTACH_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{applyId},
+            #{templateId},
+            #{contractName},
+            #{attachId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="updateContractInfo" parameterType="com.stripcode.mybatis.cs.model.CSContractApply">
+        UPDATE
+              T_CS_CONTRACT_APPLY
+              SET
+                UPDATER = #{updater},
+                UPDATE_TIME = sysdate()
+        WHERE OPTIMAUTH_ID = #{optimauthId}
+    </update>
+
+    <update id="updateContractAttachment" parameterType="com.stripcode.mybatis.cs.model.CSContractAttachment">
+        UPDATE
+                T_CS_CONTRACT_APPLY_ATTACHMENT
+                SET
+                    UPDATER = #{updater},
+                    UPDATE_TIME = sysdate()
+        WHERE ROW_ID = #{rowId}
+    </update>
+
+    <select id="isExistContract" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSContractApply">
+        SELECT
+            ROW_ID,
+            OPTIMAUTH_ID,
+            SUBMIT_BY,
+            POSITION_ID,
+            POSITION_NAME,
+            PROGRESS,
+            COMMENTS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME
+         FROM T_CS_CONTRACT_APPLY
+         WHERE OPTIMAUTH_ID = #{optimauthId}
+    </select>
+</mapper>

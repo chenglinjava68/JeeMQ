@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.user.dao.TSysActionFunctionMapMapper">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+   DELETE
+    FROM
+        T_SYS_ACUSERTION_FUNCTION_MAP
+    WHERE
+        MAP_ID = #{mapId}
+  </delete>
+  <insert id="insert" parameterType="TSysActionFunctionMap">
+   INSERT INTO T_SYS_ACTION_FUNCTION_MAP (
+      MAP_ID,
+      ACTION_ID,
+      FUNCTION_ID,
+      URL,
+      PAGE,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG,
+      DEF1,
+      DEF2,
+      DEF3,
+      DEF4,
+      DEF5,
+      DEF6,
+      DEF7,
+      DEF8,
+      DEF9,
+      DEF10
+  )
+  VALUES
+	(
+	#{mapId},
+     #{actionId},
+    #{functionId},
+	#{url},
+    #{page},
+    #{creator},
+	#{createTime},
+    #{updater},
+    #{updateTime},
+     #{delFlag},
+    #{def1},
+     #{def2},
+	#{def3},
+    #{def4},
+	#{def5},
+	#{def6},
+	#{def7},
+	#{def8},
+	#{def9},
+	#{def10}
+	)
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysActionFunctionMap">
+   UPDATE T_SYS_ACTION_FUNCTION_MAP
+    SET ACTION_ID = #{actionId},
+      FUNCTION_ID = #{functionId},
+      URL = #{url},
+      PAGE = #{page},
+      CREATOR = #{creator},
+      CREATE_TIME = #{createTime},
+      UPDATER = #{updater},
+      UPDATE_TIME = #{updateTime},
+      DEL_FLAG = #{delFlag},
+      DEF1 = #{def1},
+      DEF2 = #{def2},
+      DEF3 = #{def3},
+      DEF4 = #{def4},
+      DEF5 = #{def5},
+      DEF6 = #{def6},
+      DEF7 = #{def7},
+      DEF8 = #{def8},
+      DEF9 = #{def9},
+      DEF10 = #{def10}
+    WHERE
+        MAP_ID = #{mapId}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="TSysActionFunctionMap">
+    SELECT
+        MAP_ID,
+        ACTION_ID,
+        FUNCTION_ID,
+        URL,
+        PAGE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_ACTION_FUNCTION_MAP
+    WHERE
+        MAP_ID = #{mapId}
+  </select>
+  <select id="selectAll" resultType="TSysActionFunctionMap">
+    SELECT
+        MAP_ID,
+        ACTION_ID,
+        FUNCTION_ID,
+        URL,
+        PAGE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_ACTION_FUNCTION_MAP
+  </select>
+</mapper>

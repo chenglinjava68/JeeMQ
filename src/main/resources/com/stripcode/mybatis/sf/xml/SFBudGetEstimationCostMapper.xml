@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFBudGetEstimationCostMapper">
+    <select id="SelectBudGetCost" resultType="com.stripcode.mybatis.sf.model.SFBudGetEstimationCost" parameterType="java.lang.String">
+      SELECT
+                T.NUM,
+                T.COST_CLS,
+                T.BUDGET_TYPE,
+                T.ITEM_CODE,
+                T.IS_EDIT,
+                D.COST,
+                D.ITEM_NAME otherName,
+                T.ITEM_NAME
+        FROM T_SYS_COST_ITEM T
+                LEFT JOIN (
+                SELECT T2.* FROM T_SF_PROJECT_ESTIMATION T1
+                INNER JOIN T_SF_PROJECT_ESTIMATION_COST T2
+                ON T1.ROW_Id = T2.EST_ID
+                WHERE T1.PP_ID = #{ppId}
+                )D
+                ON T.ITEM_CODE = D.ITEM_CODE
+                WHERE T.BUDGET_TYPE = 'M0332'
+                ORDER BY T.SORT_NO
+    </select>
+
+    <select id="SelectEstimationForInvest" resultType="com.stripcode.mybatis.sf.model.SFBudGetEstimationCost" parameterType="java.util.HashMap">
+        SELECT
+            a.item_code item, a.item_name, b.cost, a.is_edit,a.BUDGET_TYPE costCls
+        FROM
+        T_SYS_COST_ITEM A
+        LEFT JOIN
+        (SELECT
+            b.item_code, b.cost
+        FROM
+            T_SF_PROJECT_ESTIMATION a
+        INNER JOIN T_SF_PROJECT_ESTIMATION_COST B ON a.ROW_ID = b.EST_ID
+        WHERE
+            a.pp_id = #{ppId}) B ON a.item_code = b.item_code
+        WHERE
+            A.BUDGET_TYPE = 'M0409'
+                AND a.COST_CLS_CODE = #{itemCodes}
+                ORDER BY A.SORT_NO
+    </select>
+
+    <insert id="insertBudGetCost" parameterType="com.stripcode.mybatis.sf.model.SFBudGetEstimationCost">
+        INSERT INTO
+        T_SF_PROJECT_ESTIMATION_COST
+            (
+            ROW_ID,
+            EST_ID,
+            ITEM_CODE,
+            ITEM_NAME,
+            COST,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{estId},
+            #{itemCode},
+            #{otherName},
+            #{cost},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updateBudGetCost"   parameterType="com.stripcode.mybatis.sf.model.SFBudGetEstimationCost">
+        UPDATE
+            T_SF_PROJECT_ESTIMATION_COST T
+        SET
+            T.COST = #{cost},
+            T.ITEM_NAME = #{otherName},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = #{updateTime}
+        WHERE T.ITEM_CODE = #{itemCode} AND T.EST_ID =#{estId} AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsBudGetCost"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(0)
+        FROM
+            T_SF_PROJECT_ESTIMATION_COST T
+        WHERE  T.ITEM_CODE = #{itemCode} AND T.EST_ID =#{estId} AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="SelectBudGetEstimation" resultType="com.stripcode.mybatis.sf.model.SFBudGetEstimation" parameterType="java.lang.String">
+        SELECT
+            T.REASON,
+            T.PP_ID,
+            T.ROW_ID
+        FROM
+            T_SF_PROJECT_ESTIMATION T
+        WHERE
+              T.PP_ID =#{ppId}
+        AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertBudGetEstimation" parameterType="com.stripcode.mybatis.sf.model.SFBudGetEstimation">
+        INSERT INTO
+            T_SF_PROJECT_ESTIMATION
+            (
+            ROW_ID,
+            PP_ID,
+            REASON,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{reason},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updateBudGetEstimation"   parameterType="com.stripcode.mybatis.sf.model.SFBudGetEstimation">
+        UPDATE
+             T_SF_PROJECT_ESTIMATION T
+        SET
+            T.REASON = #{reason},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = #{updateTime}
+        WHERE T.PP_ID = #{ppId}  AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsBudGetEstimation"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+            COUNT(0)
+        FROM
+            T_SF_PROJECT_ESTIMATION T
+        WHERE  T.PP_ID = #{ppId}  AND T.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

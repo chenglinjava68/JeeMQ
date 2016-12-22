@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFDesignApplyMapper">
+
+    <select id="selectFloor" resultType="com.stripcode.mybatis.sf.model.SFFloorInfo" parameterType="java.lang.String">
+        SELECT
+            T1.MACRO_NAME floor,
+            T.FLOORSLAB,
+            T.SIZE,
+            T.FLOOR_HIGHT,
+            T.BOTTOM_HIGHT,
+            T.GOODS_CATEGORY
+        FROM
+            T_SF_FLOORINFO T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.FLOOR = T1.MACRO_CODE AND T1.MACRO_TYPE = 'FLOOR_TYPE' AND T1.DEL_FLAG = 'M0015'
+        WHERE T.PP_ID =#{ppId} AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="selectApplyAttachment" resultType="com.stripcode.mybatis.sf.model.SFDesignApplyAttachment" parameterType="java.lang.String">
+          SELECT
+            U.USER_NAME creater,
+            C.UPDATE_TIME updatTime,
+            TC.TITLE,
+            T.ATTACH_ID,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            TC.TEMPLATE_ID
+        FROM
+             T_SYS_ATTACHEDTEMPLATE TC
+             LEFT JOIN
+             (
+            SELECT T.TEMPLATE_ID,T.ATTACH_ID,T.UPDATE_TIME,T.UPDATER
+            FROM
+             T_SF_DESIGN_APPLY_ATTACHMENT T
+             INNER JOIN T_SF_DESIGN_APPLY T3 ON T3.ROW_ID = T.DESIGN_ID AND  T3.DEL_FLAG = 'M0015' AND T3.PP_ID= #{ppId}
+            WHERE T.DEL_FLAG = 'M0015'
+             ) T
+	       ON T.TEMPLATE_ID = TC.TEMPLATE_ID
+	       LEFT JOIN T_SYS_COMMONATTACHED C ON T.ATTACH_ID = C.ATTACH_ID
+		   LEFT JOIN T_SYS_USER U ON U.USER_ID = C.UPDATER AND U.DEL_FLAG = 'M0015'
+           WHERE
+                TC.PAGE_ID='SF30_060' AND TC.DEL_FLAG = 'M0015'
+</select>
+    <select id="selectApplyDetail"  resultType="com.stripcode.mybatis.sf.model.SFDesignApplyDetail" >
+          SELECT
+        T.DEMAND1,
+        T.DEMAND2,
+        T.DEMAND3
+        FROM
+        T_SF_DESIGN_APPLY_DETAIL T
+        LEFT JOIN T_SF_DESIGN_APPLY T1 ON T1.ROW_ID = T.DESIGN_ID AND T.DEL_FLAG = 'M0015'
+        <where>
+            T1.DEL_FLAG = 'M0015'
+            <if test="ppId !=null and ppId != ''">
+                AND  T1.PP_ID= #{ppId}
+            </if>
+        </where>
+    </select>
+    <insert id="insertApplyDetail" parameterType="com.stripcode.mybatis.sf.model.SFDesignApplyDetail">
+        INSERT INTO
+            T_SF_DESIGN_APPLY_DETAIL
+            (
+            ROW_ID,
+            DESIGN_ID,
+            ITEM,
+            DEMAND1,
+            DEMAND2,
+            DEMAND3,
+            DESCRIPTION,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{designId},
+            #{item},
+            #{demand1},
+            #{demand2},
+            #{demand3},
+            #{description},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+            )
+    </insert>
+    <update id="updateApplyDetail" parameterType="com.stripcode.mybatis.sf.model.SFDesignApplyDetail">
+        UPDATE
+          T_SF_DESIGN_APPLY_DETAIL
+        SET
+            DEMAND1 =#{demand1},
+            DEMAND2 =#{demand2},
+            DEMAND3 =#{demand3},
+            DESCRIPTION =#{description},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+        WHERE DESIGN_ID = #{designId} AND ITEM =#{item} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsApplyDetail" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+          COUNT(1)
+        FROM
+          T_SF_DESIGN_APPLY_DETAIL
+        WHERE DESIGN_ID= #{designId} AND ITEM = #{item}  AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectDesignApply" parameterType="java.lang.String"  resultType="com.stripcode.mybatis.sf.model.SFDesignApply">
+          SELECT
+            T.ROW_ID,
+            T.PP_ID,
+            T.IS_SIGNBOARD,
+            T.FACADE,
+            T.OTHER,
+            T.REMARK,
+            T.ATTACH_ID,
+            T.DESIGN_ASSIGN,
+            T1.AREA,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            T1.OPERATING_AREA,
+            T1.BACK_DEPOT_AREA
+        FROM
+            T_SF_DESIGN_APPLY T
+        LEFT JOIN T_SF_SITEINFO T1 ON T1.PP_ID = T.PP_ID AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED C ON T.ATTACH_ID = C.ATTACH_ID
+        WHERE
+             T.PP_ID = #{ppId} AND T.DEL_FLAG='M0015' AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertDesignApply" parameterType="com.stripcode.mybatis.sf.model.SFDesignApply">
+        INSERT INTO
+            T_SF_DESIGN_APPLY
+            (
+            ROW_ID,
+            PP_ID,
+            ATTACH_ID,
+            IS_SIGNBOARD,
+            FACADE,
+            OTHER,
+            REMARK,
+            DESIGN_ASSIGN,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{attachId},
+            #{isSignBoard},
+            #{facade},
+            #{other},
+            #{remark},
+            #{designAssign},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+            )
+    </insert>
+    <update id="updateDesignApply" parameterType="com.stripcode.mybatis.sf.model.SFDesignApply">
+        UPDATE
+        T_SF_DESIGN_APPLY
+        SET
+        IS_SIGNBOARD =#{isSignBoard},
+        FACADE =#{facade},
+        OTHER =#{other},
+        REMARK =#{remark},
+        ATTACH_ID =#{attachId},
+        DESIGN_ASSIGN =#{designAssign},
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE ROW_ID = #{rowId} AND PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsDesignApply" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+        T_SF_DESIGN_APPLY
+        WHERE ROW_ID = #{rowId} AND PP_ID= #{ppId}  AND DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertApplyAttachment" parameterType="com.stripcode.mybatis.sf.model.SFDesignApplyAttachment">
+        INSERT INTO
+            T_SF_DESIGN_APPLY_ATTACHMENT
+        (
+            ROW_ID,
+            DESIGN_ID,
+            ATTACH_ID,
+            TEMPLATE_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )
+        VALUES (
+            #{rowId},
+            #{designId},
+            #{attachId},
+            #{templateId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+        'M0015'
+        )
+    </insert>
+    <update id="updateApplyAttachment" parameterType="com.stripcode.mybatis.sf.model.SFDesignApplyAttachment">
+        UPDATE
+        T_SF_DESIGN_APPLY_ATTACHMENT
+        SET
+        ATTACH_ID = #{attachId},
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE DESIGN_ID = #{designId} AND TEMPLATE_ID = #{templateId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsApplyAttachment" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+          COUNT(1)
+        FROM
+        T_SF_DESIGN_APPLY_ATTACHMENT
+        WHERE DESIGN_ID = #{designId} AND TEMPLATE_ID = #{templateId}  AND DEL_FLAG = 'M0015'
+    </select>
+</mapper>

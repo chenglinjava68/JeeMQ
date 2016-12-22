@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMRentalDetailMapper">
+    <!--查询店铺租金提案信息表-->
+    <select id="selectAMRentalProposalDirectStore" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMRentalProposalDirectStore">
+        SELECT
+            A.ROW_ID,
+            A.STORE_ID,
+            A.BERTH_NO,
+            A.ROOM_RATE,
+            T1.MACRO_NAME rentMode,
+            T2.MACRO_NAME signingMode,
+            A.RENT_MTH,
+            A.PROPERTY_FEE_MTH,
+            A.DELIVERY_DATE,
+            T3.MACRO_NAME rentType,
+            T4.MACRO_NAME rentPayType,
+            A.RENT_START_DATE,
+            A.RENT_END_DATE,
+            A.FREE_START_DATE,
+            A.FREE_END_DATE,
+            T5.MACRO_NAME isSublet,
+            A.SUBLET_END_DATE,
+            A.RENOVATION_PROPERTY_FEE,
+            A.OPERATION_FREE_START_DAE,
+            A.OPERATION_FREE_END_DAE,
+            A.DELIVERY_CONDITIONS,
+            A.LEASE_BOND,
+            A.SUBLET_SALE,
+            A.SPLIT_BRAND,
+            A.SPLIT_AREA,
+            A.SPLIT_START_DATE,
+            A.END_SALES,
+            A.LEASE_TERM,
+            A.RENTAL_PROPERTY_FEE,
+            A.DEFAULT_CLAUSE_PENALTY,
+            A.SPECIAL_TERMS_CONDITIONS,
+            A.OTHER_FEE
+        FROM
+            T_AM_RENTAL_PROPOSAL_DIRECT_STORE A
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T1.MACRO_CODE = A.RENT_MODE AND T1.MACRO_TYPE = 'RENT_MODE' AND T1.DEL_FLAG='M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T2.MACRO_CODE = A.SIGNING_MODE AND T2.MACRO_TYPE = 'CONTRACT_MODE' AND T2.DEL_FLAG='M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T3.MACRO_CODE = A.RENT_TYPE AND T3.MACRO_TYPE = 'RENT_TYPE' AND T3.DEL_FLAG='M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T4.MACRO_CODE = A.RENT_PAY_TYPE AND T4.MACRO_TYPE = 'RENTAL_SETTLMENT' AND T4.DEL_FLAG='M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T5 ON T5.MACRO_CODE = A.IS_SUBLET AND T5.MACRO_TYPE = 'HAVE_NOT' AND T5.DEL_FLAG='M0015'
+        <where>
+            A.STORE_ID = #{storeId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺租金提案信息-->
+    <insert id="insertAMRentalProposalDirectStore" parameterType="com.stripcode.mybatis.am.model.AMRentalProposalDirectStore">
+        INSERT INTO
+             T_AM_RENTAL_PROPOSAL_DIRECT_STORE
+             (
+                ROW_ID,
+                STORE_ID,
+                BERTH_NO,
+                ROOM_RATE,
+                RENT_MODE,
+                SIGNING_MODE,
+                RENT_MTH,
+                PROPERTY_FEE_MTH,
+                DELIVERY_DATE,
+                RENT_TYPE,
+                RENT_PAY_TYPE,
+                RENT_START_DATE,
+                RENT_END_DATE,
+                FREE_START_DATE,
+                FREE_END_DATE,
+                IS_SUBLET,
+                SUBLET_END_DATE,
+                RENOVATION_PROPERTY_FEE,
+                OPERATION_FREE_START_DAE,
+                OPERATION_FREE_END_DAE,
+                DELIVERY_CONDITIONS,
+                LEASE_BOND,
+                SUBLET_SALE,
+                SPLIT_BRAND,
+                SPLIT_AREA,
+                SPLIT_START_DATE,
+                END_SALES,
+                LEASE_TERM,
+                RENTAL_PROPERTY_FEE,
+                DEFAULT_CLAUSE_PENALTY,
+                SPECIAL_TERMS_CONDITIONS,
+                OTHER_FEE,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+             )
+         VALUES
+            (
+                #{rowId},
+                #{storeId},
+                #{berthNo},
+                #{roomRate},
+                #{rentMode},
+                #{signingMode},
+                #{rentMth},
+                #{propertyFeeMth},
+                #{deliveryDate},
+                #{rentType},
+                #{rentPayType},
+                #{rentStartDate},
+                #{rentEndDate},
+                #{freeStartDate},
+                #{freeEndDate},
+                #{isSublet},
+                #{subletEndDate},
+                #{renovationPropertyFee},
+                #{operationFreeStartDae},
+                #{operationFreeEndDae},
+                #{deliveryConditions},
+                #{leaseBond},
+                #{subletSale},
+                #{splitBrand},
+                #{splitArea},
+                #{splitStartDate},
+                #{endSales},
+                #{leaseTerm},
+                #{rentalPropertyFee},
+                #{defaultClausePenalty},
+                #{specialTermsConditions},
+                #{otherFee},
+                #{creator},
+                sysdate(),
+                #{updater},
+                #{updateTime},
+                'M0015'
+            )
+    </insert>
+
+    <!--查询店铺租期详细信息集合-->
+    <select id="selectAMRentalDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMRentalDetail">
+        SELECT
+            A.RENT_TIME,
+            A.RENTAL,
+            A.RATE,
+            A.BASE_RENTAL,
+            A.TRANSFER_FEE,
+            A.PROPERTY_FEE,
+            A.TAXATION,
+            A.SUBLET_FEE
+        FROM
+            T_AM_RENTAL_DETAIL A
+            LEFT JOIN T_AM_RENTAL_PROPOSAL_DIRECT_STORE B ON B.ROW_ID = A.RENT_ID AND B.DEL_FLAG = 'M0015'
+        <where>
+            B.STORE_ID = #{storeId}
+            AND B.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺租期详细信息-->
+    <insert id="insertAMRentalDetail" parameterType="com.stripcode.mybatis.am.model.AMRentalDetail">
+        INSERT INTO
+            T_AM_RENTAL_DETAIL
+            (
+                ROW_ID,
+                RENT_ID,
+                RENT_TIME,
+                RENTAL,
+                RATE,
+                BASE_RENTAL,
+                TRANSFER_FEE,
+                PROPERTY_FEE,
+                TAXATION,
+                SUBLET_FEE,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+            )
+        VALUES
+            (
+                #{rowId},
+                #{rentId},
+                #{rentTime},
+                #{rental},
+                #{rate},
+                #{baseRental},
+                #{transferFee},
+                #{propertyFee},
+                #{taxation},
+                #{subletFee},
+                #{creator},
+                sysdate(),
+                #{updater},
+                #{updateTime},
+                'M0015'
+            )
+    </insert>
+</mapper>

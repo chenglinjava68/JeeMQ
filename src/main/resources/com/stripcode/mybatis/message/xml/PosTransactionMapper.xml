@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.message.dao.PosMapper">
+	<sql id="selecPosTransactiontsql">SELECT autoNo,TRANSID transactionId, ORDERID, BIZTIME, ITEMCODE, ITEMNAME, PARENTID, POSNO, QUANTITY, PRICE, AMOUNT, ITEMTYPE, DISCOUNTTYPE, COMMENTS, OPERATORID, OPERATORNAME, GROUPID, ADDITIONAL</sql>
+	<insert id="insertTransaction" parameterType="com.stripcode.mybatis.message.model.PosTransaction">
+		INSERT INTO POS_TRANSACTION(autoNo,ORDERID,TRANSID,BIZTIME,ITEMCODE,ITEMNAME,PARENTID,POSNO,QUANTITY,PRICE,point,pointsCount,AMOUNT,ITEMTYPE,DISCOUNTTYPE,COMMENTS,OPERATORID,OPERATORNAME,GROUPID,ADDITIONAL)
+		VALUES(#{autoNo},#{orderId},#{transactionId},#{bizTime},#{itemCode},#{itemName},#{parentId},#{posNo},#{quantity},#{price},#{pointsCount},#{point},#{amount},#{itemType},#{discountType},#{comments},#{operatorId},#{operatorName},#{groupId},#{additional})
+	</insert>
+
+</mapper>

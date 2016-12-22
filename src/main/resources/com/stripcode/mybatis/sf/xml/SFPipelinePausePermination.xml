@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFPipelinePausePerminationMapper">
+    <select id="selectBasePipeline" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" parameterType="java.lang.String">
+        SELECT
+            T.PP_ID,
+            T.ADDRESS_DETAIL,
+            T.CN_SITENAME,
+            T3.PP_CODE,
+            T2.ERP_NAME marketName,
+            T6.CITY city,
+            T.BRAND def1,
+            T8.MACRO_NAME OPERATION_MODE,
+            T7.MACRO_NAME brand
+        FROM
+            T_SF_PIPELINE T
+        LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T.ERP_CODE= T2.ROW_ID  AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE T3 ON T.PP_ID= T3.PP_ID  AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T6 ON T.CITY = T6.MARKET_ID
+        AND T6.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE
+        AND T7.MACRO_TYPE = 'BRAND'
+        AND T7.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T8 ON T.OPERATION_MODE = T8.MACRO_CODE
+        AND T8.MACRO_TYPE = 'OPERATION_MODE'
+        AND T8.DEL_FLAG = 'M0015'
+        <where>
+            <if test="customerId != null and customerId!= ''">
+                AND T.CUSTOMER_ID =#{customerId}
+            </if>
+            AND  T.PP_ID=#{ppId} AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <insert id="insertPipelinePause" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        INSERT INTO T_SF_PIPELINE_PAUSE_TERMINATION
+         (
+            PP_ID,
+            REASON,
+            NEXT_PLAN,
+            ITEM_TYPE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+         )
+        VALUES (
+            #{ppId},
+            #{reason},
+            #{nextPlan},
+             'M0098',
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updatePipelinePause" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+         UPDATE
+		   T_SF_PIPELINE_PAUSE_TERMINATION
+	    SET
+            REASON =#{reason},
+            NEXT_PLAN =#{nextPlan},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+	    WHERE PP_ID = #{ppId} AND ITEM_TYPE = 'M0098' AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updateRestore" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+         UPDATE
+		   T_SF_PIPELINE_PAUSE_TERMINATION
+	    SET
+	        ITEM_TYPE = 'M0097',
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+	    WHERE PP_ID = #{ppId} AND ITEM_TYPE = 'M0098'  AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updateStop" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+         UPDATE
+		   T_SF_PIPELINE_PAUSE_TERMINATION
+	    SET
+	        ITEM_TYPE = 'M0097',
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+	    WHERE PP_ID = #{ppId} AND ITEM_TYPE = 'M0099' AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updateStatusPipeline" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+         UPDATE
+		   T_SF_PIPELINE
+	    SET
+            STATUS ='M0098',
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+	    WHERE PP_ID = #{ppId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updateStatusPipelineStop" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+         UPDATE
+		   T_SF_PIPELINE
+	    SET
+            STATUS ='M0099',
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+	    WHERE PP_ID = #{ppId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updateStatusRestorePipeline" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        UPDATE
+        T_SF_PIPELINE
+        SET
+        STATUS ='M0097',
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE PP_ID = #{ppId}  AND DEL_FLAG = 'M0015'
+    </update>
+     <select id="isExistsPipelinePauseCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+              COUNT(1)
+        FROM
+               T_SF_PIPELINE_PAUSE_TERMINATION
+        WHERE PP_ID= #{PPId} AND ITEM_TYPE = 'M0098' AND DEL_FLAG = 'M0015'
+    </select>
+     <select id="selectPipelinePause" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        SELECT
+               REASON,
+               NEXT_PLAN
+        FROM
+               T_SF_PIPELINE_PAUSE_TERMINATION
+        WHERE PP_ID= #{PPId} AND ITEM_TYPE = 'M0098' AND DEL_FLAG = 'M0015'
+    </select>
+
+
+    <insert id="insertPipelintStop" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        INSERT INTO T_SF_PIPELINE_PAUSE_TERMINATION
+            (
+            PP_ID,
+            REASON,
+            ITEM_TYPE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{ppId},
+            #{reason},
+            'M0099',
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+            )
+    </insert>
+    <update id="updatePipelineStop" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        UPDATE
+            T_SF_PIPELINE_PAUSE_TERMINATION
+        SET
+        REASON =#{reason},
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE PP_ID = #{ppId} AND ITEM_TYPE = 'M0099' AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsPipelineStopCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        T_SF_PIPELINE_PAUSE_TERMINATION
+        WHERE PP_ID= #{ppId} AND ITEM_TYPE = 'M0099' AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectPipelineStop" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        SELECT
+        REASON
+        FROM
+        T_SF_PIPELINE_PAUSE_TERMINATION
+        WHERE PP_ID= #{ppId} AND ITEM_TYPE = 'M0099' AND DEL_FLAG = 'M0015'
+    </select>
+</mapper>

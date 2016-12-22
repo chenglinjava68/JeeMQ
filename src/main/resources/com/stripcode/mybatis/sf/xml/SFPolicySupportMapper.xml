@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFPolicySupportMapper">
+    <update id="deleteInser" parameterType="java.lang.String">
+        UPDATE  T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        SET DEL_FLAG = 'M0014'
+        WHERE TEMPLATE_ID = #{templateId}
+        AND PP_ID = #{ppId}
+    </update>
+    <select id="selectById" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+        SELECT
+        CS.CUSTOMER_ID,
+        T.MACRO_NAME customerProperty,
+        T1.MACRO_NAME customerType,
+        T2.MACRO_NAME superiorCompany,
+        CS.CORPORATION,
+        CS.TEL,
+        CS.ID_NUMBER,
+        CS.SEX,
+        CS.NATIVE_PLACE,
+        CS.AGE,
+        CS.EDUCATION,
+        CS.BUSINESS_LIFE,
+        CS.EXPERIENCE,
+        CS.DEPOSIT_BANK,
+        CS.DEPOSIT_ACCOUNT,
+        CS.COMPANY_NAME,
+        CS.BUSINESS_LICENSE,
+        CS.TAX_ID,
+        CS.EMAIL,
+        CS.FAX,
+        CS.POSTCODE,
+        CS.POST_ADDRESS,
+        CS.ADDRESS
+        From T_CS_CUSTOMERINFO CS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.CUSTOMER_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'OPERATION_MODE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON CS.SUPERIOR_COMPANY = T2.MACRO_CODE AND T2.MACRO_TYPE = 'SUPERIOR_COMPANY' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            AND CS.CUSTOMER_ID = #{customerId}
+            AND CS.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+
+    <select id="selectPolicy" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+        ROW_ID,
+        BRAND,
+        POLICY_CODE,
+        POLICY_NAME,
+        POLICY_START_DATE,
+        POLICY_END_DATE,
+        STATUS
+        FROM T_PS_POLICY_SUPPORT
+        ORDER BY UPDATE_TIME DESC
+    </select>
+    <select id="queryPolicy" parameterType="map" resultType="com.stripcode.mybatis.sf.model.SFPolicySupport">
+        SELECT
+        ROW_ID,
+        PP_ID,
+        POLICY,
+        ATTACH_ID,
+        START_DATE,
+        END_DATE,
+        REMARK,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        FROM T_SF_POLICY_SUPPORT
+        WHERE
+        PP_ID = #{ppId} AND DEL_FLAG='M0015'
+    </select>
+    <select id="selectLoad" parameterType="java.lang.String"
+            resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+        ROW_ID,
+        POLICY_NAME,
+        POLICY_START_DATE,
+        POLICY_END_DATE,
+        DEL_FLAG
+        From
+        T_PS_POLICY_SUPPORT
+        <where>
+            ROW_ID = #{rowId}
+            AND DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupport">
+        INSERT INTO T_SF_POLICY_SUPPORT
+        (
+        ROW_ID,
+        PP_ID,
+        POLICY,
+        ATTACH_ID,
+        START_DATE,
+        END_DATE,
+        REMARK,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{ppId},
+        #{policy},
+        #{attachId},
+        #{startDate},
+        #{endDate},
+        #{remark},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupport">
+        UPDATE T_SF_POLICY_SUPPORT
+        SET
+
+        POLICY = #{policy},
+        ATTACH_ID = #{attachId},
+        START_DATE = #{startDate},
+        END_DATE = #{endDate},
+        REMARK = #{remark},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID = #{rowId} AND PP_ID = #{ppId}AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectPolicyOne" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPolicySupport">
+        SELECT
+        T.ROW_ID,
+        T.PP_ID,
+        T.POLICY,
+        T.START_DATE,
+        T.END_DATE,
+        T.ATTACH_ID,
+        T.REMARK,
+        TSC.DOC_NAME fileName,
+        TSC.FILE_PATH fieldId
+        FROM
+        T_SF_POLICY_SUPPORT T
+        LEFT JOIN T_SYS_COMMONATTACHED TSC ON TSC.ATTACH_ID =T.ATTACH_ID AND TSC.DEL_FLAG ='M0015'
+        <where>
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG =  'M0015'
+        </where>
+    </select>
+    <select id="psPolicyQueryForPage" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicySupport">
+        SELECT
+            T.ROW_ID,
+            T1.MACRO_NAME brand,
+            T.POLICY_CODE,
+            T.POLICY_NAME,
+            T.POLICY_START_DATE,
+            T.POLICY_END_DATE,
+            T.STATUS,
+            T4.ITEM_NAME MODE_CODE,
+            T2.REMARK,
+            T2.AMOUNT_LIMIT,
+            T5.ITEM_NAME CONDITION_CODE,
+            T3.ITEM_NAME ITEM_CODE
+
+        FROM T_PS_POLICY_SUPPORT T
+        LEFT JOIN T_PS_POLICY_SUPPORT_DETAIL T2  ON T.ROW_ID =T2.POLICY_ID AND T2.DEL_FLAG ='M0015'
+         LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+         LEFT JOIN T_PS_POLICY_ITEM T3 ON T2.ITEM_CODE = T3.ITEM_CODE AND T3.ITEM_TYPE='M0101' AND T3.DEL_FLAG ='M0015'
+         LEFT JOIN T_PS_POLICY_ITEM T4 ON T2.MODE_CODE = T4.ITEM_CODE AND T4.ITEM_TYPE='M0102' AND T4.DEL_FLAG ='M0015'
+         LEFT JOIN T_PS_POLICY_ITEM T5 ON T2.CONDITION_CODE = T5.ITEM_CODE AND T5.ITEM_TYPE='M0103' AND T5.DEL_FLAG ='M0015'
+        where
+                 T.ROW_ID = #{rowId}
+            AND T.DEL_FLAG = 'M0015'
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <select id="isExistsSFPolicySupport" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        T_SF_POLICY_SUPPORT
+        WHERE ROW_ID = #{rowId} AND PP_ID= #{ppId}  AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="isExistsSFPolicySupport2" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        T_SF_POLICY_SUPPORT
+        WHERE ROW_ID = #{rowId} AND PP_ID= #{ppId}  AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="isExistsSFPolicySupport3" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        T_SF_POLICY_SUPPORT
+        WHERE ROW_ID = #{rowId} AND PP_ID= #{ppId}  AND DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertAttachment" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        INSERT INTO
+        T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        (
+        ROW_ID,
+        PP_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        ATTACHMENT_TYPE,
+        STATUS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{ppId},
+        #{templateId},
+        #{attachId},
+        #{attachmentType},
+        #{status},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateAttachment" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        UPDATE
+        T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        SET
+
+
+        TEMPLATE_ID=#{templateId},
+        ATTACHMENT_TYPE = #{attachmentType},
+        STATUS = #{status},
+
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND ATTACH_ID = #{attachId}AND DEL_FLAG = 'M0015'
+    </update>
+    <insert id="insertAttachment2" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        INSERT INTO
+        T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        (
+        ROW_ID,
+        PP_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        ATTACHMENT_TYPE,
+        STATUS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{ppId},
+        #{templateId},
+        #{attachId},
+        #{attachmentType},
+        #{status},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateAttachment2" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        UPDATE
+        T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        SET
+
+
+        TEMPLATE_ID=#{templateId},
+        ATTACHMENT_TYPE = #{attachmentType},
+        STATUS = #{status},
+        ATTACH_ID = #{attachId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId}AND DEL_FLAG = 'M0015'
+    </update>
+    <insert id="insertAttachment3" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        INSERT INTO
+        T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        (
+        ROW_ID,
+        PP_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        ATTACHMENT_TYPE,
+        STATUS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{ppId},
+        #{templateId},
+        #{attachId},
+        #{attachmentType},
+        #{status},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateAttachment3" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        UPDATE
+        T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        SET
+
+
+        TEMPLATE_ID=#{templateId},
+        ATTACHMENT_TYPE = #{attachmentType},
+        STATUS = #{status},
+        ATTACH_ID = #{attachId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId}AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectProgressAll"  resultType="com.stripcode.mybatis.sf.model.SFProgressEst">
+        SELECT
+            T.ROW_ID,
+            T.PP_ID,
+            T.EST_DATE,
+            T.ACTUAL_DATE,
+            T.DELAY,
+            T5.MACRO_NAME MACRONAME,
+            T.TASK_CODE,
+            T.REMARK
+        FROM T_SF_PROGRESS_EST  T
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON T.TASK_CODE = T5.MACRO_CODE AND T5.DEL_FLAG = 'M0015' AND T5.MACRO_TYPE='DEV_SHEDULE_JOIN'
+        WHERE  T.DEL_FLAG = 'M0015' AND T.PP_ID= #{ppId}
+    </select>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFAcceptanceMapper">
+    <select id="queryAcceptance" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFAcceptance">
+        SELECT
+              ROW_ID,
+              PP_ID,
+              REMARK
+        FROM T_SF_ACCEPTANCE
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertAcceptance" parameterType="com.stripcode.mybatis.sf.model.SFAcceptance">
+        INSERT INTO T_SF_ACCEPTANCE(
+              ROW_ID,
+              PP_ID,
+              REMARK,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+        )VALUES (
+              #{rowId},
+              #{ppId},
+              #{remark},
+              #{creator},
+              sysdate(),
+              #{updater},
+              sysdate(),
+              'M0015'
+        )
+    </insert>
+
+    <update id="updateAcceptance" parameterType="com.stripcode.mybatis.sf.model.SFAcceptance">
+        UPDATE T_SF_ACCEPTANCE
+        SET REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="queryAcceptanceAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFAcceptanceAttachment">
+       SELECT
+              T.TITLE def1,
+              A.ROW_ID,
+              A.ACCEPTANCE_ID,
+              T.TEMPLATE_ID,
+              A.ATTACH_ID,
+              T.COMMENTS acceptanceStd,
+              A.IS_QUALIFIED,
+              A.REMARK
+        FROM T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_ACCEPTANCE_ATTACHMENT A ON A.TEMPLATE_ID = T.TEMPLATE_ID AND A.DEL_FLAG = 'M0015' AND A.ACCEPTANCE_ID=#{acceptanced}
+        WHERE T.PAGE_ID = 'SF30_071' AND T.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertAcceptanceAttachment" parameterType="com.stripcode.mybatis.sf.model.SFAcceptanceAttachment">
+        INSERT INTO T_SF_ACCEPTANCE_ATTACHMENT(
+            ROW_ID,
+            ACCEPTANCE_ID,
+            TEMPLATE_ID,
+            ATTACH_ID,
+            ACCEPTANCE_STD,
+            IS_QUALIFIED,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{acceptanceId},
+            #{templateId},
+            #{attachId},
+            #{acceptanceStd},
+            #{isQualified},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateAcceptanceAttachment" parameterType="com.stripcode.mybatis.sf.model.SFAcceptanceAttachment">
+        UPDATE T_SF_ACCEPTANCE_ATTACHMENT
+        SET TEMPLATE_ID = #{templateId},
+            ATTACH_ID = #{attachId},
+            ACCEPTANCE_STD = #{acceptanceStd},
+            IS_QUALIFIED = #{isQualified},
+            REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE ACCEPTANCE_ID = #{acceptanceId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+</mapper>

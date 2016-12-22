@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSCustomerErpInfoMapper">
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            Tcer.CUSTOMER_ID,
+            Tcs.CORPORATION,
+            T.MACRO_NAME brand,
+            Tcer.BRAND BRAND_CODE,
+            Tcer.ERP_CODE ,
+            Tcer.ERP_NAME ,
+            Tcer.ROW_ID ,
+            Tcer.ACCREDIT_ENDDATE ,
+            T2.MACRO_NAME discountRateMode,
+            T1.MACRO_NAME cooperationMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO Tcer
+        LEFT JOIN T_CS_CUSTOMERINFO Tcs ON Tcer.CUSTOMER_ID = Tcs.CUSTOMER_ID AND Tcer.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON Tcer.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON Tcer.COOPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'COOPERATION_MODEL' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON Tcer.DISCOUNT_RATE_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T2.DEL_FLAG = 'M0015'
+        <where>
+                AND  Tcs.DEL_FLAG = 'M0015'
+            <if test="corporation != null and corporation != ''">
+                AND Tcs.CORPORATION LIKE CONCAT('%',#{corporation},'%')
+            </if>
+            <if test="brand != null and brand != ''">
+                AND Tcer.BRAND = #{brand}
+            </if>
+            <if test="discountRateMode != null and discountRateMode != ''">
+                AND Tcer.DISCOUNT_RATE_MODE = #{discountRateMode}
+            </if>
+            <if test="cooperationMode != null and cooperationMode != ''">
+                AND Tcer.COOPERATION_MODE = #{cooperationMode}
+            </if>
+            <if test="erpCode != null and erpCode!= ''">
+                AND Tcer.ERP_CODE LIKE CONCAT('%',#{erpCode},'%')
+            </if>
+            <if test="erpName!=null and erpName != ''">
+                AND Tcer.ERP_NAME LIKE CONCAT('%',#{erpName},'%')
+            </if>
+            <if test="accreditStartDate != null and accreditStartDate != ''">
+                <![CDATA[
+                   AND Tcer.ACCREDIT_STARTDATE >= #{accreditStartDate}
+                 ]]>
+            </if>
+            <if test="accreditEndDate != null and accreditEndDate != ''">
+                <![CDATA[
+                   AND Tcer.ACCREDIT_ENDDATE <= #{accreditEndDate}
+                 ]]>
+            </if>
+            <if test="basicDiscountRate != null and basicDiscountRate != '' ">
+                AND  Tcer.BASIC_DISCOUNT_RATE = #{basicDiscountRate}
+            </if>
+                 ORDER BY Tcer.UPDATE_TIME DESC
+        </where>
+    </select>
+    <select id="selectForExportErpInfo" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            Tcs.CORPORATION,
+            T.MACRO_NAME brand,
+            Tcer.ERP_CODE ,
+            Tcer.ERP_NAME ,
+            Tcer.ACCREDIT_ENDDATE ,
+            T2.MACRO_NAME discountRateMode,
+            T1.MACRO_NAME cooperationMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO Tcer
+        LEFT JOIN T_CS_CUSTOMERINFO Tcs ON Tcer.CUSTOMER_ID = Tcs.CUSTOMER_ID AND Tcer.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON Tcer.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON Tcer.COOPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'COOPERATION_MODEL' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON Tcer.DISCOUNT_RATE_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            AND  Tcs.DEL_FLAG = 'M0015'
+            <if test="corporation != null and corporation != ''">
+                AND Tcs.CORPORATION LIKE CONCAT('%',#{corporation},'%')
+            </if>
+            <if test="brand != null and brand != ''">
+                AND Tcer.BRAND = #{brand}
+            </if>
+            <if test="cooperationMode != null and cooperationMode != ''">
+                AND Tcer.COOPERATION_MODE = #{cooperationMode}
+            </if>
+            <if test="erpCode != null and erpCode!= ''">
+                AND Tcer.ERP_CODE LIKE CONCAT('%',#{erpCode},'%')
+            </if>
+            <if test="erpName!=null and erpName != ''">
+                AND Tcer.ERP_NAME LIKE CONCAT('%',#{erpName},'%')
+            </if>
+            <if test="accreditStartDate != null and accreditStartDate != ''">
+                <![CDATA[
+                   AND Tcer.ACCREDIT_STARTDATE >= #{accreditStartDate}
+                 ]]>
+            </if>
+            <if test="accreditEndDate != null and accreditEndDate != ''">
+                <![CDATA[
+                   AND Tcer.ACCREDIT_ENDDATE <= #{accreditEndDate}
+                 ]]>
+            </if>
+            <if test="basicDiscountRate != null and basicDiscountRate != '' ">
+                AND  Tcer.BASIC_DISCOUNT_RATE = #{basicDiscountRate}
+            </if>
+            <if test="discountRateMode != null and discountRateMode != ''">
+                AND Tcer.DISCOUNT_RATE_MODE = #{discountRateMode}
+            </if>
+            ORDER BY Tcer.UPDATE_TIME DESC
+        </where>
+    </select>
+
+    <select id="queryForMarket" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+          SELECT
+            T.CUSTOMER_ID,
+            T.ROW_ID,
+            T.ERP_CODE,
+            T.ERP_NAME,
+            TC.CORPORATION,
+            T1.MACRO_NAME brand,
+            T.ACCREDIT_ENDDATE,
+            T.BASIC_DISCOUNT_RATE,
+            T2.MACRO_NAME cooperationMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO T
+            LEFT JOIN T_CS_CUSTOMERINFO TC ON T.CUSTOMER_ID = TC.CUSTOMER_ID AND TC.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.COOPERATION_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'COOPERATION_MODEL' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            <if test="customerId != null and customerId != '' ">
+                AND  T.CUSTOMER_ID = #{customerId}
+            </if>
+                <![CDATA[
+                   AND T.ACCREDIT_ENDDATE <= curdate()
+                 ]]>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+
+    <select id="queryForMarketend" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            T.CUSTOMER_ID,
+            T.ROW_ID,
+            T.ERP_CODE,
+            T.ERP_NAME,
+            TC.CORPORATION,
+            T1.MACRO_NAME brand,
+            T.ACCREDIT_ENDDATE,
+            T.BASIC_DISCOUNT_RATE,
+            T2.MACRO_NAME cooperationMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO T
+            LEFT JOIN T_CS_CUSTOMERINFO TC ON T.CUSTOMER_ID = TC.CUSTOMER_ID AND TC.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.COOPERATION_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'COOPERATION_MODEL' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            <if test="customerId != null and customerId != '' ">
+                AND  T.CUSTOMER_ID = #{customerId}
+            </if>
+                <![CDATA[
+                   AND T.ACCREDIT_ENDDATE >= curdate()
+                 ]]>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+
+    <select id="queryForMarketCustomer" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            T.CUSTOMER_ID,
+            T.ROW_ID,
+            T.ERP_CODE,
+            T.ERP_NAME,
+            TC.CORPORATION,
+            T1.MACRO_NAME brand,
+            T.ACCREDIT_ENDDATE,
+            T.BASIC_DISCOUNT_RATE,
+            T2.MACRO_NAME cooperationMode
+        FROM
+            T_CS_CUSTOMER_ERP_INFO T
+            LEFT JOIN T_CS_CUSTOMERINFO TC ON T.CUSTOMER_ID = TC.CUSTOMER_ID AND TC.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.BRAND = T1.MACRO_CODE AND T1.MACRO_TYPE = 'BRAND' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.COOPERATION_MODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'COOPERATION_MODEL' AND T2.DEL_FLAG = 'M0015'
+        <where>
+                AND  T.CUSTOMER_ID = #{customerId}
+                AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFSigningAttachmentMapper" >
+<select id="querySigningAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFSigningAttachment">
+    SELECT
+          A.TITLE,
+          S.ROW_ID,
+          S.PP_ID,
+          A.TEMPLATE_ID,
+          S.ATTACH_ID,
+          S.REMARK,
+          C.DOC_NAME fileName,
+          C.FILE_PATH,
+          C.UPDATE_TIME createrTime,
+          U.USER_NAME creater
+    FROM T_SYS_ATTACHEDTEMPLATE A
+    LEFT JOIN T_SF_SIGNING_ATTACHMENT S ON S.TEMPLATE_ID = A.TEMPLATE_ID AND S.PP_ID = #{ppId} AND S.DEL_FLAG='M0015'
+    LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = S.ATTACH_ID AND C.DEL_FLAG ='M0015'
+    LEFT JOIN T_SYS_USER U ON U.USER_ID = C.UPDATER AND U.DEL_FLAG = 'M0015'
+    WHERE A.PAGE_ID='SF30_032' AND A.DEL_FLAG = 'M0015'
+</select>
+
+    <insert id="insertSigningAttachment" parameterType="com.stripcode.mybatis.sf.model.SFSigningAttachment">
+        INSERT INTO T_SF_SIGNING_ATTACHMENT(
+        ROW_ID,
+        PP_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        REMARK,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{ppId},
+        #{templateId},
+        #{attachId},
+        #{remark},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+    <update id="updateSigningAttachment" parameterType="com.stripcode.mybatis.sf.model.SFSigningAttachment">
+        UPDATE T_SF_SIGNING_ATTACHMENT
+        SET
+            TEMPLATE_ID = #{templateId},
+            ATTACH_ID = #{attachId},
+            REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME=sysdate()
+        WHERE ROW_ID = #{rowId}
+    </update>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMStoreAttachMentInfoMapper">
+
+    <!--查询店铺附件-->
+    <select id="selectForAttachInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMStoreAttachMentInfo">
+      SELECT
+          B.SIGN_DATE,
+          B.CONTRACT_NAME,
+          T.MACRO_NAME optimizedType,
+          C.DOC_NAME fileName,
+          C.FILE_PATH fieldId
+      FROM
+          T_AM_CONTRACT_ATTACHMENT B
+          INNER JOIN T_AM_STORE A ON B.STORE_ID = A.STORE_ID
+          LEFT JOIN T_CODE_MACRO_DEFINE T ON B.OPTIMIZED_TYPE = T.MACRO_CODE AND T.MACRO_TYPE = 'CALCULATION_MODEL_TYPE' AND T.DEL_FLAG = 'M0015'
+          LEFT JOIN T_SYS_COMMONATTACHED C ON B.ATTACH_ID = C.ATTACH_ID
+      <where>
+            B.STORE_ID = #{storeId}
+            AND B.DEL_FLAG = 'M0015'
+      </where>
+    </select>
+</mapper>

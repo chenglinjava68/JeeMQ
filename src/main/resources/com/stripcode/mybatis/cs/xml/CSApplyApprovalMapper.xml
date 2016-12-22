@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSApplyApprovalMapper">
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSPlanInvestment">
+        INSERT INTO
+           T_CS_PLAN_INVESTMENT
+            (
+              ROW_ID,
+              OPTIMAUTH_ID,
+              INVEST_FUNDS,
+              COST_BACK,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+            )
+        VALUE (
+            #{rowId},
+            #{optimauthId},
+            #{investFunds},
+            #{costBack},
+            #{remark},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSPlanInvestment">
+            UPDATE
+                   T_CS_PLAN_INVESTMENT
+            SET
+                   INVEST_FUNDS = #{investFunds},
+                   COST_BACK = #{costBack},
+                   UPDATE_TIME = #{updateTime},
+                   UPDATER = #{updater}
+           WHERE  OPTIMAUTH_ID = #{optimauthId}
+    </update>
+   <select id="approvalCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+         SELECT
+            COUNT(0)
+         FROM T_CS_PLAN_INVESTMENT TC
+         WHERE TC.OPTIMAUTH_ID = #{optimauthId}
+   </select>
+    <select id="selectApplyInfoById" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        SELECT
+            cei.DISCOUNT_RATE,
+            cei.DEPOSIT,
+            cei.PLEDGE,
+            cei.GOODS_PLEDGE,
+            cei.INITIAL_FEE,
+            cei.ACCREDIT_STARTDATE,
+            cei.ACCREDIT_ENDDATE,
+            T2.MACRO_NAME isBuyout,
+            T.MACRO_NAME brand,
+            T3.MACRO_NAME cooperationMode,
+            T4.MACRO_NAME discountRateMode,
+            T1.MACRO_NAME marketLev,
+            TA.INVEST_FUNDS,
+            TA.COST_BACK,
+            TA.OTHER_BRAND,
+            TA.CUSTOMER_FUNDS,
+            TA.MKT_VOLUME_SALES,
+            TA.MB_MAX_ACH_SALES,
+            cei.USER_ID,
+            cei.IS_NEW_ERPID,
+            cei.ERP_NAME,
+            cei.ERP_CODE,
+            cei.SPLIT_RATE,
+            cei.REMARK
+        FROM
+            T_CS_MARKET_OPTIMAUTH TC
+        LEFT JOIN T_CS_NEW_MARKETAUZ cei ON TC.ROW_ID = cei.OPTIMAUTH_ID AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_PLAN_INVESTMENT TA ON TC.ROW_ID = TA.OPTIMAUTH_ID AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = cei.USER_ID AND U.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON cei.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON cei.IS_BUYOUT = T2.MACRO_CODE AND T2.MACRO_TYPE = 'YES_NO' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN  T_CODE_MACRO_DEFINE T1 ON cei.MARKET_LEV = T1.MACRO_CODE AND T1.MACRO_TYPE = 'MARKET_LEVEL' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN  T_CODE_MACRO_DEFINE T3 ON cei.COOPERATION_MODE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'COOPERATION_MODEL' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN  T_CODE_MACRO_DEFINE T4 ON cei.DISCOUNT_RATE_MODE = T4.MACRO_CODE AND T4.MACRO_TYPE = 'DISCOUNT_RATE_METHOD' AND T4.DEL_FLAG = 'M0015'
+        <where>
+            AND TC.CUSTOMER_ID = #{customerId} AND TC.ROW_ID = #{rowId} AND cei.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+</mapper>

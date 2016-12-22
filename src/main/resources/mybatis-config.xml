@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="logImpl" value="SLF4J" />
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- 字段为空时仍调用model的set方法或map的put方法 -->
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.stripcode.mybatis.user.model.RscSysRole" alias="RscSysRole"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.RscSysRoleusermap" alias="RscSysRoleusermap"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.RscSysUser" alias="RscSysUser"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TSysPermission" alias="TSysPermission"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.RscSysRole" alias="TSysDatatype"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.RscSysPosition" alias="RscSysPosition"/>
+		<typeAlias type="com.stripcode.mybatis.cf.model.TCfTaskTemplate" alias="TCfTaskTemplate"/>
+		<typeAlias type="com.stripcode.mybatis.cs.model.TCsTaskCompletion" alias="TCsTaskCompletion"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TSysActionFunctionMap" alias="TSysActionFunctionMap"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TSysAction" alias="TSysAction"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TSysFunction" alias="TSysFunction"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TCodeMacroDefine" alias="TCodeMacroDefine"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TSysBranchOffice" alias="TSysBranchOffice"/>
+		<typeAlias type="com.stripcode.mybatis.user.model.TSysUserDataRight" alias="TSysUserDataRight"/>
+		<typeAlias type="com.stripcode.mybatis.cs.model.TSysCommonattached" alias="TSysCommonattached"/>
+		<typeAlias type="com.stripcode.mybatis.common.Tree" alias="Tree"/>
+
+		<typeAlias type="com.stripcode.mybatis.sys.model.SYSBranchOfficeInfo" alias="SYSBranchOfficeInfo"/>
+
+		<typeAlias type="com.stripcode.core.util.tree.TreeModel" alias="TreeModel"/>
+
+	</typeAliases>
+
+	<plugins>
+
+		<!-- 分页查询插件,数据权限控制-->
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql" />
+			<property name="reasonable" value="true" />
+		</plugin>
+	</plugins>
+</configuration>

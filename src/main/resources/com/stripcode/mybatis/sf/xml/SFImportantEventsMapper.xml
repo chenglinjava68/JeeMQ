@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFImportantEventsMapper" >
+    <select id="queryImportantEvents" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFImportantEvents">
+        SELECT
+        ROW_ID,
+        HANDOVER_ID,
+        HAPPEN_DATE,
+        EVENT,
+        IS_SOLVED,
+        PROGRESS
+        FROM T_SF_IMPORTANT_EVENTS
+        WHERE HANDOVER_ID = #{handoverId} AND DEL_FLAG='M0015'
+    </select>
+
+    <insert id="insertImportantEvents" parameterType="com.stripcode.mybatis.sf.model.SFImportantEvents">
+        INSERT INTO T_SF_IMPORTANT_EVENTS(
+        ROW_ID,
+        HANDOVER_ID,
+        HAPPEN_DATE,
+        EVENT,
+        IS_SOLVED,
+        PROGRESS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{handoverId},
+        #{happenDate},
+        #{event},
+        #{isSolved},
+        #{progress},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+    <update id="updaterImportantEvents" parameterType="com.stripcode.mybatis.sf.model.SFImportantEvents">
+        UPDATE T_SF_IMPORTANT_EVENTS
+        SET
+        HAPPEN_DATE = #{happenDate},
+        EVENT = #{event},
+        IS_SOLVED = #{isSolved},
+        PROGRESS = #{progress},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE ROW_ID=#{rowId} AND HANDOVER_ID = #{handoverId} AND DEL_FLAG = 'M0015'
+    </update>
+</mapper>

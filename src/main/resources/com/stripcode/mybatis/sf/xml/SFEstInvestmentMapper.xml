@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentMapper">
+    <select id="selectForPage" parameterType="map" resultType="com.stripcode.mybatis.sf.model.SFEstInvestment">
+        SELECT 
+            I.ROW_ID,
+            I.PP_ID,
+            T.MACRO_NAME modelName,
+            I.MODEL_TYPE,
+            I.MODEL_VERSION,
+            I.REPORT_FLAG,
+            I.IRR,
+            I.CALBACK_YEAR,
+            I.UC,
+            I.FIRST_UC_PER,
+            I.SECOND_UC_PER,
+            I.THIRD_UC_PER,
+            I.ATTACH_ID,
+            I.REMARK,
+            I.CREATOR,
+            I.CREATE_TIME,
+            I.UPDATER,
+            I.UPDATE_TIME,
+            I.DEL_FLAG,
+            I.COMPANY_UC1,
+            I.COMPANY_UC2,
+            I.COMPANY_UC3,
+            I.COMPANY_UC4,
+            I.COMPANY_UC5,
+            I.DEF1,
+            I.DEF2,
+            I.DEF3,
+            I.DEF4,
+            I.DEF5,
+            I.DEF6,
+            I.DEF7,
+            I.DEF8,
+            I.DEF9,
+            I.DEF10,
+            C.DOC_NAME fileName,
+            C.FILE_PATH
+        FROM T_SF_EST_INVESTMENT I
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = I.MODEL_TYPE AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = I.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+        WHERE I.PP_ID = #{ppId} AND I.DEL_FLAG ='M0015'
+        ORDER BY I.UPDATE_TIME DESC
+    </select>
+    
+    <select id="queryInvestDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetail">
+          SELECT
+                D.ROW_ID,
+                T.PARENT_CODE itemClass,
+                T.MACRO_CODE item,
+                T.MACRO_NAME,
+                D.SALES,
+                D.DESCRIPTION
+          FROM T_CODE_MACRO_DEFINE T
+          LEFT JOIN T_SF_EST_INVESTMENT_DETAIL D ON T.MACRO_CODE = D.ITEM AND D.DEL_FLAG = 'M0015' AND D.INVESTMENT_ID = #{investmentId}
+          WHERE T.PARENT_CODE IN (SELECT MACRO_CODE FROM T_CODE_MACRO_DEFINE WHERE PARENT_CODE = #{parentCode})
+    </select>
+
+    <insert id="insertEstInvestment" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestment">
+       INSERT INTO t_sf_est_investment (
+            AUTO_NO,
+            ROW_ID,
+            PP_ID,
+            MODEL_TYPE,
+            MODEL_VERSION,
+            REPORT_FLAG,
+            IRR,
+            CALBACK_YEAR,
+            UC,
+            FIRST_UC_PER,
+            SECOND_UC_PER,
+            THIRD_UC_PER,
+            ATTACH_ID,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10,
+            COMPANY_UC1,
+            COMPANY_UC2,
+            COMPANY_UC3,
+            COMPANY_UC4,
+            COMPANY_UC5
+        )
+        VALUES
+            (
+                #{autoNo},
+                #{rowId},
+                #{ppId},
+                #{modelType},
+                #{modelVersion},
+                #{reportFlag},
+                #{irr},
+                #{calbackYear},
+                #{uc},
+                #{firstUcPer},
+                #{secondUcPer},
+                #{thirdUcPer},
+                #{attachId},
+                #{remark},
+                #{creator},
+                sysdate(),
+                #{updater},
+                sysdate(),
+                #{delFlag},
+                #{def1},
+                #{def2},
+                #{def3},
+                #{def4},
+                #{def5},
+                #{def6},
+                #{def7},
+                #{def8},
+                #{def9},
+                #{def10},
+                #{companyUc1},
+                #{companyUc2},
+                #{companyUc3},
+                #{companyUc4},
+                #{companyUc5}
+            )
+    </insert>
+
+    <update id="updateEstInvestment" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestment">
+       UPDATE t_sf_est_investment
+        SET PP_ID = #{ppId},
+            MODEL_TYPE = #{modelType},
+            <if test="modelVersion !=null and modelVersion !=''">
+                MODEL_VERSION = #{modelVersion},
+            </if>
+            REPORT_FLAG = #{reportFlag},
+            IRR = #{irr},
+            CALBACK_YEAR = #{calbackYear},
+            UC = #{uc},
+            FIRST_UC_PER = #{firstUcPer},
+            SECOND_UC_PER = #{secondUcPer},
+            THIRD_UC_PER = #{thirdUcPer},
+            ATTACH_ID = #{attachId},
+            REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate(),
+            DEL_FLAG = #{delFlag},
+            DEF1 = #{def1},
+            DEF2 = #{def2},
+            DEF3 = #{def3},
+            DEF4 = #{def4},
+            DEF5 = #{def5},
+            DEF6 = #{def6},
+            DEF7 = #{def7},
+            DEF8 = #{def8},
+            DEF9 = #{def9},
+            DEF10 = #{def10},
+            COMPANY_UC1 = #{companyUc1},
+            COMPANY_UC2 = #{companyUc2},
+            COMPANY_UC3 = #{companyUc3},
+            COMPANY_UC4 = #{companyUc4},
+            COMPANY_UC5 = #{companyUc5}
+        WHERE ROW_ID = #{rowId} AND PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <insert id="insertEstInvestmentDetail" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetail">
+        INSERT INTO T_SF_EST_INVESTMENT_DETAIL(
+            ROW_ID,
+            INVESTMENT_ID,
+            ITEM_CLASS,
+            ITEM,
+            SALES,
+            DESCRIPTION,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{investmentId},
+            #{itemClass},
+            #{item},
+            #{sales},
+            #{description},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateEstInvestmentDetail" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetail">
+        UPDATE T_SF_EST_INVESTMENT_DETAIL
+        SET
+            SALES = #{sales},
+            DESCRIPTION = #{description},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE ROW_ID = #{rowId} AND INVESTMENT_ID = #{investmentId} AND ITEM = #{item} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <insert id="insertEstInvestmentResultData" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentResultData">
+        INSERT INTO T_SF_EST_INVESTMENT_RESULT_DATA(
+            ROW_ID,
+            INVESTMENT_ID,
+            SUPPLY_DISCOUNT_RATE,
+            SALE_DISCOUNT_RATE,
+            YEAR_COST_SALES,
+            DAY_DISCOUNT_RATE,
+            FIRST_SALES_INCR_RATE,
+            SECOND_SALES_INCR_RATE,
+            THIRD_SALES_INCR_RATE,
+            FIRST_SALES,
+            SECOND_SALES,
+            THIRD_SALES,
+            TOTAL_SALES,
+            FIRST_FIX_COST,
+            SECOND_FIX_COST,
+            THIRD_FIX_COST,
+            TOTAL_FIX_COST,
+            FIRST_OPR_COST,
+            SECOND_OPR_COST,
+            THIRD_OPR_COST,
+            TOTAL_OPR_COST,
+            FIRST_UC,
+            SECOND_UC,
+            THIRD_UC,
+            TOTAL_UC,
+            FIRST_UC_PER,
+            SECOND_UC_PER,
+            THIRD_UC_PER,
+            TOTAL_UC_PER,
+            FIRST_CALBACK_YEAR,
+            SECOND_CALBACK_YEAR,
+            THIRD_CALBACK_YEAR,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{investmentId},
+            #{supplyDiscountRate},
+            #{saleDiscountRate},
+            #{yearCostSales},
+            #{dayDiscountRate},
+            #{firstSalesIncrRate},
+            #{secondSalesIncrRate},
+            #{thirdSalesIncrRate},
+            #{firstSales},
+            #{secondSales},
+            #{thirdSales},
+            #{totalSales},
+            #{firstFixCost},
+            #{secondFixCost},
+            #{thirdFixCost},
+            #{totalFixCost},
+            #{firstOprCost},
+            #{secondOprCost},
+            #{thirdOprCost},
+            #{totalOprCost},
+            #{firstUc},
+            #{secondUc},
+            #{thirdUc},
+            #{totalUc},
+            #{firstUcPer},
+            #{secondUcPer},
+            #{thirdUcPer},
+            #{totalUcPer},
+            #{firstCalbackYear},
+            #{secondCalbackYear},
+            #{thirdCalbackYear},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateEstInvestmentResultData" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentResultData">
+        UPDATE T_SF_EST_INVESTMENT_RESULT_DATA
+        SET SUPPLY_DISCOUNT_RATE = #{supplyDiscountRate},
+            SALE_DISCOUNT_RATE = #{saleDiscountRate},
+            YEAR_COST_SALES = #{yearCostSales},
+            DAY_DISCOUNT_RATE = #{dayDiscountRate},
+            FIRST_SALES_INCR_RATE = #{firstSalesIncrRate},
+            SECOND_SALES_INCR_RATE = #{secondSalesIncrRate},
+            THIRD_SALES_INCR_RATE = #{thirdSalesIncrRate},
+            FIRST_SALES = #{firstSales},
+            SECOND_SALES = #{secondSales},
+            THIRD_SALES = #{thirdSales},
+            TOTAL_SALES = #{totalSales},
+            FIRST_FIX_COST = #{firstFixCost},
+            SECOND_FIX_COST = #{secondFixCost},
+            THIRD_FIX_COST = #{thirdFixCost},
+            TOTAL_FIX_COST = #{totalFixCost},
+            FIRST_OPR_COST = #{firstOprCost},
+            SECOND_OPR_COST = #{secondOprCost},
+            THIRD_OPR_COST = #{thirdOprCost},
+            TOTAL_OPR_COST = #{totalOprCost},
+            FIRST_UC = #{firstUc},
+            SECOND_UC = #{secondUc},
+            THIRD_UC = #{totalUc},
+            TOTAL_UC = #{totalUc},
+            FIRST_UC_PER = #{firstUcPer},
+            SECOND_UC_PER = #{secondUcPer},
+            THIRD_UC_PER = #{thirdUcPer},
+            TOTAL_UC_PER = #{totalUcPer},
+            FIRST_CALBACK_YEAR = #{firstCalbackYear},
+            SECOND_CALBACK_YEAR = #{secondCalbackYear},
+            THIRD_CALBACK_YEAR = #{thirdCalbackYear},
+            REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE INVESTMENT_ID = #{investmentId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="isExistsEstInvestmentDetail" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_SF_EST_INVESTMENT_DETAIL WHERE ROW_ID = #{rowId} AND INVESTMENT_ID = #{investmentId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <update id="deleteInvestment" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT SET DEL_FLAG = 'M0014' WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId}
+    </update>
+
+    <delete id="deleteInvestmentDetail" parameterType="java.lang.String">
+        UPDATE  T_SF_EST_INVESTMENT_DETAIL SET DEL_FLAG = 'M0014' WHERE INVESTMENT_ID = #{investmentId}
+    </delete>
+
+    <delete id="deleteInvestmentResultDate" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT_RESULT_DATA SET DEL_FLAG = 'M0014' WHERE INVESTMENT_ID = #{investmentId}
+    </delete>
+
+    <select id="queryResultData" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentResultData">
+        SELECT
+              ROW_ID,
+              SUPPLY_DISCOUNT_RATE,
+              SALE_DISCOUNT_RATE,
+              YEAR_COST_SALES,
+              DAY_DISCOUNT_RATE,
+              FIRST_SALES_INCR_RATE,
+              SECOND_SALES_INCR_RATE,
+              THIRD_SALES_INCR_RATE,
+              FIRST_SALES,
+              SECOND_SALES,
+              THIRD_SALES,
+              TOTAL_SALES,
+              FIRST_FIX_COST,
+              SECOND_FIX_COST,
+              THIRD_FIX_COST,
+              TOTAL_FIX_COST,
+              FIRST_OPR_COST,
+              SECOND_OPR_COST,
+              THIRD_OPR_COST,
+              TOTAL_OPR_COST,
+              FIRST_UC,
+              SECOND_UC,
+              THIRD_UC,
+              TOTAL_UC,
+              FIRST_UC_PER,
+              SECOND_UC_PER,
+              THIRD_UC_PER,
+              TOTAL_UC_PER,
+              FIRST_CALBACK_YEAR,
+              SECOND_CALBACK_YEAR,
+              THIRD_CALBACK_YEAR,
+              REMARK
+        FROM T_SF_EST_INVESTMENT_RESULT_DATA
+        WHERE INVESTMENT_ID = #{investmentId} AND DEL_FLAG ='M0015'
+    </select>
+
+    <select id="isExistsEstInvestmentResultData" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_SF_EST_INVESTMENT_RESULT_DATA WHERE INVESTMENT_ID = #{investmentId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="getFilePath" parameterType="java.lang.String" resultType="map">
+        select b.FILE_PATH fieldId,b.DOC_NAME fileName,b.ATTACH_ID attachId,a.MODEL_VERSION modelVersion
+        from
+        T_SYS_EST_INVESTMENT_MODEL A
+        inner join T_SYS_COMMONATTACHED b
+        on a.attach_id = b.attach_id
+        where a.MODEL_TYPE = #{modelType}
+        and a.DEL_FLAG = 'M0015'
+        and a.MODEL_STATUS = 'M0043'
+        and a.brand = #{brand}
+     </select>
+
+    <!--查询ppt意向店投资测算-->
+    <select id="selectInvestmentDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetail">
+        SELECT
+            T2.MACRO_NAME itemClass,
+            T1.MACRO_NAME item,
+            T.SALES,
+            T.DESCRIPTION
+        FROM
+            T_SF_EST_INVESTMENT B
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND A.DEL_FLAG = 'M0015' AND B.REPORT_FLAG = 'M0044'
+            LEFT JOIN T_SF_EST_INVESTMENT_DETAIL T ON B.ROW_ID = T.INVESTMENT_ID AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.ITEM = T1.MACRO_CODE AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T.ITEM_CLASS = T2.MACRO_CODE AND T1.DEL_FLAG = 'M0015'
+            <where>
+                 A.OPTIMAUTH_ID =#{optimauthId}
+            </where>
+    </select>
+    <!--查询ppt意向店回收期评估-->
+    <select id="selectResultData" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentResultData">
+        SELECT
+            T.ROW_ID,
+            T.SUPPLY_DISCOUNT_RATE,
+            T.SALE_DISCOUNT_RATE,
+            T.YEAR_COST_SALES,
+            T.DAY_DISCOUNT_RATE,
+            T.FIRST_SALES_INCR_RATE,
+            T.SECOND_SALES_INCR_RATE,
+            T.THIRD_SALES_INCR_RATE,
+            T.FIRST_SALES,
+            T.SECOND_SALES,
+            T.THIRD_SALES,
+            T.TOTAL_SALES,
+            T.FIRST_FIX_COST,
+            T.SECOND_FIX_COST,
+            T.THIRD_FIX_COST,
+            T.TOTAL_FIX_COST,
+            T.FIRST_OPR_COST,
+            T.SECOND_OPR_COST,
+            T.THIRD_OPR_COST,
+            T.TOTAL_OPR_COST,
+            T.FIRST_UC,
+            T.SECOND_UC,
+            T.THIRD_UC,
+            T.TOTAL_UC,
+            T.FIRST_UC_PER,
+            T.SECOND_UC_PER,
+            T.THIRD_UC_PER,
+            T.TOTAL_UC_PER,
+            T.FIRST_CALBACK_YEAR,
+            T.SECOND_CALBACK_YEAR,
+            T.THIRD_CALBACK_YEAR,
+            T.REMARK
+        FROM
+            T_SF_EST_INVESTMENT B
+            LEFT JOIN T_CS_CUSTOMER_PP A ON A.PP_ID = B.PP_ID AND A.DEL_FLAG = 'M0015' AND B.REPORT_FLAG = 'M0044'
+            LEFT JOIN T_SF_EST_INVESTMENT_RESULT_DATA T ON B.ROW_ID = T.INVESTMENT_ID AND T.DEL_FLAG = 'M0015'
+        <where>
+            A.OPTIMAUTH_ID = #{optimauthId}
+        </where>
+    </select>
+
+    <select id="queryReport" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFReport">
+        SELECT
+              ROW_ID,
+              PP_ID,
+              INVESTMENT_ID
+        FROM T_SF_REPORT
+        WHERE PP_ID = #{ppId}
+    </select>
+
+    <update id="updateSubmitStatus">
+        UPDATE T_SF_EST_INVESTMENT
+        SET REPORT_FLAG = 'M0043'
+        <where>
+                ROW_ID NOT IN
+                <foreach collection="rowIds" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            AND PP_ID = #{ppId}
+        </where>
+    </update>
+
+    <update id="updateSubmitStatusByRowId">
+        UPDATE T_SF_EST_INVESTMENT
+        SET REPORT_FLAG = 'M0044'
+        <where>
+            ROW_ID IN
+            <foreach collection="rowIds" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
+    </update>
+    <update id="deleteById" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT
+        SET
+        DEL_FLAG = 'M0014'
+        WHERE ROW_ID = #{rowId}
+    </update>
+</mapper>

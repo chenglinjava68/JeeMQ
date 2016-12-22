@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentCostMapper">
+
+    <select id="selectEstInvestmentCost" resultType="com.stripcode.mybatis.sf.model.SFBudGetEstimationCost" parameterType="map">
+        SELECT
+               B.row_id, a.item_code item, a.item_name, b.cost, a.is_edit, a.COST_CLS_CODE costCls
+        FROM
+        T_SYS_COST_ITEM A
+        LEFT JOIN
+        (SELECT
+              b.ROW_ID,b.item item_code, b.cost
+          FROM
+              t_sf_est_investment_cost B
+              where investment_Id  = #{investmentId}) B ON a.item_code = b.item_code
+        WHERE
+            A.BUDGET_TYPE = 'M0409'
+                AND a.COST_CLS_CODE = #{itemCodes}
+          ORDER BY A.SORT_NO
+    </select>
+
+    <insert id="insertEstInvestmentCost" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentCost">
+      INSERT INTO T_SF_EST_INVESTMENT_COST(
+      ROW_ID,
+      INVESTMENT_ID,
+      ITEM,
+      COST,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG
+      )VALUES (
+      #{rowId},
+      #{investmentId},
+      #{item},
+      #{cost},
+      #{creator},
+      sysdate(),
+      #{updater},
+      sysdate(),
+      'M0015'
+        )
+    </insert>
+
+    <update id="updateEstInvestmentCost" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentCost">
+      UPDATE T_SF_EST_INVESTMENT_COST
+      SET INVESTMENT_ID = #{investmentId},
+      ITEM = #{item},
+      COST = #{cost},
+      UPDATER = #{updater},
+      UPDATE_TIME = sysdate()
+      WHERE ROW_ID = #{rowId}
+    </update>
+    <update id="deleteInvestmentId" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT_COST
+        SET
+        DEL_FLAG = 'M0014'
+        WHERE INVESTMENT_ID = #{investmentId}
+    </update>
+</mapper>

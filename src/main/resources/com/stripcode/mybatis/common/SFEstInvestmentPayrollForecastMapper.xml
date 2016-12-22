@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentPayrollForecastMapper">
+
+    <select id="selectEstInvestmentPayrollForecast" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentPayrollForecast" parameterType="java.lang.String">
+        SELECT
+        ROW_ID,
+        INVESTMENT_ID,
+        POS_NAME,
+        NUMBER,
+        FIX_SALARY_STD,
+        MEAL_SUB_STD,
+        RENT_SUB_STD,
+        FULL_ATTND_STD,
+        AVG_OVERTIME,
+        PERFORM_COEF
+        FROM
+        T_SF_EST_INVESTMENT_PAYROLL_FORECAST
+        where INVESTMENT_ID = #{investmentId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertEstInvestmentPayrollForecast" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentPayrollForecast">
+        INSERT INTO T_SF_EST_INVESTMENT_PAYROLL_FORECAST(
+         ROW_ID,
+        INVESTMENT_ID,
+        POS_NAME,
+        NUMBER,
+        FIX_SALARY_STD,
+        MEAL_SUB_STD,
+        RENT_SUB_STD,
+        FULL_ATTND_STD,
+        AVG_OVERTIME,
+        PERFORM_COEF,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{investmentId},
+        #{posName},
+        #{number},
+        #{fixSalaryStd},
+        #{mealSubStd},
+        #{rentSubStd},
+        #{fullAttndStd},
+        #{avgOvertime},
+        #{performCoef},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+    <update id="updateEstInvestmentPayrollForecast" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestment">
+        UPDATE T_SF_EST_INVESTMENT_PAYROLL_FORECAST
+        SET INVESTMENT_ID = #{investmentId},
+        POS_NAME = #{posName},
+        NUMBER = #{number},
+        FIX_SALARY_STD = #{fixSalaryStd},
+        MEAL_SUB_STD = #{mealSubStd},
+        RENT_SUB_STD = #{rentSubStd},
+        FULL_ATTND_STD = #{fullAttndStd},
+        AVG_OVERTIME = #{avgOvertime},
+        PERFORM_COEF = #{performCoef}
+        WHERE ROW_ID = #{rowId}
+    </update>
+    <update id="deleteByInvestmentId" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT_PAYROLL_FORECAST
+        SET
+        DEL_FLAG = 'M0014'
+        WHERE INVESTMENT_ID = #{investmentId}
+    </update>
+</mapper>

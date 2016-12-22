@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFLocationInfoMapper">
+    <!--新增位置状况-->
+    <insert id="insertLocationInfo" parameterType="com.stripcode.mybatis.sf.model.SFLocationInfo">
+        INSERT INTO T_SF_LOCATIONINFO(
+            ROW_ID,
+            PP_ID,
+            LOCATION_TYPE,
+            TA_NAME,
+            CITY,
+            TA_TYPE,
+            TA_PRIORITY,
+            TA_MATURITY,
+            INCOME_LEVEL,
+            TA_DESIRABILITY,
+            COMMUNITY_NAME,
+            OTHER_BRAND,
+            STORE_NUM_500,
+            STORE_NUM_1000,
+            STORE_NUM_3000,
+            HOUSEHOLES,
+            POPULATION,
+            TA_AVG_INCOME,
+            CITY_AVG_INCOME,
+            TA_AREA,
+            POP_DENSITY,
+            HOUSING_500,
+            HOUSEHOLES_NUM,
+            HOUSING_MATURITY,
+            YEARS,
+            HYPERMARKET,
+            PASSENGER_FLOW_YEAR,
+            SALES_YEAR,
+            HYPERMARKET_PLAN,
+            HYPERMARKET_AREA,
+            BUSINESS_TYPE,
+            IS_SIGNBOARD,
+            SIGNBOARD_LEN,
+            SIGNBOARD_Height,
+            OVERALL_VISIBILITY,
+            IS_OTHER_AD,
+            IS_POLO_SIGN,
+            POLO_SIGN_NUM,
+            SHOPFRONT_EFFICTIVITY,
+            IS_DIRECTIONAL_SIGN,
+            DIRECTIONAL_SIGN_NUM,
+            DISTANCE_ANT_LINE,
+            ROAD_WIDTH,
+            DISTANCE_CROSSROADS,
+            IS_STEPS,
+            IS_ISOLATION_BELT,
+            IS_OCCLUSION,
+            OCCLUSION,
+            IS_ROAD_REFORMING,
+            IS_ROAD_OVERHAUL,
+            IS_HOUSING_CONCENTRATED,
+            IS_NEAR_HOUSING,
+            OCCUPANCY_RATE,
+            HOUSING_LIVING_STANDARD,
+            IS_HYPERMARKET_STORE,
+            BUSINESS_ANALYSIS,
+            ADVANTAGE_INFERIORITY,
+            SURFACE_LEN,
+            ORIENTATION,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{locationType},
+            #{taName},
+            #{city},
+            #{taType},
+            #{taPriority},
+            #{taMaturity},
+            #{incomeLevel},
+            #{taDesirability},
+            #{communityName},
+            #{otherBrand},
+            #{storeNum500},
+            #{storeNum1000},
+            #{storeNum3000},
+            #{householes},
+            #{population},
+            #{taAvgIncome},
+            #{cityAvgIncome},
+            #{taArea},
+            #{popDensity},
+            #{housing500},
+            #{householesNum},
+            #{housingMaturity},
+            #{years},
+            #{hypermarket},
+            #{passengerFlowYear},
+            #{salesYear},
+            #{hypermarketPlan},
+            #{hypermarketArea},
+            #{businessType},
+            #{isSignboard},
+            #{signboardLen},
+            #{signboardHeight},
+            #{overallVisibility},
+            #{isOtherAd},
+            #{isPoloSign},
+            #{poloSignNum},
+            #{shopfrontEffictivity},
+            #{isDirectionalSign},
+            #{directionalSignNum},
+            #{distanceAntLine},
+            #{roadWidth},
+            #{distanceCrossroads},
+            #{isSteps},
+            #{isIsolationBelt},
+            #{isOcclusion},
+            #{occlusion},
+            #{isRoadReforming},
+            #{isRoadOverhaul},
+            #{isHousingConcentrated},
+            #{isNearHousing},
+            #{occupancyRate},
+            #{housingLivingStandard},
+            #{isHypermarketStore},
+            #{businessAnalysis},
+            #{advantageInferiority},
+            #{surfaceLen},
+            #{orientation},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <!--新增楼层信息-->
+    <insert id="insertHypermarketFloor" parameterType="com.stripcode.mybatis.sf.model.SFHypermarketFloor">
+        INSERT INTO T_SF_HYPERMARKET_FLOOR(
+            ROW_ID,
+            PP_ID,
+            FLOOR,
+            SIZE,
+            GOODS_CATEGORY,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{floor},
+            #{size},
+            #{goodsCategory},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <!--新增新址照片-->
+    <insert id="insertPhotoAttachment" parameterType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        INSERT INTO T_SF_PIPEINE_PHOTO_ATTACHMENT(
+            ROW_ID,
+            PP_ID,
+            NAME,
+            PERSON,
+            TIME,
+            TEMPLATE_ID,
+            ATTACH_ID,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{name},
+            #{updater},
+            sysdate(),
+            #{templateId},
+            #{attachId},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <!--修改位置状况-->
+    <update id="updateLocationInfo" parameterType="com.stripcode.mybatis.sf.model.SFLocationInfo">
+        UPDATE T_SF_LOCATIONINFO
+        SET LOCATION_TYPE = #{locationType},
+            TA_NAME = #{taName},
+            CITY = #{city},
+            TA_TYPE = #{taType},
+            TA_PRIORITY = #{taPriority},
+            TA_MATURITY = #{taMaturity},
+            INCOME_LEVEL = #{incomeLevel},
+            TA_DESIRABILITY = #{taDesirability},
+            COMMUNITY_NAME = #{communityName},
+            OTHER_BRAND = #{otherBrand},
+            STORE_NUM_500 = #{storeNum500},
+            STORE_NUM_1000 = #{storeNum1000},
+            STORE_NUM_3000 = #{storeNum3000},
+            HOUSEHOLES = #{householes},
+            POPULATION = #{population},
+            TA_AVG_INCOME = #{taAvgIncome},
+            CITY_AVG_INCOME = #{cityAvgIncome},
+            TA_AREA = #{taArea},
+            POP_DENSITY = #{popDensity},
+            HOUSING_500 = #{housing500},
+            HOUSEHOLES_NUM = #{householesNum},
+            HOUSING_MATURITY = #{housingMaturity},
+            YEARS = #{years},
+            HYPERMARKET = #{hypermarket},
+            PASSENGER_FLOW_YEAR = #{passengerFlowYear},
+            SALES_YEAR = #{salesYear},
+            HYPERMARKET_PLAN = #{hypermarketPlan},
+            HYPERMARKET_AREA = #{hypermarketArea},
+            BUSINESS_TYPE = #{businessType},
+            IS_SIGNBOARD = #{isSignboard},
+            SIGNBOARD_LEN = #{signboardLen},
+            OVERALL_VISIBILITY = #{overallVisibility},
+            IS_OTHER_AD = #{isOtherAd},
+            IS_POLO_SIGN = #{isPoloSign},
+            POLO_SIGN_NUM = #{poloSignNum},
+            SHOPFRONT_EFFICTIVITY = #{shopfrontEffictivity},
+            IS_DIRECTIONAL_SIGN = #{isDirectionalSign},
+            DIRECTIONAL_SIGN_NUM = #{directionalSignNum},
+            DISTANCE_ANT_LINE = #{distanceAntLine},
+            ROAD_WIDTH = #{roadWidth},
+            DISTANCE_CROSSROADS = #{distanceCrossroads},
+            IS_STEPS = #{isSteps},
+            IS_ISOLATION_BELT = #{isIsolationBelt},
+            IS_OCCLUSION = #{isOcclusion},
+            OCCLUSION = #{occlusion},
+            IS_ROAD_REFORMING = #{isRoadReforming},
+            IS_ROAD_OVERHAUL = #{isRoadOverhaul},
+            IS_HOUSING_CONCENTRATED = #{isHousingConcentrated},
+            IS_NEAR_HOUSING = #{isNearHousing},
+            OCCUPANCY_RATE = #{occupancyRate},
+            HOUSING_LIVING_STANDARD = #{housingLivingStandard},
+            IS_HYPERMARKET_STORE = #{isHypermarketStore},
+            BUSINESS_ANALYSIS = #{businessAnalysis},
+            ORIENTATION = #{orientation},
+            ADVANTAGE_INFERIORITY = #{advantageInferiority},
+            SIGNBOARD_HEIGHT = #{signboardHeight},
+            SURFACE_LEN = #{surfaceLen},
+            REMARK = #{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId}
+    </update>
+    <!--修改楼层信息-->
+    <update id="updateHypermarketFloor" parameterType="com.stripcode.mybatis.sf.model.SFHypermarketFloor">
+        UPDATE T_SF_HYPERMARKET_FLOOR
+        SET FLOOR = #{floor},
+            SIZE = #{size},
+            GOODS_CATEGORY = #{goodsCategory},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+         WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId}
+    </update>
+    <!--修改新址照片-->
+    <update id="updatePhotoAttachment" parameterType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        UPDATE T_SF_PIPEINE_PHOTO_ATTACHMENT
+        SET NAME = #{name},
+            PERSON = #{updater},
+            TIME = sysdate(),
+            TEMPLATE_ID = #{templateId},
+            ATTACH_ID = #{attachId},
+            REMARK=#{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId}
+    </update>
+    <!--删除楼层-->
+    <update id="delHypermarketFloor" parameterType="map">
+        UPDATE T_SF_HYPERMARKET_FLOOR
+        SET DEL_FLAG = 'M0014'
+        <where>
+            <if test='isFloorNull!=0'>
+           ROW_ID NOT IN
+            <foreach collection="rowId" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        AND PP_ID = #{ppId}
+        </where>
+    </update>
+    <!--删除新址照片-->
+    <update id="delPhotoAttachment" parameterType="map">
+        UPDATE T_SF_PIPEINE_PHOTO_ATTACHMENT
+        SET DEL_FLAG = 'M0014'
+        <where>
+        <if test='isPhotoNull!=0'>
+        ROW_ID NOT IN
+        <foreach collection="rowId" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        </if>
+        AND PP_ID = #{ppId}
+        </where>
+    </update>
+    <!--查询位置状况信息-->
+    <select id="queryLocationInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLocationInfo">
+        SELECT
+              ROW_ID,
+            PP_ID,
+            LOCATION_TYPE,
+            TA_NAME,
+            CITY,
+            TA_TYPE,
+            TA_PRIORITY,
+            TA_MATURITY,
+            INCOME_LEVEL,
+            TA_DESIRABILITY,
+            COMMUNITY_NAME,
+            OTHER_BRAND,
+            STORE_NUM_500,
+            STORE_NUM_1000,
+            STORE_NUM_3000,
+            HOUSEHOLES,
+            POPULATION,
+            TA_AVG_INCOME,
+            CITY_AVG_INCOME,
+            TA_AREA,
+            POP_DENSITY,
+            HOUSING_500,
+            HOUSEHOLES_NUM,
+            HOUSING_MATURITY,
+            YEARS,
+            ORIENTATION,
+            HYPERMARKET,
+            PASSENGER_FLOW_YEAR,
+            SALES_YEAR,
+            HYPERMARKET_PLAN,
+            HYPERMARKET_AREA,
+            BUSINESS_TYPE,
+            IS_SIGNBOARD,
+            SIGNBOARD_LEN,
+            SIGNBOARD_Height,
+            OVERALL_VISIBILITY,
+            IS_OTHER_AD,
+            IS_POLO_SIGN,
+            POLO_SIGN_NUM,
+            SHOPFRONT_EFFICTIVITY,
+            IS_DIRECTIONAL_SIGN,
+            DIRECTIONAL_SIGN_NUM,
+            DISTANCE_ANT_LINE,
+            ROAD_WIDTH,
+            DISTANCE_CROSSROADS,
+            IS_STEPS,
+            IS_ISOLATION_BELT,
+            IS_OCCLUSION,
+            OCCLUSION,
+            IS_ROAD_REFORMING,
+            IS_ROAD_OVERHAUL,
+            IS_HOUSING_CONCENTRATED,
+            IS_NEAR_HOUSING,
+            OCCUPANCY_RATE,
+            HOUSING_LIVING_STANDARD,
+            IS_HYPERMARKET_STORE,
+            BUSINESS_ANALYSIS,
+            ADVANTAGE_INFERIORITY,
+            SURFACE_LEN,
+            REMARK
+        FROM T_SF_LOCATIONINFO
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+    <!--查询楼层信息-->
+    <select id="queryHypermarketFloor" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFHypermarketFloor">
+      SELECT
+            ROW_ID,
+            PP_ID,
+            FLOOR,
+            SIZE,
+            GOODS_CATEGORY
+      FROM T_SF_HYPERMARKET_FLOOR
+      WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+    <!--查询新址照片-->
+    <select id="queryPhotoAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPipeinePhotoAttachment">
+        SELECT
+            P.ROW_ID,
+            P.PP_ID,
+            T.TITLE name,
+            U.USER_NAME person,
+            P.UPDATE_TIME time,
+            T.TEMPLATE_ID,
+            P.ATTACH_ID,
+            P.REMARK
+        FROM T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_PIPEINE_PHOTO_ATTACHMENT P ON P.TEMPLATE_ID = T.TEMPLATE_ID AND P.PP_ID = #{ppId} AND P.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = P.UPDATER AND U.DEL_FLAG = 'M0015'
+        WHERE T.DEL_FLAG = 'M0015' AND T.PAGE_ID = 'SF30_051'
+        ORDER BY T.SORT_NO
+    </select>
+</mapper>

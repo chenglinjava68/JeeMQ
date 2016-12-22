@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stripcode.mybatis.dictionary.dao.DictionaryMapper">
+	<sql id="baseSql"> DICT_CODE dictCode,TYPE_CODE typeCode, TYPE_NAME typeName,TYPE_ENNAME typeEnName, TYPE_ID typeId,JOIN_ID joinId,COMMENTS comments,STATUS status,SORTNO
+		sortno,MNEMONICCODE mnemonicCode, DEF1 def1,DEF2 def2,DEF3 def3,DEF4 def4,DEF5 def5 ,def6 ,def7 ,def8,def9,def10
+	</sql>
+	<select id="getDataAll" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT <include refid="baseSql"/>
+		FROM  dev_sysdatatype
+	</select>
+
+	<select id="getByTypeId" parameterType="int" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		<include refid="baseSql" />
+		,T.TYPE_NAME AS PARENTNAME FROM DEV_SYSDATATYPE D 
+		LEFT JOIN DEV_SYSDATATYPE T ON D.JOIN_ID = T.DICT_CODE And T.TYPE_ID = #{typeId}
+		WHERE D.TYPE_ID = #{typeId}
+		<if test="status==1"> AND D.STATUS=1 
+		</if>
+		ORDER BY D.SORTNO,DICT_CODE;
+	</select>
+	
+	
+	<select id="isExists" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+	SELECT TYPE_NAME FROM DEV_SYSDATATYPE WHERE TYPE_ID=#{typeId} AND TYPE_NAME=#{typeName} ;
+	</select>
+	
+	<select id="getByDictCode" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		<include refid="baseSql" />
+		,T.TYPE_NAME AS PARENTNAME FROM DEV_SYSDATATYPE D 
+		LEFT JOIN DEV_SYSDATATYPE T ON D.JOIN_ID = T.DICT_CODE 
+		WHERE D.DICT_CODE = #{dictCode} AND D.TYPE_ID = #{typeId};
+	</select>
+	
+	<insert id="insert" parameterType="com.stripcode.mybatis.dictionary.model.Dictionary">
+	Insert Into DEV_SYSDATATYPE(DICT_CODE,TYPE_CODE,TYPE_ENNAME,TYPE_NAME,TYPE_Id, JOIN_ID,COMMENTS,STATUS,SORTNO,MNEMONICCODE, 
+		DEF1,DEF2,DEF3,DEF4,DEF5,DEF6,DEF7,DEF8,DEF9,DEF10)
+		VALUES(#{dictCode},#{typeCode},#{typeEnName},#{typeName},
+		#{typeId},#{joinId}, #{comments},#{status},#{sortno},#{mnemonicCode}, 
+		#{def1},#{def2}, #{def3},#{def4},#{def5},
+		#{def6},#{def7}, #{def8},#{def9},#{def10}) ;
+	</insert>
+	
+	
+	<update id="update" parameterType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		UPDATE DEV_SYSDATATYPE SET TYPE_CODE = #{typeCode},TYPE_NAME = #{typeName},COMMENTS = #{comments},
+		TYPE_Id = #{typeId},
+		STATUS = #{status},TYPE_ENNAME=#{typeEnName}, SORTNO = #{sortno}, MNEMONICCODE = #{mnemonicCode},
+		DEF1=#{def1}, DEF2=#{def2}, DEF3=#{def3}, DEF4=#{def4}, DEF5=#{def5} ,
+		DEF6=#{def6}, DEF7=#{def7}, DEF8=#{def8}, DEF9=#{def9}, DEF10=#{def10} 
+		WHERE DICT_CODE = #{dictCode};
+	</update>
+	
+	<select id="getMaxDictCode" resultType="string">
+		SELECT MAX(DICT_CODE) FROM DEV_SYSDATATYPE 
+		WHERE DICT_CODE LIKE "jeemq%";
+	</select>
+	
+	
+	<delete id="remove" parameterType="string"> 
+	update DEV_SYSDATATYPE set status = 0 WHERE DICT_CODE = #{dictCode} ;
+	</delete>
+	
+	<select id="getSnapShot" resultType="string">
+	SELECT DICT_CODE FROM DEV_SYSDATATYPE
+	</select>
+	
+	<select id="get" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		<include refid="baseSql" />
+		FROM DEV_SYSDATATYPE WHERE TYPE_CODE= #{typeCode} ORDER BY SORTNO
+	</select>
+	
+	<select id="getByTypeCode" resultType="map">
+		SELECT
+		<include refid="baseSql" />
+		from  DEV_SYSDATATYPE WHERE TYPE_CODE= #{typeCode}
+		<if test="filter.whereClause != ''">
+  		and ${filter.whereClause}
+  		</if> 
+		<if test="filter.pageClause != ''">
+		${filter.pageClause}
+		</if>
+	</select>
+	
+	<select id="getByTypeCodeCount" resultType="int">
+		SELECT
+		count(1)
+		from  DEV_SYSDATATYPE WHERE TYPE_CODE= #{typeCode}
+		<if test="filter.whereClause != ''">
+  		and ${filter.whereClause}
+  		</if> 
+	</select>
+	
+	
+	<select id="load" parameterType="string" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		<include refid="baseSql" />
+		FROM DEV_SYSDATATYPE WHERE DICT_CODE=#{dictCode}
+	</select>
+	
+	
+	<select id="getInfoByParentId" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		<include refid="baseSql" />
+		FROM dev_sysdatatype WHERE join_id= #{joinId}
+		<if test="status != null">
+		and status = #{status} 
+		</if>
+		ORDER BY status DESC
+	</select>
+
+	<select id="checkIsHaveTypeEnName" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		<include refid="baseSql" />
+		FROM DEV_SYSDATATYPE WHERE JOIN_ID=#{parentCode} AND TYPE_ENNAME=#{typeEnName} ;
+	</select>
+
+	<select id="getLayer" resultType="com.stripcode.mybatis.dictionary.model.Dictionary" >
+		SELECT
+		DISTINCT(DICT_CODE) dictCode,type_Id typeId,TYPE_CODE typeCode, TYPE_NAME typeName,TYPE_ENNAME typeEnName, TYPE_ID typeId,JOIN_ID joinId,COMMENTS comments,STATUS status,d.SORTNO
+		sortno,MNEMONICCODE mnemonicCode, DEF1 def1,DEF2 def2,DEF3 def3,DEF4 def4,DEF5 def5 
+		FROM DEV_SYSDATATYPE d
+		<!-- LEFT JOIN RSC_SYS_FUNCTION FUNC ON FUNC.MODULE_ID = D.DICT_CODE AND FUNC.PAGETYPE = 1 -->
+		<if test="userId != null and userId != 250">
+		LEFT JOIN RSC_SYS_PERMISSION p ON p.moduleid = d.dict_code 
+		</if>
+		WHERE d.JOIN_ID= #{parentCode} and ifnull(STATUS,1) != 0
+		<if test="typeCode != null">
+		and d.type_Code = #{typeCode}
+		</if>
+		<if test="typeCode == null">
+		AND D.TYPE_CODE IS NULL
+		</if>
+		<if test="userId != null and userId != 250">
+		AND P.ROLE_ID IN (	
+		SELECT DISTINCT(R.ROLE_ID) FROM RSC_SYS_ROLE R
+		INNER JOIN RSC_SYS_ROLEUSERMAP M ON M.ROLE_ID = R.ROLE_ID
+		INNER JOIN RSC_SYS_POSITION P ON P.POSITIONID = M.POSITIONID
+		WHERE P.USERID = #{userId}
+		)
+		</if>
+		ORDER BY d.SORTNO,d.dict_code asc
+	</select>
+	
+	<select id="listModules" resultType="com.stripcode.mybatis.dictionary.model.Dictionary">
+		SELECT
+		DICT_CODE dictCode,
+		TYPE_CODE typeCode, 
+		TYPE_NAME typeName,
+		TYPE_ENNAME typeEnName, 
+		TYPE_ID typeId,
+		JOIN_ID joinId,
+		COMMENTS comments,
+		STATUS status,
+		SORTNO sortno,
+		MNEMONICCODE mnemonicCode,
+		DEF1 def1,DEF2 def2, P.MODULEID def3,DEF4 def4,DEF5 def5 
+		FROM DEV_SYSDATATYPE d
+		LEFT JOIN RSC_SYS_PERMISSION P ON P.MODULEID = D.DICT_CODE
+		<if test="roleId != null">
+		AND P.ROLE_ID = #{roleId}
+		</if>
+		WHERE TYPE_CODE= 'module'  and ifnull(STATUS,1) != 0
+		/*根据userId是否为空过滤，如果该用户本身没有的权限，则不能分配给其他人*/
+		<if test="userId != null and userId != 250">
+		and d.dict_code in(
+			select p.moduleId from RSC_SYS_PERMISSION p
+			inner join rsc_sys_role r on r.role_id = p.role_id
+			inner join rsc_sys_roleusermap rum on rum.Role_ID = r.Role_ID
+			inner join rsc_sys_position ps on ps.PositionID = rum.POSITIONID and ps.userid = #{userId}
+			where p.mapid is null group by p.moduleid
+			)
+		</if>
+		ORDER BY SORTNO;
+	</select>
+
+</mapper>

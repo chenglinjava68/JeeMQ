@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSReportInfoMapper">
+    <!--插入市场授权报批报告-->
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSReportInfo">
+        INSERT INTO
+          T_CS_REPORT_INFO
+            (
+              ROW_ID,
+              OPTIMAUTH_ID,
+              ATTACH_ID,
+              INVESTMENT_ID,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+             )
+        VALUES
+            (
+              #{rowId},
+              #{optimauthId},
+              #{attachId},
+              #{investmentId},
+              #{creator},
+              #{createTime},
+              #{updater},
+              #{updateTime},
+              'M0015'
+            )
+    </insert>
+    <!--更新市场授权报批报告-->
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSReportInfo">
+        UPDATE
+                   T_CS_REPORT_INFO
+            SET
+                   ATTACH_ID = #{attachId},
+                   INVESTMENT_ID = #{investmentId},
+                   UPDATE_TIME = #{updateTime},
+                   UPDATER = #{updater}
+           WHERE  OPTIMAUTH_ID = #{optimauthId}
+    </update>
+    <!--判断报批报告是否存在-->
+    <select id="selectIsExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(0)
+        FROM T_CS_REPORT_INFO T
+        WHERE T.OPTIMAUTH_ID = #{optimauthId}
+    </select>
+
+    <select id="selectCSReportInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSReportInfo">
+        SELECT
+            U.USER_NAME creator,
+            T1.CREATE_DATE createTime,
+            T1.DOC_NAME fileName,
+            T1.FILE_PATH fieldId
+        FROM
+            T_CS_REPORT_INFO T
+            LEFT JOIN T_SYS_COMMONATTACHED T1 ON T.ATTACH_ID = T1.ATTACH_ID AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_USER U ON U.USER_ID = T1.CREATOR AND U.DEL_FLAG = 'M0015'
+        <where>
+            T.OPTIMAUTH_ID = #{optimauthId}
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+</mapper>

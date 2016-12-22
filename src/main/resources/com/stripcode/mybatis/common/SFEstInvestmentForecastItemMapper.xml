@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentForecastItemMapper">
+
+    <select id="selectEstInvestmentForecastItem" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentForecastItem" parameterType="java.lang.String">
+      SELECT
+      ROW_ID,
+      INVESTMENT_ID,
+      ITEM,
+      OPERATION_Y1,
+      OPERATION_Y3,
+      OPERATION_Y5
+      FROM
+      T_SF_EST_INVESTMENT_FORECAST_ITEM
+      where INVESTMENT_ID = #{investmentId} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertEstInvestmentForecastItem" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentForecastItem">
+      INSERT INTO T_SF_EST_INVESTMENT_FORECAST_ITEM(
+      ROW_ID,
+      INVESTMENT_ID,
+      ITEM,
+      OPERATION_Y1,
+      OPERATION_Y3,
+      OPERATION_Y5,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG
+      )VALUES (
+      #{rowId},
+      #{investmentId},
+      #{item},
+      #{operationY1},
+      #{operationY3},
+      #{operationY5},
+      #{creator},
+      sysdate(),
+      #{updater},
+      sysdate(),
+      'M0015'
+        )
+    </insert>
+
+    <update id="updateEstInvestmentForecastItem" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentForecastItem">
+      UPDATE T_SF_EST_INVESTMENT_FORECAST_ITEM
+      SET INVESTMENT_ID = #{investmentId},
+      ITEM = #{item},
+      OPERATION_Y1 = #{operationY1},
+      OPERATION_Y3 = #{operationY3},
+      OPERATION_Y5 = #{operationY5}
+      WHERE ROW_ID = #{rowId}
+    </update>
+
+</mapper>

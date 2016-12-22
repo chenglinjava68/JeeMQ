@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFRentalProposalCopartnerStoreMapper">
+    <select id="selectCopartnerStore" resultType="com.stripcode.mybatis.sf.model.SFRentalProposalCopartnerStore" parameterType="java.lang.String">
+      SELECT
+                T.ROW_ID,
+                T.PP_ID,
+                T.RENT_MODE,
+                T.RENT_MODE,
+                T.RENT_PAY_TYPE,
+                T.RENT_PER_SQUARE,
+                T.RENT_FIRST_YEAR,
+                T.RENT_INC_RATE,
+                T.RENT_CONTRACT_TERM,
+                T.DEDUCTION_POINT_FIRST_YEAR,
+                T.DEDUCTION_POINT_CONTRACT_TERM,
+                T.PROPERTY_FEE_PER_SQUARE,
+                T.PROPERTY_FEE_YEAR,
+                T.BOTH_TAKE_HIGHT,
+                T.LEASE_BOND,
+                T.RENT_TYPE,
+                T.RENT_START_DATE,
+                T.RENT_END_DATE,
+                T.RELATION
+        FROM T_SF_RENTAL_PROPOSAL_COPARTNER_STORE T
+        WHERE T.PP_ID =#{ppId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectProposalForInvestment" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentNonLaborCost" parameterType="java.lang.String">
+     SELECT
+            T.PP_ID,
+            T1.EST_DATE openDate,
+            T.RENT_PER_SQUARE rentMonthPerSquare,
+            T.RENT_FIRST_YEAR,
+            T.RENT_TYPE,
+            T3.MACRO_NAME RENT_TYPE_NAME,
+            T.RENT_INC_RATE,
+            T.RENT_CONTRACT_TERM,
+            T.DEDUCTION_POINT_FIRST_YEAR deductionPointFirYear,
+            T.DEDUCTION_POINT_CONTRACT_TERM,
+            T.PROPERTY_FEE_PER_SQUARE propertyFeeMonth,
+            T.PROPERTY_FEE_YEAR,
+            T.BOTH_TAKE_HIGHT,
+            T2.MACRO_NAME bothTakeHightName,
+            T.LEASE_BOND,
+            T.RENT_START_DATE,
+            T.RENT_END_DATE,
+            T.RELATION
+        FROM
+            T_SF_RENTAL_PROPOSAL_COPARTNER_STORE T
+        LEFT JOIN t_sf_progress_est T1 ON T1.TASK_CODE IN ('M0331', 'M0516', 'M0165')
+        AND T1.pp_Id = t.pp_Id
+        AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN t_code_macro_define T2 ON T.BOTH_TAKE_HIGHT = T2.MACRO_CODE
+        AND T2.MACRO_TYPE = 'YES_NO'
+        AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN t_code_macro_define T3 ON T.RENT_TYPE = T3.MACRO_CODE
+        AND T3.MACRO_TYPE = 'RENT_TYPE'
+        AND T3.DEL_FLAG = 'M0015'
+        WHERE
+            T.PP_ID = #{ppId}
+            AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertCopartnerStore" parameterType="com.stripcode.mybatis.sf.model.SFRentalProposalCopartnerStore">
+        INSERT INTO
+          T_SF_RENTAL_PROPOSAL_COPARTNER_STORE
+            (
+            ROW_ID,
+            PP_ID,
+            LEASE_BOND,
+            RENT_START_DATE,
+            RENT_END_DATE,
+            RENT_MODE,
+            RENT_TYPE,
+            RENT_PAY_TYPE,
+            RENT_PER_SQUARE,
+            RENT_FIRST_YEAR,
+            RENT_INC_RATE,
+            DEDUCTION_POINT_FIRST_YEAR,
+            RENT_CONTRACT_TERM,
+            DEDUCTION_POINT_CONTRACT_TERM,
+            PROPERTY_FEE_PER_SQUARE,
+            PROPERTY_FEE_YEAR,
+            BOTH_TAKE_HIGHT,
+            RELATION,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{leaseBond},
+            #{rentStartDate},
+            #{rentEndDate},
+            #{rentMode},
+            #{rentType},
+            #{rentPayType},
+            #{rentPerSquare},
+            #{rentFirstYear},
+            #{rentIncRate},
+            #{deductionPointFirstYear},
+            #{rentContractTerm},
+            #{deductionPointContractTerm},
+            #{propertyFeePerSquare},
+            #{propertyFeeYear},
+            #{bothTakeHight},
+            #{relation},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updateCopartnerStore"   parameterType="com.stripcode.mybatis.sf.model.SFRentalProposalCopartnerStore">
+        UPDATE
+            T_SF_RENTAL_PROPOSAL_COPARTNER_STORE T
+        SET
+            T.RENT_MODE = #{rentMode},
+            T.RENT_TYPE = #{rentType},
+            T.RENT_PAY_TYPE = #{rentPayType},
+            T.RENT_PER_SQUARE = #{rentPerSquare},
+            T.RENT_FIRST_YEAR = #{rentFirstYear},
+            T.RENT_INC_RATE = #{rentIncRate},
+            T.RENT_CONTRACT_TERM = #{rentContractTerm},
+            T.DEDUCTION_POINT_FIRST_YEAR = #{deductionPointFirstYear},
+            T.DEDUCTION_POINT_CONTRACT_TERM = #{deductionPointContractTerm},
+            T.PROPERTY_FEE_PER_SQUARE = #{propertyFeePerSquare},
+            T.PROPERTY_FEE_YEAR = #{propertyFeeYear},
+            T.BOTH_TAKE_HIGHT = #{bothTakeHight},
+            T.RELATION = #{relation},
+            T.LEASE_BOND = #{leaseBond},
+            T.RENT_START_DATE = #{rentStartDate},
+            T.RENT_END_DATE = #{rentEndDate},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = #{updateTime}
+        WHERE T.PP_ID = #{ppId} AND T.ROW_ID =#{rowId} AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsCopartnerStore"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+            COUNT(0)
+        FROM
+            T_SF_RENTAL_PROPOSAL_COPARTNER_STORE T
+        WHERE  T.PP_ID = #{ppId} AND T.ROW_ID = #{rowId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectProposalAttachment"  resultType="com.stripcode.mybatis.sf.model.SFRentalProposalAttachment">
+        SELECT
+        U.USER_NAME creater,
+        T.CREATE_TIME createrTime,
+        TC.TITLE,
+        T.ATTACH_ID,
+        C.DOC_NAME fileName,
+        C.FILE_PATH fieldId,
+        TC.TEMPLATE_ID
+        FROM
+        T_SYS_ATTACHEDTEMPLATE TC
+        LEFT JOIN
+        (
+        SELECT T.TEMPLATE_ID,T.ATTACH_ID,T.CREATOR,T.CREATE_TIME
+        FROM
+        T_SF_RENTAL_PROPOSAL_ATTACHMENT T
+        INNER JOIN T_SF_RENTAL_PROPOSAL_COPARTNER_STORE T1 ON T1.ROW_ID = T.RENT_ID AND T1.DEL_FLAG = 'M0015' AND T1.PP_ID = #{ppId}
+        WHERE T.DEL_FLAG = 'M0015'
+        ) T
+        ON T.TEMPLATE_ID = TC.TEMPLATE_ID
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = T.CREATOR AND U.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED C ON T.ATTACH_ID = C.ATTACH_ID
+        WHERE
+        TC.PAGE_ID='SF30_055' AND TC.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

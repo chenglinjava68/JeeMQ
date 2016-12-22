@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFPolicySupportAgreeMapper">
+    <select id="selectById" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgree">
+        SELECT
+        T3.MACRO_NAME ISBUYOUT1,
+        TCS.CUSTOMER_ID CUSTOMERID1,
+        TCS.CORPORATION CORPORATION1,
+        T.MACRO_NAME BRAND1,
+        TCER.ERP_CODE ERPCODE1,
+        TCER.ERP_NAME ERPNAME1,
+        TCER.ROW_ID ROWID1,
+        T2.MACRO_NAME MARKET_LEV1,
+        TCER.ACCREDIT_STARTDATE ACCREDITSTARTDATE1,
+        TCER.ACCREDIT_ENDDATE ACCREDITENDDATE1,
+        TCER.BASIC_DISCOUNT_RATE BASICDISCOUNTRATE1,
+        T1.MACRO_NAME COOPERATIONMODE1
+        FROM
+        T_CS_CUSTOMER_ERP_INFO TCER
+        LEFT JOIN T_CS_CUSTOMERINFO TCS ON TCER.CUSTOMER_ID = TCS.CUSTOMER_ID AND TCER.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON TCER.MARKET_LEV = T2.MACRO_CODE AND T2.MACRO_TYPE = 'MARKET_LEVEL' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON TCER.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON TCER.COOPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'COOPERATION_MODEL' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON TCER.IS_BUYOUT = T3.MACRO_CODE AND T3.MACRO_TYPE ='YES_NO' AND T3.DEL_FLAG = 'M0015'
+        <where>
+            AND Tcer.CUSTOMER_ID = #{customerId1}
+            AND Tcer.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+</mapper>

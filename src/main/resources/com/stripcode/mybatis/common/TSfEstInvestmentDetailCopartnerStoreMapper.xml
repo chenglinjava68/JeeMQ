@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.TSfEstInvestmentDetailCopartnerStoreMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sf_est_investment_detail_copartner_store
+    where ROW_ID = #{rowId}
+  </delete>
+
+  <insert id="insertInvestmentDetailCopartnerStore" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentDetailCopartnerStore" >
+    insert into t_sf_est_investment_detail_copartner_store (ROW_ID, INVESTMENT_ID,
+      MIN_STD, SOC_SEC_PCT, SALES_AVG_MONTH, 
+      CREATOR, CREATE_TIME, UPDATER, 
+      UPDATE_TIME, DEL_FLAG)
+    values (#{rowId}, #{investmentId},
+      #{minStd}, #{socSecPct}, #{salesAvgMonth},
+      #{creator}, sysdate(), #{updater}, sysdate(), 'M0015')
+  </insert>
+
+  <update id="updateInvestmentDetailCopartnerStore" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentDetailCopartnerStore" >
+    update t_sf_est_investment_detail_copartner_store
+    set INVESTMENT_ID = #{investmentId},
+      MIN_STD = #{minStd},
+      SOC_SEC_PCT = #{socSecPct},
+      SALES_AVG_MONTH = #{salesAvgMonth}
+    where ROW_ID = #{rowId}
+  </update>
+
+  <select id="selectInvestmentDetailCopartnerStore" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentDetailCopartnerStore" parameterType="java.lang.String" >
+    SELECT
+        A.ROW_ID,
+        A.INVESTMENT_ID,
+        A.MIN_STD,
+        A.SOC_SEC_PCT,
+        A.SALES_AVG_MONTH,
+        B.STORE_CODE,
+        B.CN_SITENAME,
+        B.RENT_AREA contractArea,
+        B.RENT_START_DATE contractStartDate,
+        B.RENT_END_DATE contractEndDate
+    FROM
+        t_sf_est_investment_detail_copartner_store A
+    LEFT JOIN (
+        SELECT
+            A.STORE_CODE,
+            A.CN_SITENAME,
+            D.ROW_ID INVESTMENT_ID,
+            B.RENT_AREA,
+            C.RENT_START_DATE,
+            C.RENT_END_DATE
+        FROM
+            t_sf_est_investment D
+        LEFT JOIN t_sf_pipeline A ON D.PP_ID = A.PP_ID
+        AND A.DEL_FLAG = 'M0015'
+        LEFT JOIN t_sf_siteinfo B ON D.PP_ID = B.PP_ID
+        AND B.DEL_FLAG = 'M0015'
+        LEFT JOIN t_sf_rental_proposal_copartner_store C ON D.PP_ID = C.PP_ID
+        AND C.DEL_FLAG = 'M0015'
+        WHERE
+            D.DEL_FLAG = 'M0015'
+    ) B ON B.INVESTMENT_ID = A.INVESTMENT_ID
+    WHERE
+        A.DEL_FLAG = 'M0015'
+    AND A.INVESTMENT_ID = #{investmentId}
+  </select>
+  <select id="selectByPPId" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentDetailCopartnerStore" parameterType="java.lang.String" >
+    SELECT
+        A.STORE_CODE,
+        A.CN_SITENAME,
+        B.RENT_AREA contractArea,
+        C.RENT_START_DATE contractStartDate,
+        C.RENT_END_DATE contractEndDate
+    FROM
+    t_sf_pipeline A
+    LEFT JOIN t_sf_siteinfo B ON A.PP_ID = B.PP_ID
+    AND B.DEL_FLAG = 'M0015'
+    LEFT JOIN t_sf_rental_proposal_copartner_store C ON A.PP_ID = C.PP_ID
+    AND C.DEL_FLAG = 'M0015'
+    WHERE
+    A.DEL_FLAG = 'M0015'
+    AND A.PP_ID = #{ppId}
+  </select>
+<update id="deleteInvestmentId" parameterType="java.lang.String">
+    UPDATE T_SF_EST_INVESTMENT_DETAIL_COPARTNER_STORE
+    SET
+    DEL_FLAG = 'M0014'
+    WHERE INVESTMENT_ID = #{investmentId}
+</update>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFReportMapper">
+    <insert id="insert" parameterType="com.stripcode.mybatis.sf.model.SFReport">
+        INSERT INTO
+          T_SF_REPORT
+            (
+              ROW_ID,
+              PP_ID,
+              INVESTMENT_ID,
+              ATTACH_ID,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+             )
+        VALUES
+            (
+              #{rowId},
+              #{ppId},
+              #{investmentId},
+              #{attachId},
+              #{creator},
+              #{createTime},
+              #{updater},
+              #{updateTime},
+              'M0015'
+            )
+    </insert>
+
+    <update id="update" parameterType="com.stripcode.mybatis.sf.model.SFReport">
+        UPDATE
+        T_SF_REPORT
+        SET
+        ATTACH_ID = #{attachId},
+        INVESTMENT_ID = #{investmentId},
+        UPDATE_TIME = #{updateTime},
+        UPDATER = #{updater}
+        WHERE  PP_ID = #{ppId} AND ROW_ID = #{rowId}
+    </update>
+
+    <select id="selectIsExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(0)
+        FROM T_SF_REPORT T
+        WHERE T.PP_ID = #{ppId}
+    </select>
+
+    <select id="selectSFReportRowId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFReport">
+        SELECT
+            T.ROW_ID
+        FROM
+            T_SF_REPORT T
+        <where>
+            T.PP_ID = #{ppId}
+        </where>
+    </select>
+   <select id="selectSFReport" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFReport">
+        SELECT
+            B.DOC_NAME fileName,
+            B.FILE_PATH filePath,
+            B.CREATE_DATE createTime,
+            C.USER_NAME creator
+        FROM
+            T_SF_REPORT T
+            LEFT JOIN T_SYS_COMMONATTACHED B ON T.ATTACH_ID = B.ATTACH_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_USER C ON C.USER_ID = B.CREATOR
+        <where>
+            T.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMLeaseAttachMentMapper">
+    <!--查询店铺租约附件信息表-->
+    <select id="selectAMLeaseAttachMent" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMLeaseAttachMent">
+        SELECT
+            B.TITLE title,
+            T1.MACRO_NAME isExist,
+            T2.MACRO_NAME isGet,
+            T3.MACRO_NAME reason,
+            T4.MACRO_NAME isSupply,
+            A.SUPPLY_DATE,
+            A.REMARK,
+            D.DOC_NAME fileName,
+            D.FILE_PATH fieldId
+        FROM
+            T_AM_LEASE_ATTACHMENT A
+            LEFT JOIN T_SYS_COMMONATTACHED D ON D.ATTACH_ID = A.ATTACH_ID AND D.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_ATTACHEDTEMPLATE B ON B.TEMPLATE_ID = A.TEMPLATE_ID AND B.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T1.MACRO_CODE = A.IS_EXIST AND T1.MACRO_TYPE = 'YES_NO' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON T2.MACRO_CODE = A.IS_GET AND T2.MACRO_TYPE = 'YES_NO' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T3.MACRO_CODE = A.REASON AND T3.MACRO_TYPE = 'UN_FETCH_REASON' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T4.MACRO_CODE = A.IS_SUPPLY AND T4.MACRO_TYPE = 'YES_NO' AND T4.DEL_FLAG = 'M0015'
+        <where>
+          A.STORE_ID = #{storeId}
+          AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺租约附件信息集合-->
+    <insert id="insertAMLeaseAttachMent" parameterType="com.stripcode.mybatis.am.model.AMLeaseAttachMent">
+        INSERT INTO
+            T_AM_LEASE_ATTACHMENT
+            (
+            STORE_ID,
+            TEMPLATE_ID,
+            ATTACH_ID,
+            IS_EXIST,
+            IS_GET,
+            REASON,
+            IS_SUPPLY,
+            SUPPLY_DATE,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES
+            (
+            #{storeId},
+            #{templateId},
+            #{attachId},
+            #{isExist},
+            #{isGet},
+            #{reason},
+            #{isSupply},
+            #{supplyDate},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+            )
+    </insert>
+</mapper>

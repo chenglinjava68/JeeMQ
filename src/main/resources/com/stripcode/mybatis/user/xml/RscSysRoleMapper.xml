@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.RscSysRoleMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    DELETE FROM T_SYS_ROLE
+    WHERE ROLE_ID = #{roleId}
+  </delete>
+  <insert id="insert" parameterType="RscSysRole" >
+    INSERT INTO T_SYS_ROLE (
+      ROLE_ID,
+      ROLE_CODE,
+      ROLE_NAME,
+      STATUS,
+      COMMENTS,
+      SORT_NO,
+      CREATOR,
+      CREATE_TIME,
+      UPDATER,
+      UPDATE_TIME,
+      DEL_FLAG
+    )
+    values
+    (
+      #{roleId},
+      #{rolecode},
+      #{roleName},
+      #{status},
+      #{comments},
+      #{sortno},
+      #{creator},
+      sysdate(),
+      #{updater},
+      sysdate(),
+      'M0015'
+    )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="RscSysRole" >
+    UPDATE T_SYS_ROLE
+    SET ROLE_CODE = #{rolecode},
+      Role_Name = #{roleName},
+      Status = #{status},
+      Comments = #{comments},
+      UPDATER = #{updater},
+      UPDATE_TIME=sysdate(),
+      Sort_No = #{sortno}
+    WHERE ROLE_ID = #{roleId}
+  </update>
+  <select id="selectByPrimaryKey" resultType="RscSysRole" parameterType="java.lang.String" >
+    SELECT
+      ROLE_ID,
+      ROLE_CODE,
+      ROLE_NAME,
+      STATUS,
+      COMMENTS,
+      SORT_NO
+    FROM
+      T_SYS_ROLE
+    WHERE ROLE_ID = #{roleId}
+  </select>
+  <select id="selectAll" resultType="RscSysRole" >
+    SELECT
+        ROLE_ID,
+        ROLE_CODE,
+        ROLE_NAME,
+        STATUS,
+        COMMENTS,
+        SORT_NO
+    FROM
+      T_SYS_ROLE
+  </select>
+  <select id="selectForExport" parameterType="map" resultType="RscSysRole" >
+    SELECT
+      R. ROLE_ID,
+      R. ROLE_CODE,
+      R.ROLE_NAME,
+      M.MACRO_NAME statusName,
+      R.COMMENTS,
+      R.SORT_NO
+    FROM
+      T_SYS_ROLE R
+    LEFT JOIN
+    T_CODE_MACRO_DEFINE M ON M.MACRO_CODE = R.STATUS
+    AND MACRO_TYPE = 'STATUS'
+  </select>
+  <select id="query" parameterType="map" resultType="RscSysRole" >
+    SELECT
+      ROLE_ID,
+      ROLE_CODE,
+      ROLE_NAME,
+      STATUS,
+      COMMENTS,
+      SORT_NO
+    FROM
+      T_SYS_ROLE
+    <where>
+      <if test="rolecode != null">
+        and Role_Code = #{rolecode}
+      </if>
+      <if test="rolename != null">
+        and Role_Name = #{rolename}
+      </if>
+      <if test="status != null">
+        and Status = #{status}
+      </if>
+      <if test="comments != null">
+        and Comments = #{comments}
+      </if>
+    </where>
+  </select>
+  <select id="queryByConditions" parameterType="map" resultType="RscSysRole" >
+    SELECT
+      ROLE_ID,
+      ROLE_CODE,
+      ROLE_NAME,
+      STATUS,
+      COMMENTS,
+      SORT_NO
+    FROM
+      T_SYS_ROLE
+    <where>
+      <if test="rolecode != null">
+        and Role_Code = #{rolecode}
+      </if>
+      <if test="rolename != null">
+        and Role_Name = #{rolename}
+      </if>
+      <if test="status != null">
+        and Status = #{status}
+      </if>
+      <if test="comments != null">
+        and Comments = #{comments}
+      </if>
+    </where>
+  </select>
+
+  <select id="queryForPage" parameterType="map" resultType="RscSysRole" >
+    SELECT
+        R.ROLE_ID,
+        R.ROLE_CODE,
+        R.ROLE_NAME,
+        M.MACRO_NAME statusName,
+        R.COMMENTS,
+        R.SORT_NO
+    FROM
+        T_SYS_ROLE R
+    LEFT JOIN
+     T_CODE_MACRO_DEFINE M
+     ON M.MACRO_CODE = R.STATUS
+     AND MACRO_TYPE = 'STATUS'
+    <where>
+      <if test="rolecode != null">
+        and T1.Role_Code = #{rolecode}
+      </if>
+      <if test="rolename != null">
+        and T1.Role_Name = #{rolename}
+      </if>
+      <if test="status != null">
+        and T1.Status = #{status}
+      </if>
+      <if test="comments != null">
+        and T1.Comments = #{comments}
+      </if>
+    </where>
+      ORDER BY R.UPDATE_TIME DESC
+  </select>
+  <select id="selectForExists" parameterType="RscSysRole" resultType="java.lang.Integer">
+    SELECT
+      COUNT('X')
+    FROM
+      T_SYS_ROLE
+    <where>
+      <if test="roleId != null">
+        and Role_ID &lt;&gt; #{roleId}
+      </if>
+      and (Role_Code = #{rolecode} or Role_Name = #{roleName} )
+    </where>
+  </select>
+  <select id="queryByPostionId" parameterType="java.lang.String" resultType="RscSysRole">
+    SELECT
+      R.ROLE_ID,
+      R.ROLE_CODE,
+      R.ROLE_NAME,
+      R.STATUS,
+      R.COMMENTS,
+      R.SORT_NO
+    FROM
+     T_SYS_ROLE R
+     LEFT JOIN
+     T_SYS_ROLEUSERMAP RM
+     ON R.ROLE_ID = RM.ROLE_ID
+     WHERE RM.POSITION_ID = #{positionid}
+  </select>
+</mapper>

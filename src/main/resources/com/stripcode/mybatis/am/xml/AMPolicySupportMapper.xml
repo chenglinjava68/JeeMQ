@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMPolicySupportMapper">
+    <!--查询新店模块店铺政策支持集合-->
+    <select id="selectSFPolicySupportDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail">
+        SELECT
+            A.PP_ID ppId,
+            B.ROW_ID,
+            B.PS_ID,
+            B.SUPPORT_ITEM,
+            B.SUPPORT_MODE,
+            B.PRICE,
+            B.MONEY
+        FROM T_SF_POLICY_SUPPORT A
+        LEFT JOIN T_SF_POLICY_SUPPORT_DETAIL B ON A.ROW_ID = B.PS_ID AND B.DEL_FLAG ='M0015'
+        WHERE A.PP_ID = #{ppId} AND A.DEL_FLAG = 'M0015'
+    </select>
+
+
+    <!--查询店铺政策支持集合-->
+    <select id="selectAMPolicySupport" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMPolicySupport">
+        SELECT
+            T1.ITEM_NAME supportItem,
+            T2.ITEM_NAME supportMode,
+            A.PRICE,
+            A.MONEY
+        FROM
+            T_AM_POLICY_SUPPORT A
+            LEFT JOIN T_PS_POLICY_ITEM T1 ON T1.ITEM_CODE = A.SUPPORT_ITEM AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_PS_POLICY_ITEM T2 ON T2.ITEM_CODE = A.SUPPORT_MODE AND T2.DEL_FLAG = 'M0015'
+        <where>
+          A.STORE_ID = #{storeId}
+          AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺政策支持集合-->
+    <insert id="insertAMPolicySupport" parameterType="com.stripcode.mybatis.am.model.AMPolicySupport">
+        INSERT INTO
+            T_AM_POLICY_SUPPORT
+            (
+            STORE_ID,
+            SUPPORT_ITEM,
+            SUPPORT_MODE,
+            PRICE,
+            MONEY,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES
+            (
+            #{storeId},
+            #{supportItem},
+            #{supportMode},
+            #{price},
+            #{money},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+            )
+    </insert>
+</mapper>

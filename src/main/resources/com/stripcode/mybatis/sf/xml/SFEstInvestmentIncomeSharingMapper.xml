@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentIncomeSharingMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    DELETE FROM T_SF_EST_INVESTMENT_INCOME_SHARING
+    WHERE ROW_ID = #{rowId}
+  </delete>
+  <insert id="insert" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" >
+   INSERT INTO t_sf_est_investment_income_sharing (
+        AUTO_NO,
+        ROW_ID,
+        INVESTMENT_ID,
+        SERIES,
+        SALES_PCT,
+        INCOME_SHARING_RADIO,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    )
+    VALUES
+        (
+            #{autoNo},
+            #{rowId},
+            #{investmentId},
+            #{series},
+            #{salesPct},
+            #{incomeSharingRadio},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            #{delFlag},
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" >
+    UPDATE T_SF_EST_INVESTMENT_INCOME_SHARING
+    SET ROW_ID = #{rowId},
+      INVESTMENT_ID = #{investmentId},
+      SERIES = #{series},
+      SALES_PCT = #{salesPct},
+      INCOME_SHARING_RADIO = #{incomeSharingRadio},
+      UPDATER = #{updater},
+      UPDATE_TIME = sysdate(),
+      DEL_FLAG = #{delFlag},
+      DEF1 = #{def1},
+      DEF2 = #{def2},
+      DEF3 = #{def3},
+      DEF4 = #{def4},
+      DEF5 = #{def5},
+      DEF6 = #{def6},
+      DEF7 = #{def7},
+      DEF8 = #{def8},
+      DEF9 = #{def9},
+      DEF10 = #{def10}
+    WHERE ROW_ID = #{rowId}
+  </update>
+  <select id="selectByPrimaryKey" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" parameterType="java.lang.String" >
+    SELECT
+        AUTO_NO,
+        ROW_ID,
+        INVESTMENT_ID,
+        SERIES,
+        SALES_PCT,
+        INCOME_SHARING_RADIO,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SF_EST_INVESTMENT_INCOME_SHARING
+    WHERE
+        ROW_ID = #{rowId}
+        AND DEL_FLAG = 'M0015'
+  </select>
+  <select id="selectByInvestmentId" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" parameterType="java.lang.String" >
+     SELECT
+        s.ROW_ID,
+        s.INVESTMENT_ID,
+        t.MACRO_CODE series,
+        s.SALES_PCT,
+        s.INCOME_SHARING_RADIO,
+        s.CREATOR,
+        s.CREATE_TIME,
+        s.UPDATER,
+        s.UPDATE_TIME,
+        s.DEL_FLAG,
+        t.MACRO_NAME SERIES_NAME,
+        s.DEF1,
+        s.DEF2,
+        s.DEF3,
+        s.DEF4,
+        s.DEF5,
+        s.DEF6,
+        s.DEF7,
+        s.DEF8,
+        s.DEF9,
+        s.DEF10
+    FROM
+        T_CODE_MACRO_DEFINE t
+    LEFT JOIN (
+        SELECT
+            ROW_ID,
+            INVESTMENT_ID,
+            SERIES,
+            SALES_PCT,
+            INCOME_SHARING_RADIO,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        FROM
+            T_SF_EST_INVESTMENT_INCOME_SHARING
+        WHERE
+            INVESTMENT_ID = #{investmentId}
+    ) S ON S.SERIES = T.MACRO_CODE
+    AND s.DEL_FLAG = 'M0015'
+    WHERE
+        T.DEL_FLAG = 'M0015'
+    AND T.MACRO_TYPE = 'STORE_IMAGE'
+    AND T.MACRO_CODE &lt;&gt; 'M0250'
+    ORDER BY
+        T.MACRO_NO
+  </select>
+  <select id="selectByInvestmentIdForDirect" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" parameterType="java.lang.String" >
+     SELECT
+        s.ROW_ID,
+        s.INVESTMENT_ID,
+        t.MACRO_CODE series,
+        s.SALES_PCT,
+        s.INCOME_SHARING_RADIO,
+        s.CREATOR,
+        s.CREATE_TIME,
+        s.UPDATER,
+        s.UPDATE_TIME,
+        s.DEL_FLAG,
+        t.MACRO_NAME SERIES_NAME,
+        s.DEF1,
+        s.DEF2,
+        s.DEF3,
+        s.DEF4,
+        s.DEF5,
+        s.DEF6,
+        s.DEF7,
+        s.DEF8,
+        s.DEF9,
+        s.DEF10
+    FROM
+        T_CODE_MACRO_DEFINE t
+    LEFT JOIN (
+        SELECT
+            ROW_ID,
+            INVESTMENT_ID,
+            SERIES,
+            SALES_PCT,
+            INCOME_SHARING_RADIO,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        FROM
+            T_SF_EST_INVESTMENT_INCOME_SHARING
+        WHERE
+            INVESTMENT_ID = #{investmentId}
+    ) S ON S.SERIES = T.MACRO_CODE
+    AND s.DEL_FLAG = 'M0015'
+    WHERE
+        T.DEL_FLAG = 'M0015'
+    AND T.MACRO_TYPE = 'STORE_IMAGE'
+    ORDER BY
+        T.MACRO_NO
+  </select>
+  <select id="selectByPPId" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" parameterType="java.lang.String" >
+      SELECT
+          a.macro_code series,
+          a.macro_name seriesName,
+          b.SPLIT_RATE incomeSharingRadio,
+          c.SALES_PER salesPct
+      FROM
+      t_code_macro_define A
+          LEFT JOIN (
+          SELECT
+          a.pp_id,
+          b.STYLE,
+          b.SPLIT_RATE
+          FROM
+          t_sf_pipeline a
+          INNER JOIN (
+          SELECT
+          a.ERP_CODE,
+          a.erp_name,
+          a.CUSTOMER_ID,
+          b.STYLE,
+          b.SPLIT_RATE
+          FROM
+          T_CS_CUSTOMER_ERP_INFO A
+          INNER JOIN T_CS_MARKET_CUSTOMER_DISCOUNT_SPLIT b ON a.row_id = b.AUTHORIZATION_ID
+          AND b.del_flag = 'M0015'
+          WHERE
+          a.DEL_FLAG = 'M0015'
+          UNION ALL
+          SELECT
+          b.row_Id,
+          b.ERP_NAME,
+          a.CUSTOMER_ID,
+          c.STYLE,
+          C.SPLIT_RATE
+          FROM
+          T_CS_MARKET_OPTIMAUTH A
+          INNER JOIN T_CS_NEW_MARKETAUZ b ON a.row_id = b.OPTIMAUTH_ID
+          AND b.del_flag = 'M0015'
+          INNER JOIN T_CS_MARKET_DISCOUNT_SPLIT C ON b.ROW_ID = c.AUTHORIZATION_ID
+          AND c.del_flag = 'M0015'
+          WHERE
+          a.del_flag = 'M0015'
+          ) b ON a.CUSTOMER_ID = b.CUSTOMER_ID
+          AND a.ERP_CODE = B.ERP_CODE
+          WHERE
+          a.DEL_FLAG = 'M0015'
+          AND a.pp_id = #{ppId}) b ON a.macro_code = b.style
+          LEFT JOIN (
+          SELECT
+          pp_Id,
+          style,
+          SUM(SALES_PER) SALES_PER
+          FROM
+          T_SF_STYLE_AREA_PER_INFO
+          WHERE
+          pp_id = #{ppId}
+          GROUP BY
+          pp_Id,
+          style
+          ) c ON a.macro_code = c.style
+          WHERE
+          A.macro_type = 'STORE_IMAGE'
+          AND A.DEL_FLAG = 'M0015'
+          AND A.MACRO_CODE &lt;&gt; 'M0250'
+          ORDER BY
+          a.macro_No
+  </select>
+  <select id="selectByPPIdForDirect" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" parameterType="java.lang.String" >
+     SELECT
+        a.macro_code series,
+        a.macro_name seriesName
+    FROM
+        t_code_macro_define A
+    LEFT JOIN (
+        SELECT
+            a.pp_id,
+            b.STYLE,
+            b.DISCOUNT_RATE
+        FROM
+            t_sf_pipeline a
+        INNER JOIN (
+            SELECT
+                a.ERP_CODE,
+                a.erp_name,
+                a.CUSTOMER_ID,
+                b.STYLE,
+                b.DISCOUNT_RATE
+            FROM
+                T_CS_CUSTOMER_ERP_INFO A
+            INNER JOIN T_CS_MARKET_CUSTOMER_DISCOUNT_SPLIT b ON a.row_id = b.AUTHORIZATION_ID
+            AND b.del_flag = 'M0015'
+            WHERE
+                a.DEL_FLAG = 'M0015'
+            UNION ALL
+                SELECT
+                    b.row_Id,
+                    b.ERP_NAME,
+                    a.CUSTOMER_ID,
+                    c.STYLE,
+                    b.DISCOUNT_RATE
+                FROM
+                    T_CS_MARKET_OPTIMAUTH A
+                INNER JOIN T_CS_NEW_MARKETAUZ b ON a.row_id = b.OPTIMAUTH_ID
+                AND b.del_flag = 'M0015'
+                INNER JOIN T_CS_MARKET_DISCOUNT_SPLIT C ON b.ROW_ID = c.AUTHORIZATION_ID
+                AND c.del_flag = 'M0015'
+                WHERE
+                    a.del_flag = 'M0015'
+        ) b ON a.CUSTOMER_ID = b.CUSTOMER_ID
+        AND a.ERP_CODE = B.ERP_CODE
+        WHERE
+            a.DEL_FLAG = 'M0015'
+        AND a.pp_id = #{ppId}) b ON a.macro_code = b.style
+        LEFT JOIN (
+            SELECT
+                pp_Id,
+                style,
+                SUM(SALES_PER) SALES_PER
+            FROM
+                T_SF_STYLE_AREA_PER_INFO
+            WHERE
+                pp_id = #{ppId}
+            GROUP BY
+                pp_Id,
+                style
+        ) c ON a.macro_code = c.style
+        WHERE
+            A.macro_type = 'STORE_IMAGE'
+        AND A.DEL_FLAG = 'M0015'
+        ORDER BY
+            a.macro_No
+  </select>
+  <select id="selectAll" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentIncomeSharing" >
+    SELECT
+        ROW_ID,
+        INVESTMENT_ID,
+        SERIES,
+        SALES_PCT,
+        INCOME_SHARING_RADIO,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SF_EST_INVESTMENT_INCOME_SHARING
+        WHERE
+        DEL_FLAG = 'M0015'
+  </select>
+    <update id="deleteByInvestmentId" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT_INCOME_SHARING
+        SET
+        DEL_FLAG = 'M0014'
+        WHERE INVESTMENT_ID = #{investmentId}
+    </update>
+</mapper>

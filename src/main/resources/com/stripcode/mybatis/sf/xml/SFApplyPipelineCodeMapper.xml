@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFApplyPipelineCodeMapper">
+
+    <select id="selectApplyPipelineCode" resultType="com.stripcode.mybatis.sf.model.SFApplyPipelineCode" parameterType="java.lang.String">
+          SELECT
+            T1.PP_ID,
+            T2.ERP_CODE,
+            T3.PP_CODE
+        FROM
+            T_SF_PIPELINE T1
+        LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T1.ERP_CODE = T2.ROW_ID AND T2.DEL_FLAG = 'M0015'
+         LEFT JOIN T_SF_APPLY_PIPELINE_CODE T3 ON T3.PP_ID = T1.PP_ID AND T3.DEL_FLAG = 'M0015'
+        WHERE T1.PP_ID =#{ppId} AND T1.DEL_FLAG = 'M0015'
+    </select>
+
+    <update id="updatePipelineCode"   parameterType="com.stripcode.mybatis.sf.model.SFApplyPipelineCode">
+        UPDATE
+           T_SF_APPLY_PIPELINE_CODE T
+        SET
+            T.PP_CODE = #{ppCode},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = #{updateTime}
+        WHERE T.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015'
+    </update>
+
+    <update id="updateProcessInstanceId">
+        UPDATE T_SF_APPLY_PIPELINE_CODE SET
+        process_instance_id = #{process_instance_id}
+        WHERE  PP_ID = #{PPID}
+    </update>
+
+    <select id="isExistsPipelineCode"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+            COUNT(0)
+        FROM
+            T_SF_APPLY_PIPELINE_CODE T
+        WHERE  T.PP_ID= #{pp_Id} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertPipelineCode" parameterType="com.stripcode.mybatis.sf.model.SFApplyPipelineCode">
+        INSERT INTO
+        T_SF_APPLY_PIPELINE_CODE
+        (
+        ROW_ID,
+        PP_ID,
+        PP_CODE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{ppId},
+        #{ppCode},
+        #{creator},
+        sysdate(),
+        #{updater},
+        #{updateTime},
+        'M0015'
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.RscSysUserMapper">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+      DELETE FROM T_SYS_USER
+      WHERE USER_ID = #{userId}
+    </delete>
+
+    <insert id="insert" parameterType="RscSysUser">
+      INSERT INTO T_SYS_USER (
+       USER_ID,
+        LOGIN_NAME,
+        USER_NAME,
+        PASSWORD,
+        STATUS,
+        MAIL,
+        PHONE,
+        MOBILE,
+        SEX,
+        OFFICE,
+        ADDRESS,
+        JOIN_DATE,
+        FAX,
+        WORK_STATUS,
+        OFFICE_NO,
+        DEPARTMENT,
+        COMP_CODE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+      VALUES (
+        #{userId},
+        #{loginName},
+       #{userName},
+        #{password},
+        #{status},
+         #{mail},
+        #{phone},
+        #{mobile},
+        #{sex},
+        #{office},
+         #{address},
+         #{joindate},
+        #{fax},
+        #{workstatus},
+        #{officeno},
+        #{department},
+        #{compcode},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="RscSysUser">
+      UPDATE T_SYS_USER
+      SET login_name = #{loginName},
+        User_Name = #{userName},
+        Status = #{status},
+        Mail = #{mail},
+        Phone = #{phone},
+        Mobile = #{mobile},
+        Sex = #{sex},
+        Office = #{office},
+        Address = #{address},
+        Join_Date = #{joindate},
+        Fax = #{fax},
+        Work_Status = #{workstatus},
+        Office_No = #{officeno},
+        Department = #{department},
+        UPDATER = #{updater},
+        UPDATE_TIME=sysdate(),
+        COMP_CODE = #{compcode}
+      WHERE User_ID = #{userId}
+    </update>
+    <update id="updateByConditions" parameterType="RscSysUser">
+        UPDATE T_SYS_USER
+        <set>
+            <if test="loginName != null">
+                Login_Name = #{loginName},
+            </if>
+            <if test="userName != null">
+                User_Name = #{userName},
+            </if>
+            <if test="password != null">
+                Password = #{password},
+            </if>
+            <if test="status != null">
+                Status = #{status},
+            </if>
+            <if test="mail != null">
+                Mail = #{mail},
+            </if>
+            <if test="phone != null">
+                Phone = #{phone},
+            </if>
+            <if test="mobile != null">
+                Mobile = #{mobile},
+            </if>
+            <if test="sex != null">
+                Sex = #{sex},
+            </if>
+            <if test="office != null">
+                Office = #{office},
+            </if>
+            <if test="address != null">
+                Address = #{address},
+            </if>
+            <if test="joindate != null">
+                Join_Date = #{joindate},
+            </if>
+            <if test="fax != null">
+                Fax = #{fax},
+            </if>
+            <if test="workstatus != null">
+                Work_Status = #{workstatus},
+            </if>
+            <if test="officeno != null">
+                Office_No = #{officeno},
+            </if>
+            <if test="department != null">
+                Department = #{department},
+            </if>
+            <if test="compcode != null">
+                CompCode = #{compcode},
+            </if>
+        </set>
+        WHERE USER_ID = #{userId}
+    </update>
+    <select id="selectByPrimaryKey" resultType="RscSysUser"
+            parameterType="java.lang.String">
+      SELECT
+        USER_ID,
+        LOGIN_NAME,
+        USER_NAME,
+        STATUS,
+        MAIL,
+        PHONE,
+        MOBILE,
+        SEX,
+        OFFICE,
+        ADDRESS,
+        JOIN_DATE,
+        FAX,
+        WORK_STATUS,
+        OFFICE_NO,
+        DEPARTMENT,
+        COMP_CODE
+      FROM
+        T_SYS_USER
+      WHERE USER_ID = #{userId}
+    </select>
+    <select id="selectAll" resultType="RscSysUser">
+    SELECT
+        USER_ID,
+        LOGIN_NAME,
+        USER_NAME,
+        STATUS,
+        MAIL,
+        PHONE,
+        MOBILE,
+        SEX,
+        OFFICE,
+        ADDRESS,
+        JOIN_DATE,
+        FAX,
+        WORK_STATUS,
+        OFFICE_NO,
+        DEPARTMENT,
+        COMP_CODE
+      FROM
+        T_SYS_USER
+    </select>
+    <select id="selectForExport" resultType="RscSysUser">
+     SELECT
+            R.USER_ID,
+            R.LOGIN_NAME,
+            R.USER_NAME,
+            T1.CN_NAME DEPARTMENT,
+            TSR.ROLE_NAME TITLE,
+            R.MAIL,
+            R.MOBILE,
+            R.PHONE,
+            T2.MACRO_NAME SEX,
+            T3.MACRO_NAME STATUSNAME
+        FROM
+            T_SYS_USER R
+            LEFT JOIN T_SYS_POSITION T1 ON R.USER_ID = T1.USER_ID
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON R.SEX = T2.MACRO_CODE
+            AND T2.MACRO_TYPE = 'SEX'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON R. STATUS = T3.MACRO_CODE
+            AND T3.MACRO_TYPE = 'STATUS'
+            LEFT JOIN T_SYS_ROLE TSR ON R.TITLE = TSR.ROLE_ID
+    </select>
+    <select id="query" parameterType="map" resultType="RscSysUser">
+        SELECT
+        USER_ID,
+        LOGIN_NAME,
+        USER_NAME,
+        PASSWORD,
+        STATUS,
+        MAIL,
+        PHONE,
+        MOBILE,
+        SEX,
+        OFFICE,
+        ADDRESS,
+        JOIN_DATE,
+        FAX,
+        WORK_STATUS,
+        OFFICE_NO,
+        DEPARTMENT,
+        COMP_CODE
+        FROM
+        T_SYS_USER R
+        <where>
+            <if test="userId  !=  null">
+                and r.User_ID = #{userId}
+            </if>
+            <if test="loginName  !=  null">
+                and r.Login_Name = #{loginName}
+            </if>
+            <if test="userName  !=  null">
+                and r.User_Name = #{userName}
+            </if>
+            <if test="status  !=  null">
+                and r.Status = #{status}
+            </if>
+            <if test="mail  !=  null">
+                and r.Mail = #{mail}
+            </if>
+            <if test="phone  !=  null">
+                and r.Phone = #{phone}
+            </if>
+            <if test="mobile  !=  null">
+                and r.Mobile = #{mobile}
+            </if>
+            <if test="sex  !=  null">
+                and r.Sex = #{sex}
+            </if>
+            <if test="office  !=  null">
+                and r.Office = #{office}
+            </if>
+            <if test="address  !=  null">
+                and r.Address = #{address}
+            </if>
+            <if test="joinDate  !=  null">
+                and r.Join_Date = #{joinDate}
+            </if>
+            <if test="fax  !=  null">
+                and r.Fax = #{fax}
+            </if>
+            <if test="workStatus  !=  null">
+                and r.WorkStatus = #{workStatus}
+            </if>
+            <if test="officeNo  !=  null">
+                and r.OfficeNo = #{officeNo}
+            </if>
+            <if test="department  !=  null">
+                and r.Department = #{department}
+            </if>
+            <if test="compCode  !=  null">
+                and r.Comp_Code = #{compCode}
+            </if>
+        </where>
+    </select>
+    <select id="queryByConditions" parameterType="map" resultType="RscSysUser">
+        SELECT
+        USER_ID,
+        LOGIN_NAME,
+        USER_NAME,
+        PASSWORD,
+        STATUS,
+        MAIL,
+        PHONE,
+        MOBILE,
+        SEX,
+        OFFICE,
+        ADDRESS,
+        JOIN_DATE,
+        FAX,
+        WORK_STATUS,
+        OFFICE_NO,
+        DEPARTMENT,
+        COMP_CODE
+        FROM
+        T_SYS_USER R
+        <where>
+            <if test="userId  !=  null">
+                and r.User_ID = #{userId}
+            </if>
+            <if test="loginName  !=  null">
+                and r.Login_Name = #{loginName}
+            </if>
+            <if test="password  !=  null">
+                and r.Password = #{password}
+            </if>
+            <if test="userName  !=  null">
+                and r.User_Name = #{userName}
+            </if>
+            <if test="status  !=  null">
+                and r.Status = #{status}
+            </if>
+            <if test="mail  !=  null">
+                and r.Mail = #{mail}
+            </if>
+            <if test="phone  !=  null">
+                and r.Phone = #{phone}
+            </if>
+            <if test="mobile  !=  null">
+                and r.Mobile = #{mobile}
+            </if>
+            <if test="sex  !=  null">
+                and r.Sex = #{sex}
+            </if>
+            <if test="office  !=  null">
+                and r.Office = #{office}
+            </if>
+            <if test="address  !=  null">
+                and r.Address = #{address}
+            </if>
+            <if test="joinDate  !=  null">
+                and r.Join_Date = #{joinDate}
+            </if>
+            <if test="fax  !=  null">
+                and r.Fax = #{fax}
+            </if>
+            <if test="workStatus  !=  null">
+                and r.Work_Status = #{workStatus}
+            </if>
+            <if test="officeNo  !=  null">
+                and r.Office_No = #{officeNo}
+            </if>
+            <if test="department  !=  null">
+                and r.Department = #{department}
+            </if>
+            <if test="compCode  !=  null">
+                and r.Comp_Code = #{compCode}
+            </if>
+            AND DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="queryForPage" parameterType="map" resultType="RscSysUser">
+        SELECT
+            R.USER_ID,
+            R.LOGIN_NAME,
+            R.USER_NAME,
+            T1.CN_NAME DEPARTMENT,
+            TSR.ROLE_NAME TITLE,
+            R.MAIL,
+            R.MOBILE,
+            R.PHONE,
+            T2.MACRO_NAME SEX,
+            T3.MACRO_NAME STATUSNAME
+        FROM
+            T_SYS_USER R
+            LEFT JOIN T_SYS_POSITION T1 ON R.USER_ID = T1.USER_ID
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON R.SEX = T2.MACRO_CODE
+            AND T2.MACRO_TYPE = 'SEX'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON R. STATUS = T3.MACRO_CODE
+            AND T3.MACRO_TYPE = 'STATUS'
+            LEFT JOIN T_SYS_ROLE TSR ON R.TITLE = TSR.ROLE_ID
+        <where>
+            <if test="loginName  !=  null">
+                and r.Login_Name = #{loginName}
+            </if>
+            <if test="password  !=  null">
+                and r.Password = #{password}
+            </if>
+            <if test="status  !=  null">
+                and r.Status = #{status}
+            </if>
+            <if test="mail  !=  null">
+                and r.Mail = #{mail}
+            </if>
+            <if test="phone  !=  null">
+                and r.Phone = #{phone}
+            </if>
+            <if test="mobile  !=  null">
+                and r.Mobile = #{mobile}
+            </if>
+            <if test="sex  !=  null">
+                and r.Sex = #{sex}
+            </if>
+            <if test="office  !=  null">
+                and r.Office = #{office}
+            </if>
+            <if test="address  !=  null">
+                and r.Address = #{address}
+            </if>
+            <if test="joinDate  !=  null">
+                and r.Join_Date = #{joinDate}
+            </if>
+            <if test="fax  !=  null">
+                and r.Fax = #{fax}
+            </if>
+            <if test="workStatus  !=  null">
+                and r.Work_Status = #{workStatus}
+            </if>
+            <if test="officeNo  !=  null">
+                and r.Office_No = #{officeNo}
+            </if>
+            <if test="department  !=  null">
+                and r.Department = #{department}
+            </if>
+            <if test="compCode  !=  null">
+                and r.Comp_Code = #{compCode}
+            </if>
+        </where>
+          ORDER BY r.UPDATE_TIME DESC
+    </select>
+    <select id="selectForExists" parameterType="RscSysUser"
+            resultType="java.lang.Integer">
+        SELECT COUNT('X') FROM T_SYS_USER
+        <where>
+            <if test="userId  !=  null">
+                and User_ID &lt;&gt; #{userId}
+            </if>
+            and Login_Name = #{loginName}
+        </where>
+    </select>
+    <select id="selectForExistsByLoginName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT('X') FROM T_SYS_USER
+        <where>
+            and Login_Name = #{loginName}
+        </where>
+    </select>
+
+    <select id="loadUser" parameterType="java.lang.String" resultType="com.stripcode.mybatis.user.model.RscSysUser">
+        SELECT USER_ID,USER_NAME,LOGIN_NAME FROM T_SYS_USER WHERE USER_ID = #{userId}
+    </select>
+</mapper>

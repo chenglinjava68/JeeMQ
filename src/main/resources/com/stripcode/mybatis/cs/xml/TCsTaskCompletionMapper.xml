@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.TCsTaskCompletionMapper">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    DELETE
+    FROM
+        T_CS_TASK_COMPLETION
+    WHERE
+        AUTO_NO = #{autoNo}
+  </delete>
+    <insert id="insert" parameterType="TCsTaskCompletion">
+    INSERT INTO T_CS_TASK_COMPLETION (
+        AUTO_NO,
+        ROW_ID,
+        OPTIMAUTH_ID,
+        TASK_ID,
+        IS_FINISHED,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    )
+    VALUES
+        (
+            #{autoNo},
+            #{rowId},
+            #{optimauthId},
+            #{taskId},
+            #{isFinished},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            #{delFlag},
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="TCsTaskCompletion">
+     UPDATE T_CS_TASK_COMPLETION
+      SET
+        ROW_ID = #{rowId},
+        OPTIMAUTH_ID = #{optimauthId},
+        TASK_ID = #{taskId},
+        IS_FINISHED = #{isFinished},
+        CREATOR = #{creator},
+        CREATE_TIME = #{createTime},
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime},
+        DEL_FLAG = #{delFlag},
+        DEF1 = #{def1},
+        DEF2 = #{def2},
+        DEF3 = #{def3},
+        DEF4 = #{def4},
+        DEF5 = #{def5},
+        DEF6 = #{def6},
+        DEF7 = #{def7},
+        DEF8 = #{def8},
+        DEF9 = #{def9},
+        DEF10 = #{def10}
+     WHERE AUTO_NO = #{autoNo}
+  </update>
+    <select id="selectByPrimaryKey" resultType="TCsTaskCompletion" parameterType="java.lang.Integer">
+    SELECT
+        AUTO_NO,
+        ROW_ID,
+        OPTIMAUTH_ID,
+        TASK_ID,
+        IS_FINISHED,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_CS_TASK_COMPLETION
+    where ROW_ID = #{rowId}
+  </select>
+    <select id="selectAll" resultType="TCsTaskCompletion">
+    SELECT
+        AUTO_NO,
+        ROW_ID,
+        OPTIMAUTH_ID,
+        TASK_ID,
+        IS_FINISHED,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_CS_TASK_COMPLETION
+  </select>
+  <select id="selectSuccessCountByTaskIds"  parameterType="string" resultType="integer">
+      SELECT
+          COUNT('X')
+      FROM
+          T_CS_TASK_COMPLETION C
+      LEFT JOIN T_CF_TASK_TEMPLATE T
+      ON C.TASK_ID = T.TASK_ID
+      WHERE
+          TASK_ID IN
+          <foreach collection = "taskIds" index = "index" item = "item" open = "(" separator = "," close = ")" >
+            #{item}
+          </foreach>
+      AND IS_FINISHED = 1
+      AND T.IS_MUST = 1
+  </select>
+    <select id="selectMustCountByTaskIds"  parameterType="string" resultType="integer">
+        SELECT
+            COUNT('X')
+        FROM
+            T_CS_TASK_COMPLETION C
+        LEFT JOIN T_CF_TASK_TEMPLATE T
+        ON C.TASK_ID = T.TASK_ID
+        WHERE
+             TASK_ID IN
+            <foreach collection = "taskIds" index = "index" item = "item" open = "(" separator = "," close = ")" >
+                #{item}
+            </foreach>
+            AND T.IS_MUST = 1
+    </select>
+    <select id="isExists"  parameterType="TCsTaskCompletion" resultType="integer">
+        SELECT
+          COUNT('X')
+        FROM
+          T_CS_TASK_COMPLETION
+        WHERE
+          TASK_ID = #{taskId}
+          AND OPTIMAUTH_ID = #{optimauthId}
+
+    </select>
+    <update id="updateCompletion" parameterType="TCsTaskCompletion">
+        UPDATE
+        T_CS_TASK_COMPLETION T
+        <set>
+            <if test="isFinished != null and  isFinished !='' ">
+                IS_FINISHED = #{isFinished},
+            </if>
+            <if test="updateTime != null ">
+                UPDATE_TIME = #{updateTime},
+            </if>
+            <if test="updater != null and  updater !='' ">
+                UPDATER = #{updater},
+            </if>
+        </set>
+        WHERE  T.OPTIMAUTH_ID = #{optimauthId} AND T.TASK_ID=#{taskId}
+    </update>
+
+    <update id="updateOptimauthType" parameterType="java.lang.String" >
+        UPDATE
+              T_CS_MARKET_OPTIMAUTH
+              SET CURRENT_NODE = #{macroCode}
+              WHERE ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updatePipelineType" parameterType="java.lang.String" >
+        UPDATE
+        T_SF_PIPELINE
+        SET CURRENT_NODE = #{macroCode},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </update>
+    
+    <select id="selectMacroNoByMacroCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+      SELECT MACRO_NO FROM T_CODE_MACRO_DEFINE T
+      <if test="rowId !=null and rowId !='' ">
+          LEFT JOIN T_CS_MARKET_OPTIMAUTH O ON O.CURRENT_NODE = T.MACRO_CODE
+          WHERE O.ROW_ID = #{rowId}
+      </if>
+      <if test="macroCode !=null and macroCode !='' ">
+          WHERE MACRO_CODE = #{macroCode}
+      </if>
+        <if test="(macroCode !=null and macroCode !='') or (rowId !=null and rowId !='')">
+          AND
+        </if>
+       MACRO_TYPE = 'MARKET_NEW_PIPELINE_STATUS'
+    </select>
+
+    <select id="selectMacroNoByMacroCodeToPipeline" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT MACRO_NO FROM T_CODE_MACRO_DEFINE T
+        <if test="ppId!=null and ppId!=''">
+            LEFT JOIN T_SF_PIPELINE O ON O.CURRENT_NODE = T.MACRO_CODE
+            WHERE O.PP_ID = #{ppId}
+        </if>
+        <if test="macroCode!=null and macroCode!=''">
+            WHERE MACRO_CODE = #{macroCode}
+        </if>
+        AND MACRO_TYPE = 'NEW_SITE_PIPELINE'
+    </select>
+</mapper>

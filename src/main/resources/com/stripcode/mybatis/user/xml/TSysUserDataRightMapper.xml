@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.TSysUserDataRightMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from T_SYS_USER_DATA_RIGHT
+    where AUTO_NO = #{autoNo}
+  </delete>
+  <delete id="deleteByPositionId" parameterType="java.lang.String">
+    DELETE FROM T_SYS_USER_DATA_RIGHT
+    where POSITION_ID=#{positionId}
+  </delete>
+  <insert id="insert" parameterType="TSysUserDataRight" >
+    INSERT INTO t_sys_user_data_right (
+        AUTO_NO,
+        POSITION_ID,
+        ROW_ID,
+        BRAND,
+        BRANCH_COMPANY_ID,
+        CUSTOMER_ID,
+        ERP_MARKET_ID,
+        STORE_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    )
+    VALUES
+        (
+            #{autoNo},
+            #{positionId},
+            #{rowId},
+            #{brand},
+            #{branchCompanyId},
+            #{customerId},
+            #{erpMarketId},
+            #{storeId},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            #{delFlag},
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10}
+        )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysUserDataRight" >
+  UPDATE t_sys_user_data_right
+      SET POSITION_ID = #{positionId},
+      ROW_ID = #{rowId},
+      BRAND = #{brand},
+      BRANCH_COMPANY_ID = #{branchCompanyId},
+      CUSTOMER_ID = #{customerId},
+      ERP_MARKET_ID = #{erpMarketId},
+      STORE_ID = #{storeId},
+      CREATOR = #{creator},
+      CREATE_TIME = #{createTime},
+      UPDATER = #{updater},
+      UPDATE_TIME = #{updateTime},
+      DEL_FLAG = #{delFlag},
+      DEF1 = #{def1},
+      DEF2 = #{def2},
+      DEF3 = #{def3},
+      DEF4 = #{def4},
+      DEF5 = #{def5},
+      DEF6 = #{def6},
+      DEF7 = #{def7},
+      DEF8 = #{def8},
+      DEF9 = #{def9},
+      DEF10 = #{def10}
+      WHERE
+          AUTO_NO = #{autoNo}
+  </update>
+  <select id="selectByPrimaryKey" resultType="TSysUserDataRight" parameterType="java.lang.Integer" >
+   SELECT
+        AUTO_NO,
+        POSITION_ID,
+        ROW_ID,
+        BRAND,
+        BRANCH_COMPANY_ID,
+        CUSTOMER_ID,
+        ERP_MARKET_ID,
+        STORE_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_USER_DATA_RIGHT
+    where AUTO_NO = #{autoNo}
+  </select>
+  <select id="selectAll" resultType="TSysUserDataRight" >
+   SELECT
+        AUTO_NO,
+        POSITION_ID,
+        ROW_ID,
+        BRAND,
+        BRANCH_COMPANY_ID,
+        CUSTOMER_ID,
+        ERP_MARKET_ID,
+        STORE_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_USER_DATA_RIGHT
+        WHERE DEL_FLAG = 'M0015'
+        ORDER BY AUTO_NO
+  </select>
+    <select id="selectByPositionId" resultType="TSysUserDataRight" parameterType="TSysUserDataRight" >
+        SELECT
+           AUTO_NO,
+            POSITION_ID,
+            ROW_ID,
+            BRAND,
+            BRANCH_COMPANY_ID,
+            CUSTOMER_ID,
+            ERP_MARKET_ID,
+            STORE_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG,
+            DEF1,
+            DEF2,
+            DEF3,
+            DEF4,
+            DEF5,
+            DEF6,
+            DEF7,
+            DEF8,
+            DEF9,
+            DEF10
+        FROM
+        T_SYS_USER_DATA_RIGHT
+        WHERE POSITION_ID = #{positionId}
+        AND DEL_FLAG = 'M0015'
+    </select>
+</mapper>

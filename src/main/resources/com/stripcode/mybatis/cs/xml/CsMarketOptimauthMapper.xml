@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSMarketOptimauthMapper">
+
+    <select id="selectForPage" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSMarketOptimauth">
+        SELECT
+              MO.ROW_ID,
+              MO.CUSTOMER_ID,
+              T2.MACRO_NAME currentNode,
+              U.USER_NAME director,
+              CO.CORPORATION,
+              MO.ERP_NAME,
+              MO.ERP_CODE,
+              CO.SUPERIOR_COMPANY,
+              T1.MACRO_NAME customerProperty,
+              T3.MACRO_NAME brand,
+              MO.BRAND BRAND_CODE
+        FROM
+            T_CS_MARKET_OPTIMAUTH MO
+            LEFT JOIN T_CS_CUSTOMERINFO CO ON CO.CUSTOMER_ID = MO.CUSTOMER_ID AND CO.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SYS_USER U ON U.USER_ID = MO.DIRECTOR AND U.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CO.CUSTOMER_PROPERTY = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON MO.CURRENT_NODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'MARKET_NEW_PIPELINE_STATUS' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON MO.BRAND = T3.MACRO_CODE AND T3.MACRO_TYPE = 'BRAND' AND T3.DEL_FLAG = 'M0015'
+        <where>
+            AND MO.OPTIMIZED_TYPE = #{optimizedType}
+            <if test="corporation != null and corporation != ''">
+                AND CO.CORPORATION LIKE CONCAT('%',#{corporation},'%')
+            </if>
+            <if test="customerProperty != null and customerProperty != ''">
+                AND CO.CUSTOMER_PROPERTY = #{customerProperty}
+            </if>
+            <if test="currentNode != null and currentNode != ''">
+                AND MO.CURRENT_NODE LIKE CONCAT('%',#{currentNode},'%')
+            </if>
+            <if test="director != null and director != ''">
+                AND U.USER_NAME LIKE CONCAT('%',#{director},'%')
+            </if>
+            <if test="superiorCompany != null and superiorCompany != ''">
+                AND CO.SUPERIOR_COMPANY LIKE CONCAT('%',#{superiorCompany},'%')
+            </if>
+            <if test="brand != null and brand != ''">
+                AND M.BRAND = #{brand}
+            </if>
+                AND MO.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY MO.UPDATE_TIME DESC
+    </select>
+
+    <select id="selectForExport" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSMarketOptimauth">
+        SELECT
+        MO.ROW_ID,
+        MO.CUSTOMER_ID,
+        T2.MACRO_NAME currentNode,
+        U.USER_NAME director,
+        CO.CORPORATION,
+        MO.ERP_NAME,
+        CO.SUPERIOR_COMPANY,
+        T1.MACRO_NAME customerProperty
+        FROM
+        T_CS_MARKET_OPTIMAUTH MO
+        LEFT JOIN T_CS_CUSTOMERINFO CO ON CO.CUSTOMER_ID = MO.CUSTOMER_ID AND CO.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = MO.DIRECTOR AND U.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CO.CUSTOMER_PROPERTY = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON MO.CURRENT_NODE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'MARKET_NEW_PIPELINE_STATUS' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            AND MO.OPTIMIZED_TYPE = #{optimizedType}
+            <if test="corporation != null and corporation != ''">
+                AND CO.CORPORATION LIKE CONCAT('%',#{corporation},'%')
+            </if>
+            <if test="customerProperty != null and customerProperty != ''">
+                AND CO.CUSTOMER_PROPERTY = #{customerProperty}
+            </if>
+            <if test="currentNode != null and currentNode != ''">
+                AND MO.CURRENT_NODE LIKE CONCAT('%',#{currentNode},'%')
+            </if>
+            <if test="director != null and director != ''">
+                AND U.USER_NAME LIKE CONCAT('%',#{director},'%')
+            </if>
+            <if test="superiorCompany != null and superiorCompany != ''">
+                AND CO.SUPERIOR_COMPANY LIKE CONCAT('%',#{superiorCompany},'%')
+            </if>
+            AND MO.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY MO.UPDATE_TIME DESC
+    </select>
+
+    <select id="queryOptimauth" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSMarketOptimauth">
+        SELECT
+              MO.ROW_ID,
+              MO.CUSTOMER_ID,
+              MO.ERP_CODE,
+              MO.ERP_NAME,
+              MO.OPTIMIZED_TYPE,
+              MO.CURRENT_NODE,
+              MO.PRO_STATUS,
+              MO.DIRECTOR,
+              CO.CORPORATION
+        FROM T_CS_MARKET_OPTIMAUTH MO
+        LEFT JOIN T_CS_CUSTOMERINFO CO ON CO.CUSTOMER_ID = MO.CUSTOMER_ID AND CO.DEL_FLAG = 'M0015'
+        WHERE
+              MO.ROW_ID = #{optimauthId} AND MO.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

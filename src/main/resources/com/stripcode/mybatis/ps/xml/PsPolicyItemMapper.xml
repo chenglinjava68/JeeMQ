@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.ps.dao.PSPolicyItemMapper">
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        SELECT
+            T.ROW_ID,
+            T.ITEM_CODE,
+            T.ITEM_NAME,
+            T.ITEM_TYPE,
+            T7.MACRO_NAME  status
+        FROM T_PS_POLICY_ITEM T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.ITEM_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'ITEM_TYPE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.STATUS = T7.MACRO_CODE AND T7.MACRO_TYPE = 'status' AND T7.DEL_FLAG = 'M0015'
+        <where>
+            <if test="itemCode != null and itemCode != ''">
+                AND T.ITEM_CODE LIKE CONCAT('%',#{itemCode},'%')
+            </if>
+            <if test="itemName != null and itemName != ''">
+                AND T.ITEM_NAME LIKE CONCAT('%',#{itemName},'%')
+            </if>
+            AND T.ITEM_TYPE = #{itemType} AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        INSERT INTO T_PS_POLICY_ITEM
+        (
+            ROW_ID,
+            ITEM_CODE,
+            ITEM_NAME,
+            ITEM_TYPE,
+            STATUS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )
+        VALUE
+        (
+            #{rowId},
+            #{itemCode},
+            #{itemName},
+            #{itemType},
+            #{status},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        UPDATE T_PS_POLICY_ITEM
+        SET
+            ITEM_CODE = #{itemCode},
+            ITEM_NAME = #{itemName},
+            ITEM_TYPE = #{itemType},
+            STATUS = #{status},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE
+           ROW_ID = #{rowId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updateStatus" parameterType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        UPDATE T_PS_POLICY_ITEM
+        SET
+        STATUS = 'M0044',
+          UPDATER = #{updater},
+          UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID = #{rowId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="editLoad" parameterType="java.lang.String" resultType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        SELECT
+            ROW_ID,
+            ITEM_CODE,
+            ITEM_NAME,
+            ITEM_TYPE,
+            STATUS,
+            DEL_FLAG
+        From
+            T_PS_POLICY_ITEM
+        <where>
+            ROW_ID = #{rowId}
+            AND DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectForExport" resultType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        SELECT
+        T.ROW_ID,
+        T.ITEM_CODE,
+        T.ITEM_NAME,
+        T.ITEM_TYPE,
+        T7.MACRO_NAME  status
+        FROM T_PS_POLICY_ITEM T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.ITEM_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'ITEM_TYPE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.STATUS = T7.MACRO_CODE AND T7.MACRO_TYPE = 'status' AND T7.DEL_FLAG = 'M0015'
+        <where>
+
+             T.ITEM_TYPE = #{itemType} AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+
+    <select id="selectAllByItemType" parameterType="java.lang.String" resultType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        SELECT
+        T.ROW_ID,
+        T.ITEM_CODE itemCode,
+        T.ITEM_NAME itemName,
+        T.ITEM_TYPE itemType
+        FROM T_PS_POLICY_ITEM T
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON T.ITEM_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'ITEM_TYPE' AND T1.DEL_FLAG = 'M0015'
+        <where>
+            AND T.ITEM_TYPE = #{itemType}
+
+                AND  T.STATUS='M0043'
+
+        </where>
+    </select>
+    <select id="selectALL" parameterType="java.lang.String" resultType="com.stripcode.mybatis.ps.model.PSPolicyItem">
+        SELECT
+        T.ROW_ID,
+        T.ITEM_CODE itemCode,
+        T.ITEM_NAME itemName,
+        T.ITEM_TYPE itemType
+        FROM T_PS_POLICY_ITEM T
+        where
+                 T.STATUS='M0043'
+    </select>
+    <select id="isExistsNumber" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_PS_POLICY_ITEM
+        WHERE ITEM_CODE = #{itemCode} AND ITEM_TYPE = #{itemType}
+        <if test='rowId!=null and rowId!=""'>
+            AND ROW_ID = #{rowId}
+        </if>
+
+    </select>
+</mapper>

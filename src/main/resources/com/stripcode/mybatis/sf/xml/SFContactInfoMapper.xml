@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFContactInfoMapper">
+    <select id="queryContactInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFContactInfo">
+        SELECT
+              ROW_ID,
+              PP_ID,
+              MANAGER,
+              MANAGER_PHONE,
+              DECORATION_DATE,
+              DELIVERY_DATE,
+              COMMODITY_MG,
+              LEAGUE_MG,
+              PROMOTION_MG,
+              INFO_MG,
+              ACCOUNTING_MG,
+              ENGINEERING_MG,
+              DEVELOPMENT_MG,
+              CONSIGNEE,
+              CONSIGNEE_PHONE,
+              POST,
+              ADDRESS,
+              WAREHOUSE,
+              TRANSPORT_CYCLE,
+              ERP_RECEPTION,
+              REMARK,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG,
+              DEF1,
+              DEF2,
+              DEF3,
+              DEF4,
+              DEF5,
+              DEF6,
+              DEF7,
+              DEF8,
+              DEF9,
+              DEF10
+        FROM T_SF_CONTACT_INFO
+        WHERE PP_ID = #{ppId}
+    </select>
+
+    <insert id="insertContactInfo" parameterType="com.stripcode.mybatis.sf.model.SFContactInfo">
+        INSERT INTO T_SF_CONTACT_INFO (
+              ROW_ID,
+              PP_ID,
+              MANAGER,
+              MANAGER_PHONE,
+              DECORATION_DATE,
+              DELIVERY_DATE,
+              COMMODITY_MG,
+              LEAGUE_MG,
+              PROMOTION_MG,
+              INFO_MG,
+              ACCOUNTING_MG,
+              ENGINEERING_MG,
+              DEVELOPMENT_MG,
+              CONSIGNEE,
+              CONSIGNEE_PHONE,
+              POST,
+              ADDRESS,
+              WAREHOUSE,
+              TRANSPORT_CYCLE,
+              ERP_RECEPTION,
+              REMARK,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+        )VALUES (
+              #{rowId},
+              #{ppId},
+              #{manager},
+              #{managerPhone},
+              #{decorationDate},
+              #{deliveryDate},
+              #{commodityMg},
+              #{leagueMg},
+              #{promotionMg},
+              #{infoMg},
+              #{accountingMg},
+              #{engineeringMg},
+              #{developmentMg},
+              #{consignee},
+              #{consigneePhone},
+              #{post},
+              #{address},
+              #{warehouse},
+              #{transportCycle},
+              #{erpReception},
+              #{remark},
+              #{creator},
+              sysdate(),
+              #{updater},
+              sysdate(),
+              'M0015'
+        )
+    </insert>
+
+    <update id="updateContactInfo" parameterType="com.stripcode.mybatis.sf.model.SFContactInfo">
+        UPDATE T_SF_CONTACT_INFO
+        SET  MANAGER = #{manager},
+              MANAGER_PHONE = #{managerPhone},
+              DECORATION_DATE = #{decorationDate},
+              DELIVERY_DATE = #{deliveryDate},
+              COMMODITY_MG = #{commodityMg},
+              LEAGUE_MG = #{leagueMg},
+              PROMOTION_MG = #{promotionMg},
+              INFO_MG = #{infoMg},
+              ACCOUNTING_MG = #{accountingMg},
+              ENGINEERING_MG = #{engineeringMg},
+              DEVELOPMENT_MG = #{developmentMg},
+              CONSIGNEE = #{consignee},
+              CONSIGNEE_PHONE = #{consigneePhone},
+              POST = #{post},
+              ADDRESS = #{address},
+              WAREHOUSE = #{warehouse},
+              TRANSPORT_CYCLE = #{transportCycle},
+              ERP_RECEPTION = #{erpReception},
+              REMARK = #{remark},
+              UPDATER = #{updater},
+              UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="queryErpInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+          SELECT
+                E.ROW_ID,
+                E.ERP_NAME,
+                E.ERP_CODE,
+                T.MACRO_NAME marketLev,
+                C.POST_ADDRESS,
+                E.COOPERATION_MODE,
+                S.ACTUAL_SIGNDATE
+          FROM T_SF_PIPELINE P
+          LEFT JOIN T_CS_NEW_MARKETAUZ E on E.ROW_ID = P.ERP_CODE AND E.DEL_FLAG = 'M0015'
+          LEFT JOIN T_CS_MARKET_OPTIMAUTH O ON O.ROW_ID = E.OPTIMAUTH_ID AND O.DEL_FLAG = 'M0015'
+          LEFT JOIN T_CS_CUSTOMERINFO C ON C.CUSTOMER_ID = O.CUSTOMER_ID AND C.DEL_FLAG = 'M0015'
+          LEFT JOIN T_CODE_MACRO_DEFINE T ON  T.MACRO_CODE = E.MARKET_LEV  AND T.MACRO_TYPE = 'MARKET_LEVEL' AND T.DEL_FLAG = 'M0015'
+          LEFT JOIN T_CS_CONTRACT_SIGNING S ON S.OPTIMAUTH_ID = E.ROW_ID AND S.DEL_FLAG = 'M0015'
+          WHERE P.PP_ID = #{ppId}
+    </select>
+      
+      <select id="queryPolicyAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreementAttachment">
+            SELECT
+                  PP_ID,
+                  ATTACH_ID
+            FROM T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+            WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+      </select>
+      
+      <insert id="saveAmAttachMentInfo" parameterType="com.stripcode.mybatis.am.model.AMContractAttachMent">
+            INSERT INTO T_AM_CONTRACT_ATTACHMENT(
+                STORE_ID,
+                ATTACH_ID,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+            )VALUES (
+                #{storeId},
+                #{attachId},
+                #{creator},
+                sysdate(),
+                #{updater},
+                sysdate(),
+                'M0015'
+            )
+      </insert>
+
+    <insert id="insertStore" parameterType="com.stripcode.mybatis.am.model.AMStoreInfo">
+        INSERT INTO T_AM_STORE(
+            STORE_ID,
+            STORE_CODE,
+            PP_ID,
+            CN_SITENAME,
+            BRAND,
+            OPERATION_MODE,
+            CHANNEL_TYPE,
+            STORE_IMAGE,
+            COOP_MODE,
+            STORE_PROPERTY,
+            PROVINCE,
+            CITY,
+            DISTRICT,
+            STREET,
+            ADDRESS,
+            APPROVAL_DATE,
+            SIGN_DATE,
+            POSTCODE,
+            TEL,
+            OPEN_DATE,
+            REFORM_DATE,
+            STATUS,
+            CONTRACT_START_DATE,
+            CONTRACT_END_DATE,
+            APPLY_AREA,
+            OPERATE_AREA,
+            RESERVE_AREA,
+            CUSTOMER_ID,
+            CUSTOMER_PROPERTY,
+            JOINED_SIGN_DATE,
+            REP_ID,
+            OPERATION_MGR,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{storeId},
+            #{storeCode},
+            #{ppId},
+            #{cnsiteName},
+            #{brand},
+            #{operationMode},
+            #{channelType},
+            #{storeImage},
+            #{coopMode},
+            #{storeProperty},
+            #{province},
+            #{city},
+            #{district},
+            #{street},
+            #{address},
+            #{approvalDate},
+            #{signDate},
+            #{postCode},
+            #{tel},
+            #{openDate},
+            #{reformDate},
+            #{status},
+            #{contractStartDate},
+            #{contractEndDate},
+            #{applyArea},
+            #{operateArea},
+            #{reserveArea},
+            #{customerId},
+            #{custormerProperty},
+            #{joinedSignDate},
+            #{repId},
+            #{operationMgr},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMLandLordInfoMapper">
+    <!--查询店铺业主信息房产来源-->
+    <select id="selectAMLandLordInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMLandLordInfo">
+        SELECT
+            A.PROPERTY,
+            A.REP,
+            A.BROKER,
+            A.ALLIANCE
+        FROM
+            T_AM_LANDLORDINFO A
+        <where>
+            A.STORE_ID = #{storeId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺业主信息房产来源-->
+    <insert id="insertAMLandLordInfo" parameterType="com.stripcode.mybatis.am.model.AMLandLordInfo">
+        INSERT INTO
+             T_AM_LANDLORDINFO
+             (
+                STORE_ID,
+                PROPERTY,
+                IS_FROM_REP,
+                REP,
+                IS_FROM_BROKER,
+                BROKER,
+                IS_FROM_ALLIANCE,
+                ALLIANCE,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+             )
+         VALUES
+            (
+                #{storeId},
+                #{property},
+                #{isFromRep},
+                #{rep},
+                #{isFromBroker},
+                #{broker},
+                #{isFromAlliance},
+                #{alliance},
+                #{creator},
+                sysdate(),
+                #{updater},
+                #{updateTime},
+                'M0015'
+            )
+    </insert>
+
+    <!--查询店铺业主信息集合-->
+    <select id="selectAMLandLordInfoDetail" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMLandLordInfoDetail">
+        SELECT
+            A.LANDLORD,
+            A.CONTACTER contacter,
+            A.POSITION,
+            A.TEL,
+            T.MACRO_NAME rentType,
+            A.OWNER,
+            A.ADDRESS
+        FROM
+            T_AM_LANDLORDINFO_DETAIL A
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON T.MACRO_CODE = A.RENT_TYPE AND T.MACRO_TYPE = 'RENT_MODE' AND T.DEL_FLAG = 'M0015'
+        <where>
+            A.STORE_ID = #{storeId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <!--添加店铺业主信息集合-->
+    <insert id="insertAMLandLordInfoDetail" parameterType="com.stripcode.mybatis.am.model.AMLandLordInfoDetail">
+        INSERT INTO
+            T_AM_LANDLORDINFO_DETAIL
+            (
+                STORE_ID,
+                LANDLORD,
+                CONTACTER,
+                POSITION,
+                TEL,
+                RENT_TYPE,
+                OWNER,
+                ADDRESS,
+                CREATOR,
+                CREATE_TIME,
+                UPDATER,
+                UPDATE_TIME,
+                DEL_FLAG
+            )
+        VALUES
+            (
+                #{storeId},
+                #{landLord},
+                #{contacter},
+                #{position},
+                #{tel},
+                #{rentType},
+                #{owner},
+                #{address},
+                #{creator},
+                sysdate(),
+                #{updater},
+                #{updateTime},
+                'M0015'
+            )
+    </insert>
+</mapper>

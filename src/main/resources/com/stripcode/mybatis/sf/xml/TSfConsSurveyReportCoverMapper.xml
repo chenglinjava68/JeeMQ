@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFConsSurveyReportCoverMapper" >
+
+  <insert id="insertCover" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportCover" >
+    insert into t_sf_cons_survey_report_cover ( ROW_ID, PP_ID,
+      IS_SURVEY, DIRECTOR, SURVEY_DATE, 
+      IS_COMPETITOR, SALES_MONTH, IS_ACCEPTANCE, 
+      STORE_IMAGE, IS_HIGHRISK, HIGHRISK_DETAIL, 
+      IS_ENVIRONMENT, ENVIRONMENT_DETAIL, IS_TOLIET, 
+      INCOME_MODE, USED_AREA, USED_AREA_FLOOR1, 
+      USED_AREA_FLOOR2, BACK_AREA, BACK_AREA_FLOOR1, 
+      BACK_AREA_FLOOR2, FRONT_AREA, FRONT_AREA_FLOOR1, 
+      FRONT_AREA_FLOOR2, REMARK, CREATOR, 
+      CREATE_TIME, UPDATER, UPDATE_TIME, 
+      DEL_FLAG, DEF1, DEF2, 
+      DEF3, DEF4, DEF5, DEF6, 
+      DEF7, DEF8, DEF9, DEF10
+      )
+    values (#{rowId,jdbcType=VARCHAR}, #{ppId,jdbcType=VARCHAR},
+      #{isSurvey,jdbcType=VARCHAR}, #{director,jdbcType=VARCHAR}, #{surveyDate,jdbcType=VARCHAR}, 
+      #{isCompetitor,jdbcType=VARCHAR}, #{salesMonth,jdbcType=DECIMAL}, #{isAcceptance,jdbcType=VARCHAR}, 
+      #{storeImage,jdbcType=VARCHAR}, #{isHighrisk,jdbcType=VARCHAR}, #{highriskDetail,jdbcType=VARCHAR}, 
+      #{isEnvironment,jdbcType=VARCHAR}, #{environmentDetail,jdbcType=VARCHAR}, #{isToliet,jdbcType=VARCHAR}, 
+      #{incomeMode,jdbcType=VARCHAR}, #{usedArea,jdbcType=DECIMAL}, #{usedAreaFloor1,jdbcType=DECIMAL}, 
+      #{usedAreaFloor2,jdbcType=DECIMAL}, #{backArea,jdbcType=DECIMAL}, #{backAreaFloor1,jdbcType=DECIMAL}, 
+      #{backAreaFloor2,jdbcType=DECIMAL}, #{frontArea,jdbcType=DECIMAL}, #{frontAreaFloor1,jdbcType=DECIMAL}, 
+      #{frontAreaFloor2,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=VARCHAR}, #{def1,jdbcType=VARCHAR}, #{def2,jdbcType=VARCHAR}, 
+      #{def3,jdbcType=VARCHAR}, #{def4,jdbcType=VARCHAR}, #{def5,jdbcType=VARCHAR}, #{def6,jdbcType=VARCHAR}, 
+      #{def7,jdbcType=VARCHAR}, #{def8,jdbcType=VARCHAR}, #{def9,jdbcType=VARCHAR}, #{def10,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateCover" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportCover" >
+    update t_sf_cons_survey_report_cover
+    set
+      IS_SURVEY = #{isSurvey,jdbcType=VARCHAR},
+      DIRECTOR = #{director,jdbcType=VARCHAR},
+      SURVEY_DATE = #{surveyDate,jdbcType=VARCHAR},
+      IS_COMPETITOR = #{isCompetitor,jdbcType=VARCHAR},
+      SALES_MONTH = #{salesMonth,jdbcType=DECIMAL},
+      IS_ACCEPTANCE = #{isAcceptance,jdbcType=VARCHAR},
+      STORE_IMAGE = #{storeImage,jdbcType=VARCHAR},
+      IS_HIGHRISK = #{isHighrisk,jdbcType=VARCHAR},
+      HIGHRISK_DETAIL = #{highriskDetail,jdbcType=VARCHAR},
+      IS_ENVIRONMENT = #{isEnvironment,jdbcType=VARCHAR},
+      ENVIRONMENT_DETAIL = #{environmentDetail,jdbcType=VARCHAR},
+      IS_TOLIET = #{isToliet,jdbcType=VARCHAR},
+      INCOME_MODE = #{incomeMode,jdbcType=VARCHAR},
+      USED_AREA = #{usedArea,jdbcType=DECIMAL},
+      USED_AREA_FLOOR1 = #{usedAreaFloor1,jdbcType=DECIMAL},
+      USED_AREA_FLOOR2 = #{usedAreaFloor2,jdbcType=DECIMAL},
+      BACK_AREA = #{backArea,jdbcType=DECIMAL},
+      BACK_AREA_FLOOR1 = #{backAreaFloor1,jdbcType=DECIMAL},
+      BACK_AREA_FLOOR2 = #{backAreaFloor2,jdbcType=DECIMAL},
+      FRONT_AREA = #{frontArea,jdbcType=DECIMAL},
+      FRONT_AREA_FLOOR1 = #{frontAreaFloor1,jdbcType=DECIMAL},
+      FRONT_AREA_FLOOR2 = #{frontAreaFloor2,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=VARCHAR},
+      DEF1 = #{def1,jdbcType=VARCHAR},
+      DEF2 = #{def2,jdbcType=VARCHAR},
+      DEF3 = #{def3,jdbcType=VARCHAR},
+      DEF4 = #{def4,jdbcType=VARCHAR},
+      DEF5 = #{def5,jdbcType=VARCHAR},
+      DEF6 = #{def6,jdbcType=VARCHAR},
+      DEF7 = #{def7,jdbcType=VARCHAR},
+      DEF8 = #{def8,jdbcType=VARCHAR},
+      DEF9 = #{def9,jdbcType=VARCHAR},
+      DEF10 = #{def10,jdbcType=VARCHAR}
+    where PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+  </update>
+  <select id="queryCover" resultType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportCover" parameterType="java.lang.String" >
+    select AUTO_NO, ROW_ID, PP_ID, IS_SURVEY, DIRECTOR, SURVEY_DATE, IS_COMPETITOR, SALES_MONTH, 
+    IS_ACCEPTANCE, STORE_IMAGE, IS_HIGHRISK, HIGHRISK_DETAIL, IS_ENVIRONMENT, ENVIRONMENT_DETAIL, 
+    IS_TOLIET, INCOME_MODE, USED_AREA, USED_AREA_FLOOR1, USED_AREA_FLOOR2, BACK_AREA, 
+    BACK_AREA_FLOOR1, BACK_AREA_FLOOR2, FRONT_AREA, FRONT_AREA_FLOOR1, FRONT_AREA_FLOOR2, 
+    REMARK, CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME, DEL_FLAG, DEF1, DEF2, DEF3, DEF4, 
+    DEF5, DEF6, DEF7, DEF8, DEF9, DEF10
+    from t_sf_cons_survey_report_cover
+    where PP_ID = #{ppId}AND DEL_FLAG = 'M0015'
+  </select>
+</mapper>

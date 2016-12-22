@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSAuthorizationMapper">
+    <insert id="insertCustomerErpInfo" parameterType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        INSERT INTO T_CS_CUSTOMER_ERP_INFO(
+            ROW_ID,
+            CUSTOMER_ID,
+            ERP_CODE,
+            ERP_NAME,
+            BRAND,
+            COOPERATION_MODE,
+            BASIC_DISCOUNT_RATE,
+            SPLIT_RATE,
+            DEPOSIT,
+            PLEDGE,
+            GOODS_PLEDGE,
+            INITIAL_FEE,
+            ACCREDIT_STARTDATE,
+            ACCREDIT_ENDDATE,
+            IS_BUYOUT,
+            MARKET_LEV,
+            DISCOUNT_RATE_MODE,
+            USER_ID,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES(
+            #{rowId},
+            #{customerId},
+            #{erpCode},
+            #{erpName},
+            #{brand},
+            #{cooperationMode},
+            #{basicDiscountRate},
+            #{splitRate},
+            #{deposit},
+            #{pledge},
+            #{goodsPledge},
+            #{initialFee},
+            #{accreditStartDate},
+            #{accreditEndDate},
+            #{isBuyout},
+            #{marketLev},
+            #{discountRateMode},
+            #{userId},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <insert id="insertMarketInfo" parameterType="com.stripcode.mybatis.cs.model.CSMarketInfo">
+        INSERT INTO T_CS_ERP_MARKET_INFO(
+            AUTHORIZATION_ID,
+            MARKET_ID,
+            ACCREDIT_STARTDATE,
+            ACCREDIT_ENDDATE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{authorizationId},
+            #{marketId},
+            #{accreditStartDate},
+            #{accreditEndDate},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <insert id="insetMarketContract" parameterType="com.stripcode.mybatis.cs.model.CSMarketContract">
+        INSERT INTO T_CS_MARKET_CONTRACT(
+            ROW_ID,
+            AUTHORIZATION_ID,
+            SIGN_DATE,
+            CONTRACT_NAME,
+            ATTACH_ID,
+            CONTRACT_TYPE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{authorizationId},
+            #{signDate},
+            #{contractName},
+            #{attachId},
+            #{contractType},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <select id="marketInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSMarketInfo">
+        SELECT MARKET_ID FROM T_CS_ERP_MARKET_MAP WHERE AUTHORIZATION_ID = #{authorizationId}
+    </select>
+
+    <select id="authorInfoById" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        SELECT
+        cei.ROW_ID,
+        cei.BRAND,
+        cei.ERP_CODE,
+        cei.ERP_NAME,
+        cei.COOPERATION_MODE,
+        cei.DISCOUNT_RATE,
+        cei.DEPOSIT,
+        cei.PLEDGE,
+        cei.GOODS_PLEDGE,
+        cei.INITIAL_FEE,
+        cei.ACCREDIT_STARTDATE,
+        cei.ACCREDIT_ENDDATE,
+        cei.DISCOUNT_RATE_MODE,
+        cei.IS_BUYOUT,
+        cei.MARKET_LEV,
+        cei.USER_ID,
+        cei.IS_NEW_ERPID,
+        cei.REMARK
+        FROM
+        T_CS_MARKET_OPTIMAUTH TC
+        LEFT JOIN
+        T_CS_NEW_MARKETAUZ cei ON TC.ROW_ID = cei.OPTIMAUTH_ID AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN
+        T_SYS_USER u ON u.USER_ID = cei.USER_ID AND u.DEL_FLAG = 'M0015'
+        <where>
+            AND TC.CUSTOMER_ID = #{customerId} AND TC.ROW_ID = #{rowId} AND cei.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="selectListMarket" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+        CP.ROW_ID,
+        CP.MARKET_ID,
+        CP.MARKET_NAME,
+        CP.COUNTRY,
+        CP.PROVINCE,
+        CP.CITY,
+        CP.DISTRICT,
+        CP.STREET,
+        CP.REGION
+        FROM T_CS_ERP_MARKET_MAP TC
+        LEFT JOIN  T_MP_MARKETINFO CP ON TC.MARKET_ID = CP.MARKET_ID AND CP.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ M ON M.ROW_ID = TC.AUTHORIZATION_ID AND M.DEL_FLAG = 'M0015'
+        WHERE M.OPTIMAUTH_ID = #{rowId} AND TC.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="isExistCustomerErpInfo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM T_CS_CUSTOMER_ERP_INFO WHERE ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </select>
+    
+    <update id="updateCustomerErpInfo" parameterType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        UPDATE T_CS_CUSTOMER_ERP_INFO
+        SET  ACCREDIT_STARTDATE = #{accreditStartDate},
+            ACCREDIT_ENDDATE = #{accreditEndDate},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE ROW_ID=#{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <select id="queryCustomerErpInfoExist" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT ROW_ID FROM T_CS_CUSTOMER_ERP_INFO WHERE CUSTOMER_ID = #{customerId} AND ERP_CODE = #{erpCode} AND DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertCustomerDiscountSplit" parameterType="com.stripcode.mybatis.cs.model.CSMarketCustomerDiscountSplit">
+        INSERT INTO T_CS_MARKET_CUSTOMER_DISCOUNT_SPLIT(
+            ROW_ID,
+            AUTHORIZATION_ID,
+            STYLE,
+            SPLIT_RATE,
+            DISCOUNT_RATE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{authorizationId},
+            #{style},
+            #{splitRate},
+            #{discountRate},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+
+    <select id="selectDiscountSplit" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSMarketDiscountSplit">
+        SELECT
+       ROW_ID,
+       AUTHORIZATION_ID,
+       STYLE,
+       SPLIT_RATE,
+       DISCOUNT_RATE
+        FROM
+        T_CS_MARKET_DISCOUNT_SPLIT
+        WHERE AUTHORIZATION_ID = #{authorizationId}
+    </select>
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentSalesYearMapper">
+
+
+    <select id="selectEstInvestmentSalesYearMapper" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentSalesYear" parameterType="java.lang.String">
+        SELECT
+            ROW_ID,
+            INVESTMENT_ID,
+            RENT_TIME,
+            SALES,
+            RENTAL,
+            RATE,
+            BASE_RENTAL,
+            TRANSFER_FEE,
+            PROPERTY_FEE,
+            TAXATION,
+            SUBLET_FEE
+        FROM
+          T_SF_EST_INVESTMENT_SALES_YEAR
+       WHERE INVESTMENT_ID = #{investmentId} AND DEL_FLAG = 'M0015'
+       ORDER BY RENT_TIME limit 5
+    </select>
+
+    <select id="selectRentalDetailMapper" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentSalesYear" parameterType="java.lang.String">
+        select b.RENT_ID, b.RENT_TIME, b.RENTAL, b.RATE ,b.BASE_RENTAL, b.TRANSFER_FEE, b.PROPERTY_FEE,
+        b.TAXATION, b.SUBLET_FEE
+        From T_SF_RENTAL_PROPOSAL_DIRECT_STORE a
+        inner join T_SF_RENTAL_DETAIL b on a.row_id = b.rent_id AND b.DEL_FLAG = 'M0015'
+        where PP_ID = #{ppId} AND a.DEL_FLAG = 'M0015' order by RENT_TIME limit 5
+    </select>
+
+    <insert id="insertEstInvestmentSalesYearMapper" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentSalesYear">
+        INSERT INTO T_SF_EST_INVESTMENT_SALES_YEAR(
+        ROW_ID,
+        INVESTMENT_ID,
+        RENT_TIME,
+        SALES,
+        RENTAL,
+        RATE,
+        BASE_RENTAL,
+        TRANSFER_FEE,
+        PROPERTY_FEE,
+        TAXATION,
+        SUBLET_FEE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{investmentId},
+        #{rentTime},
+        #{sales},
+        #{rental},
+        #{rate},
+        #{baseRental},
+        #{transferFee},
+        #{propertyFee},
+        #{taxation},
+        #{subletFee},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+    <update id="updateEstInvestmentSalesYearMapper" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentSalesYear">
+        UPDATE T_SF_EST_INVESTMENT_SALES_YEAR
+        SET INVESTMENT_ID = #{investmentId},
+        RENT_TIME = #{rentTime},
+        SALES = #{sales},
+        RENTAL = #{rental},
+        RATE = #{rate},
+        BASE_RENTAL = #{baseRental},
+        TRANSFER_FEE = #{transferFee},
+        PROPERTY_FEE = #{propertyFee},
+        TAXATION = #{taxation},
+        SUBLET_FEE = #{subletFee}
+        WHERE ROW_ID = #{rowId}
+    </update>
+    <update id="deleteByInvestmentId" parameterType="java.lang.String">
+        UPDATE T_SF_EST_INVESTMENT_SALES_YEAR
+        SET
+        DEL_FLAG = 'M0014'
+        WHERE INVESTMENT_ID = #{investmentId}
+    </update>
+</mapper>

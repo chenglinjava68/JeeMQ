@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFEstInvestmentDetailDiretStoreMapper">
+
+    <select id="selectEstInvestmentDetailDiretStore" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetailDiretStore" parameterType="java.lang.String">
+      SELECT
+            T.ROW_ID,
+            T.INVESTMENT_ID,
+            T.MIN_STD,
+            T.SOC_SEC_PCT,
+            T.SALES_AVG_MONTH,
+            T.AVG_SALARY,
+            T.HR_COST_PCT,
+            T.CONTRACT_AREA,
+            T.OPERATING_AREA,
+            T.STORE_PROPERTY,
+            T2.MACRO_NAME STORE_PROPERTY_NAME,
+            T.CITY,
+            T1.MARKET_NAME CITYNAME,
+            T.CONTRACT_START_DATE,
+            T.CONTRACT_END_DATE,
+            T.OPEN_DATE,
+            T.RENT_FREE_PERIOD,
+            T.IS_PROVIDE_INVOCES,
+            T.TAX_RATE,
+            T.LEASE_TERM,
+            T.TAX_SALES_MTH1_PCT,
+            T.TAX_SALES_MTH2_PCT,
+            T.TAX_SALES_MTH3_PCT,
+            T.TAX_SALES_MTH4_PCT,
+            T.TAX_SALES_MTH5_PCT,
+            T.TAX_SALES_MTH6_PCT,
+            T.TAX_SALES_MTH7_PCT,
+            T.TAX_SALES_MTH8_PCT,
+            T.TAX_SALES_MTH9_PCT,
+            T.TAX_SALES_MTH10_PCT,
+            T.TAX_SALES_MTH11_PCT,
+            T.TAX_SALES_MTH12_PCT,
+            T.CREATOR,
+            T.CREATE_TIME,
+            T.UPDATER,
+            T.UPDATE_TIME,
+            T.DEL_FLAG,
+            T.DEF1,
+            T.DEF2,
+            T.DEF3,
+            T.DEF4,
+            T.DEF5,
+            T.DEF6,
+            T.DEF7,
+            T.DEF8,
+            T.DEF9,
+            T.DEF10,
+            B.STORE_CODE,
+            B.CN_SITENAME
+        FROM
+            T_SF_EST_INVESTMENT_DETAIL_DIRET_STORE T
+        LEFT JOIN t_mp_marketinfo T1 ON T1.MARKET_ID = T.CITY
+        AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN t_code_macro_define T2 ON T.STORE_PROPERTY = T2.MACRO_CODE
+        AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN (
+            SELECT
+                A.ROW_ID,
+                B.STORE_CODE,
+                B.CN_SITENAME
+            FROM
+                t_sf_est_investment a
+            INNER JOIN t_sf_pipeline b ON a.pp_id = b.PP_ID
+            AND b.DEL_FLAG = 'M0015'
+        ) B ON T.INVESTMENT_ID = B.ROW_ID
+      where T.INVESTMENT_ID = #{investmentId} AND T.DEL_FLAG = 'M0015' limit 1
+    </select>
+
+    <insert id="insertEstInvestmentDetailDiretStore" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetailDiretStore">
+        INSERT INTO t_sf_est_investment_detail_diret_store (
+              AUTO_NO,
+              ROW_ID,
+              INVESTMENT_ID,
+              MIN_STD,
+              SOC_SEC_PCT,
+              SALES_AVG_MONTH,
+              AVG_SALARY,
+              HR_COST_PCT,
+              CONTRACT_AREA,
+              OPERATING_AREA,
+              STORE_PROPERTY,
+              CITY,
+              CONTRACT_START_DATE,
+              CONTRACT_END_DATE,
+              OPEN_DATE,
+              RENT_FREE_PERIOD,
+              IS_PROVIDE_INVOCES,
+              TAX_RATE,
+              LEASE_TERM,
+              TAX_SALES_MTH1_PCT,
+              TAX_SALES_MTH2_PCT,
+              TAX_SALES_MTH3_PCT,
+              TAX_SALES_MTH4_PCT,
+              TAX_SALES_MTH5_PCT,
+              TAX_SALES_MTH6_PCT,
+              TAX_SALES_MTH7_PCT,
+              TAX_SALES_MTH8_PCT,
+              TAX_SALES_MTH9_PCT,
+              TAX_SALES_MTH10_PCT,
+              TAX_SALES_MTH11_PCT,
+              TAX_SALES_MTH12_PCT,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG,
+              DEF1,
+              DEF2,
+              DEF3,
+              DEF4,
+              DEF5,
+              DEF6,
+              DEF7,
+              DEF8,
+              DEF9,
+              DEF10
+          )
+          VALUES
+              (
+                  #{autoNo},
+                  #{rowId}, #{investmentId},
+                  #{minStd},
+                  #{socSecPct},
+                  #{salesAvgMonth},
+                  #{avgSalary},
+                  #{hrCostPct},
+                  #{contractArea},
+                  #{operatingArea},
+                  #{storeProperty},
+                  #{city},
+                  #{contractStartDate},
+                  #{contractEndDate},
+                  #{openDate},
+                  #{rentFreePeriod},
+                  #{isProvideInvoces},
+                  #{taxRate},
+                  #{leaseTerm},
+                  #{taxSalesMth1Pct},
+                  #{taxSalesMth2Pct},
+                  #{taxSalesMth3Pct},
+                  #{taxSalesMth4Pct},
+                  #{taxSalesMth5Pct},
+                  #{taxSalesMth6Pct},
+                  #{taxSalesMth7Pct},
+                  #{taxSalesMth8Pct},
+                  #{taxSalesMth9Pct},
+                  #{taxSalesMth10Pct},
+                  #{taxSalesMth11Pct},
+                  #{taxSalesMth12Pct},
+                  #{creator},
+                  sysdate(),
+                  #{updater},
+                  sysdate(),
+                  #{delFlag},
+                  #{def1},
+                  #{def2},
+                  #{def3},
+                  #{def4},
+                  #{def5},
+                  #{def6},
+                  #{def7},
+                  #{def8},
+                  #{def9},
+                  #{def10})
+    </insert>
+
+    <update id="updateEstInvestmentDetailDiretStore" parameterType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetailDiretStore">
+       UPDATE T_SF_EST_INVESTMENT_DETAIL_DIRET_STORE
+        SET
+          INVESTMENT_ID = #{investmentId},
+          MIN_STD = #{minStd},
+          SOC_SEC_PCT = #{socSecPct},
+          SALES_AVG_MONTH = #{salesAvgMonth},
+          AVG_SALARY = #{avgSalary},
+          HR_COST_PCT = #{hrCostPct},
+          CONTRACT_AREA = #{contractArea},
+          OPERATING_AREA = #{operatingArea},
+          STORE_PROPERTY = #{storeProperty},
+          CITY = #{city},
+          CONTRACT_START_DATE = #{contractStartDate},
+          CONTRACT_END_DATE = #{contractEndDate},
+          OPEN_DATE = #{openDate},
+          RENT_FREE_PERIOD = #{rentFreePeriod},
+          IS_PROVIDE_INVOCES = #{isProvideInvoces},
+          TAX_RATE = #{taxRate},
+          LEASE_TERM = #{leaseTerm},
+          TAX_SALES_MTH1_PCT = #{taxSalesMth1Pct},
+          TAX_SALES_MTH2_PCT = #{taxSalesMth2Pct},
+          TAX_SALES_MTH3_PCT = #{taxSalesMth3Pct},
+          TAX_SALES_MTH4_PCT = #{taxSalesMth4Pct},
+          TAX_SALES_MTH5_PCT = #{taxSalesMth5Pct},
+          TAX_SALES_MTH6_PCT = #{taxSalesMth6Pct},
+          TAX_SALES_MTH7_PCT = #{taxSalesMth7Pct},
+          TAX_SALES_MTH8_PCT = #{taxSalesMth8Pct},
+          TAX_SALES_MTH9_PCT = #{taxSalesMth9Pct},
+          TAX_SALES_MTH10_PCT = #{taxSalesMth10Pct},
+          TAX_SALES_MTH11_PCT = #{taxSalesMth11Pct},
+          TAX_SALES_MTH12_PCT = #{taxSalesMth12Pct},
+          UPDATER = #{updater},
+          UPDATE_TIME = sysdate(),
+          DEL_FLAG = #{delFlag},
+          DEF1 = #{def1},
+          DEF2 = #{def2},
+          DEF3 = #{def3},
+          DEF4 = #{def4},
+          DEF5 = #{def5},
+          DEF6 = #{def6},
+          DEF7 = #{def7},
+          DEF8 = #{def8},
+          DEF9 = #{def9},
+          DEF10 = #{def10}
+          WHERE ROW_ID = #{rowId}
+    </update>
+    <update id="deleteByInvestmentId" parameterType="java.lang.String">
+       UPDATE T_SF_EST_INVESTMENT_DETAIL_DIRET_STORE
+        SET
+          DEL_FLAG = 'M0014'
+          WHERE INVESTMENT_ID = #{investmentId}
+    </update>
+
+</mapper>

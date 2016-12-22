@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFSfApprovalMapper">
+
+    <select id="selectApprovalAll" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" parameterType="java.lang.String">
+        SELECT
+            T13.OPERATING_AREA,
+            T13.RENT_AREA,
+            T13.OTHER_AREA,
+            T12.NEW_STORE_CODE,
+            T.PP_ID,
+            T.CN_SITENAME,
+            T.ADDRESS_DETAIL,
+            TM.CITY,
+            T3.MACRO_NAME CHANNELTYPE,
+            T4.MACRO_NAME STOREPROPERTY,
+            T7.MACRO_NAME  BRAND,
+            T8.MACRO_NAME OPERATIONMODE,
+            T11.MACRO_NAME STOREIMAGE,
+            TS.AREA,
+            TS.FLOOR,
+            TS.DOOR_WIDTH,
+            TS.STOREY_HIGH
+        FROM
+            T_SF_PIPELINE T
+        LEFT JOIN T_MP_MARKETINFO TM ON TM.MARKET_ID = T.CITY AND TM.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_PP T12 ON T12.PP_ID =T.PP_ID AND T12.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_SITEINFO T13 ON T13.PP_ID =T.PP_ID AND T13.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_SITEINFO TS ON TS.PP_ID = T.PP_ID AND TS.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T3 ON T.CHANNEL_TYPE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'CHANNEL_TYPE' AND T3.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T.STORE_PROPERTY = T4.MACRO_CODE AND T4.MACRO_TYPE = 'STORE_PROPERTY' AND T4.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE AND T7.MACRO_TYPE = 'BRAND' AND T7.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T8 ON T.OPERATION_MODE =T8.MACRO_CODE AND T8.MACRO_TYPE='OPERATION_MODE' AND T8.DEL_FLAG ='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T11 ON T.STORE_IMAGE =T11.MACRO_CODE AND T11.MACRO_TYPE='STORE_IMAGE' AND T11.DEL_FLAG ='M0015'
+        WHERE T.PP_ID =#{ppId} AND T.CUSTOMER_ID= #{customerId}
+    </select>
+
+    <select id="marketList" resultType="com.stripcode.mybatis.cs.model.CSSfPipeline" parameterType="java.lang.String">
+        SELECT
+        T.PP_ID,
+        T.ADDRESS_DETAIL,
+        T.CN_SITENAME,
+        T.STORE_CODE,
+        T2.ERP_NAME marketName,
+        T6.CITY city,
+        T.BRAND def1,
+        T8.MACRO_NAME OPERATION_MODE,
+        TSA.PP_CODE,
+        T7.MACRO_NAME brand
+        FROM
+        T_SF_PIPELINE T
+        LEFT JOIN T_CS_NEW_MARKETAUZ T2 ON T2.ROW_ID= T.ERP_CODE AND T2.DEL_FLAG='M0015' AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE TSA ON TSA.PP_ID = T.PP_ID AND TSA.DEL_FLAG = 'M0015'
+        LEFT JOIN T_MP_MARKETINFO T6 ON T.CITY = T6.MARKET_ID
+        AND T6.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T7 ON T.BRAND = T7.MACRO_CODE
+        AND T7.MACRO_TYPE = 'BRAND'
+        AND T7.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T8 ON T.OPERATION_MODE = T8.MACRO_CODE
+        AND T8.MACRO_TYPE = 'OPERATION_MODE'
+        AND T7.DEL_FLAG = 'M0015'
+        <where>
+            <if test="customerId != null and customerId!= ''">
+                AND T.CUSTOMER_ID =#{customerId}
+            </if>
+            <if test="erpCode != null and erpCode!= ''">
+                AND T.ERP_CODE =#{erpCode}
+            </if>
+            AND  T.PP_ID=#{ppId} AND T.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <select id="selectMarketById" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSBusinessFlan">
+        SELECT
+            S.PLAN_CLASS,
+            S.SALES_Y1,
+            S.SALES_Y1_INCRATE,
+            S.SALES_Y2,
+            S.SALES_Y2_INCRATE,
+            S.SALES_Y3,
+            S.SALES_Y3_INCRATE
+        FROM
+        T_CS_PLAN_SALES_TARGET S
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON S.CHANNEL_TYPE = T.MACRO_CODE AND T.DEL_FLAG = 'M0015'
+        WHERE
+            S.pp_ID = #{ppId}
+        AND S.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectSupportDetail" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportDetail" parameterType="java.lang.String">
+       SELECT
+            T.PRICE,
+            T.MONEY,
+            T2.REMARK,
+            T3.ITEM_NAME supportItem
+        FROM
+            T_SF_POLICY_SUPPORT_DETAIL T
+        LEFT JOIN T_SF_POLICY_SUPPORT T2 ON T2.ROW_ID = T.PS_ID  AND T2.DEL_FLAG = 'M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T3 ON T3.ITEM_CODE = T.SUPPORT_ITEM  AND T3.DEL_FLAG = 'M0015'
+        WHERE  T2.PP_ID= #{pp_Id} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectAccessoryList"  resultType="com.stripcode.mybatis.cs.model.CSMarketSurvey">
+          SELECT
+            U.USER_NAME creater,
+            TC.CREATE_TIME createrTime,
+            TC.TITLE,
+            TC.TEMPLATE_ID
+        FROM
+            T_SYS_ATTACHEDTEMPLATE TC
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = TC.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+            TC.PAGE_ID IN('SF30_055', 'SF30_058', 'CS20_019') AND TC.`DEL_FLAG`='M0015';
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.sf.model.SFSfApproval">
+        INSERT INTO T_SYS_APPROVE_INFO
+        (
+        ROW_ID,
+        TASK_ID,
+        APPROVER,
+        STATUS,
+        COMMENTS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{taskId},
+        #{approver},
+        #{status},
+        #{comments},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <select id="queryByTaskId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFSfApproval">
+        SELECT
+            t.TASK_ID,
+            t.APPROVER,
+            t.status,
+            t1.MACRO_NAME statusName,
+            t.COMMENTS,
+            t.CREATOR,
+            t.CREATE_TIME,
+            t.CREATE_TIME as cTime,
+            t.UPDATER,
+            t.UPDATE_TIME,
+            t.DEL_FLAG
+        FROM T_SYS_APPROVE_INFO t
+        left join T_CODE_MACRO_DEFINE t1 on t.status = t1.MACRO_CODE
+        WHERE t.TASK_ID = #{taskId}
+        and  t.DEL_FLAG = 'M0015'
+    </select>
+    <update id="update" parameterType="com.stripcode.mybatis.sf.model.SFSfApproval">
+        UPDATE T_SYS_APPROVE_INFO
+        SET
+        APPROVER = #{approver},
+        STATUS =#{status},
+        COMMENTS = #{comments}
+        WHERE
+        TASK_ID = #{taskId} AND DEL_FLAG = 'M0015'
+    </update>
+</mapper>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFRentalProposalDirectStoreMapper">
+    <select id="selectForDirect" resultType="com.stripcode.mybatis.sf.model.SFEstInvestmentDetailDiretStore" parameterType="java.lang.String">
+    SELECT
+            D.OPERATING_AREA OPERATING_AREA,
+            D.RENT_AREA CONTRACT_AREA,
+            D.LEASE_TERM,
+            D.EST_DATE OPEN_DATE,
+            p.STORE_CODE,
+            p.CN_SITENAME,
+            M.MARKET_ID CITY,
+            M.MARKET_NAME CITY_NAME,
+            T1.MACRO_CODE STORE_PROPERTY,
+            T1.MACRO_NAME STORE_PROPERTY_NAME,
+            d.RENT_START_DATE CONTRACT_START_DATE,
+            d.RENT_END_DATE CONTRACT_END_DATE,
+            FORMAT(
+                TIMESTAMPDIFF(
+                    MONTH,
+                    d.FREE_START_DATE,
+                    d.FREE_END_DATE
+                ) / 12,
+                2
+            ) RENT_FREE_PERIOD
+        FROM
+            t_sf_pipeline P
+        LEFT JOIN t_code_macro_define T1 ON P.CHANNEL_TYPE = T1.MACRO_CODE
+        AND T1.MACRO_TYPE = 'CHANNEL_TYPE'
+        AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN t_mp_marketinfo M ON M.MARKET_ID = P.CITY
+        AND M.DEL_FLAG = 'M0015'
+        LEFT JOIN (
+            SELECT
+                D.PP_ID,
+                d.RENT_START_DATE,
+                D.LEASE_TERM,
+                d.RENT_END_DATE,
+                d.FREE_START_DATE,
+                d.FREE_END_DATE,
+                S.OPERATING_AREA,
+                E.EST_DATE,
+                S.RENT_AREA
+            FROM
+                T_SF_RENTAL_PROPOSAL_DIRECT_STORE D
+            LEFT JOIN t_sf_siteinfo S ON S.PP_ID = D.PP_ID
+             AND s.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PROGRESS_EST E ON D.PP_ID = E.PP_ID AND TASK_CODE = 'M0165'
+             AND E.DEL_FLAG = 'M0015'
+            WHERE
+                D.DEL_FLAG = 'M0015'
+        ) D ON D.PP_ID = P.PP_ID
+        WHERE
+            P.DEL_FLAG = 'M0015'
+        AND P.PP_ID = #{ppId};
+
+    </select>
+    <select id="selectRenStoreAll" resultType="com.stripcode.mybatis.sf.model.SFRentalProposalDirectStore" parameterType="java.lang.String">
+      SELECT
+            T.ROW_ID,
+            T.PP_ID,
+            T.RENT_MODE,
+            T.RENT_TYPE,
+            T.RENT_PAY_TYPE,
+            T.RENT_START_DATE,
+            T.RENT_END_DATE,
+            T.FREE_START_DATE,
+            T.IS_SUBLET,
+            T.SUBLET_END_DATE,
+            T.SUBLET_SALE,
+            T.SPLIT_BRAND,
+            T.SPLIT_AREA,
+            T.SPLIT_START_DATE,
+            T.LEASE_TERM,
+            T.RENTAL_PROPERTY_FEE,
+            T.OTHER_FEE,
+            T.BERTH_NO,
+            T.ROOM_RATE,
+            T.RENOVATION_PROPERTY_FEE,
+            T.OPERATION_FREE_START_DATE,
+            T.OPERATION_FREE_END_DATE,
+            T.DELIVERY_CONDITIONS,
+            T.LEASE_BOND,
+            T.SIGNING_MODE,
+            T.RENT_MTH,
+            T.PROPERTY_FEE_MTH,
+            T.DELIVERY_DATE,
+            T.DEFAULT_CLAUSE_PENALTY,
+            T.SPECIAL_TERMS_CONDITIONS,
+            T.END_SALES,
+            T.FREE_END_DATE
+        FROM T_SF_RENTAL_PROPOSAL_DIRECT_STORE T
+        WHERE T.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertRenStore" parameterType="com.stripcode.mybatis.sf.model.SFRentalProposalDirectStore">
+        INSERT INTO
+        T_SF_RENTAL_PROPOSAL_DIRECT_STORE
+            (
+            ROW_ID,
+            PP_ID,
+            END_SALES,
+            DEFAULT_CLAUSE_PENALTY,
+            SPECIAL_TERMS_CONDITIONS,
+            SIGNING_MODE,
+            RENT_MTH,
+            PROPERTY_FEE_MTH,
+            DELIVERY_DATE,
+            RENT_MODE,
+            RENT_TYPE,
+            RENT_PAY_TYPE,
+            RENT_START_DATE,
+            RENT_END_DATE,
+            IS_SUBLET,
+            FREE_START_DATE,
+            FREE_END_DATE,
+            SUBLET_END_DATE,
+            SUBLET_SALE,
+            SPLIT_BRAND,
+            SPLIT_AREA,
+            SPLIT_START_DATE,
+            LEASE_TERM,
+            RENTAL_PROPERTY_FEE,
+            OTHER_FEE,
+            BERTH_NO,
+            ROOM_RATE,
+            RENOVATION_PROPERTY_FEE,
+            OPERATION_FREE_START_DATE,
+            OPERATION_FREE_END_DATE,
+            DELIVERY_CONDITIONS,
+            LEASE_BOND,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{endSales},
+            #{defaultClausePenalty},
+            #{specialTermsConditions},
+            #{signingMode},
+            #{rentMth},
+            #{propertyFeeMth},
+            #{deliveryDate},
+            #{rentMode},
+            #{rentType},
+            #{rentPayType},
+            #{rentStartDate},
+            #{rentEndDate},
+            #{isSublet},
+            #{freeStartDate},
+            #{freeEndDate},
+            #{subletEndDate},
+            #{subletSale},
+            #{splitBrand},
+            #{splitArea},
+            #{splitStartDate},
+            #{leaseTerm},
+            #{rentalPropertyFee},
+            #{otherFee},
+            #{berthNo},
+            #{roomRate},
+            #{renovationPropertyFee},
+            #{operationFreeStartDate},
+            #{operationFreeEndDate},
+            #{deliveryConditions},
+            #{leaseBond},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updateRenStore"   parameterType="com.stripcode.mybatis.sf.model.SFRentalProposalDirectStore">
+        UPDATE
+            T_SF_RENTAL_PROPOSAL_DIRECT_STORE T
+        SET
+            T.SIGNING_MODE =#{signingMode},
+            T.END_SALES =#{endSales},
+            T.RENT_MTH =#{rentMth},
+            T.PROPERTY_FEE_MTH =#{propertyFeeMth},
+            T.DELIVERY_DATE =#{deliveryDate},
+            T.RENT_MODE = #{rentMode},
+            T.RENT_MODE = #{rentMode},
+            T.DEFAULT_CLAUSE_PENALTY=#{defaultClausePenalty},
+            T.SPECIAL_TERMS_CONDITIONS=#{specialTermsConditions},
+            T.RENT_TYPE = #{rentType},
+            T.RENT_PAY_TYPE = #{rentPayType},
+            T.RENT_START_DATE = #{rentStartDate},
+            T.RENT_END_DATE = #{rentEndDate},
+            T.FREE_START_DATE = #{freeStartDate},
+            T.FREE_END_DATE = #{freeEndDate},
+            T.IS_SUBLET = #{isSublet},
+            T.SUBLET_END_DATE = #{subletEndDate},
+            T.SUBLET_SALE = #{subletSale},
+            T.SPLIT_BRAND = #{splitBrand},
+            T.SPLIT_AREA = #{splitArea},
+            T.SPLIT_START_DATE = #{splitStartDate},
+            T.LEASE_TERM = #{leaseTerm},
+            T.RENTAL_PROPERTY_FEE = #{rentalPropertyFee},
+            T.OTHER_FEE = #{otherFee},
+            T.BERTH_NO = #{berthNo},
+            T.ROOM_RATE = #{roomRate},
+            T.RENOVATION_PROPERTY_FEE = #{renovationPropertyFee},
+            T.OPERATION_FREE_START_DATE = #{operationFreeStartDate},
+            T.OPERATION_FREE_END_DATE = #{operationFreeEndDate},
+            T.DELIVERY_CONDITIONS = #{deliveryConditions},
+            T.LEASE_BOND = #{leaseBond},
+            T.UPDATER = #{updater},
+            T.UPDATE_TIME = #{updateTime}
+        WHERE T.PP_ID = #{ppId} AND T.ROW_ID = #{rowId} AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsRenStore"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(0)
+        FROM
+            T_SF_RENTAL_PROPOSAL_DIRECT_STORE T
+        WHERE  T.PP_ID = #{ppId} AND T.ROW_ID =#{rowId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectRentalDetailAll" resultType="com.stripcode.mybatis.sf.model.SFRentalDetail" parameterType="java.lang.String">
+         SELECT
+            T.ROW_ID,
+            T.RENT_ID,
+            T.RENT_TIME,
+            T.RENTAL,
+            T.RATE,
+            T.BASE_RENTAL,
+            T.TRANSFER_FEE,
+            T.PROPERTY_FEE,
+            T.TAXATION,
+            T.SUBLET_FEE
+        FROM T_SF_RENTAL_DETAIL T
+        LEFT JOIN T_SF_RENTAL_PROPOSAL_DIRECT_STORE T1 ON T1.ROW_ID=T.RENT_ID AND T1.DEL_FLAG = 'M0015'
+        WHERE T1.PP_ID = #{ppId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertRentalDetail" parameterType="com.stripcode.mybatis.sf.model.SFRentalDetail">
+        INSERT INTO
+        T_SF_RENTAL_DETAIL
+        (
+        ROW_ID,
+        RENT_ID,
+        RENT_TIME,
+        RENTAL,
+        RATE,
+        BASE_RENTAL,
+        TRANSFER_FEE,
+        PROPERTY_FEE,
+        TAXATION,
+        SUBLET_FEE,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{rowId},
+        #{rentId},
+        #{rentTime},
+        #{rental},
+        #{rate},
+        #{baseRental},
+        #{transferFee},
+        #{propertyFee},
+        #{taxation},
+        #{subletFee},
+        #{creator},
+        sysdate(),
+        #{updater},
+        #{updateTime},
+        'M0015'
+        )
+    </insert>
+    <update id="updateRentalDetail"   parameterType="com.stripcode.mybatis.sf.model.SFRentalDetail">
+        UPDATE
+        T_SF_RENTAL_DETAIL T
+        SET
+        T.RENT_TIME = #{rentTime},
+        T.RENTAL = #{rental},
+        T.RATE = #{rate},
+        T.BASE_RENTAL = #{baseRental},
+        T.TRANSFER_FEE = #{transferFee},
+        T.PROPERTY_FEE = #{propertyFee},
+        T.TAXATION = #{taxation},
+        T.SUBLET_FEE = #{subletFee},
+        T.UPDATER = #{updater},
+        T.UPDATE_TIME = #{updateTime}
+        WHERE T.RENT_ID = #{rentId} AND T.ROW_ID = #{rowId} AND T.DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsRentalDetail"  resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        COUNT(0)
+        FROM
+        T_SF_RENTAL_DETAIL T
+        WHERE T.ROW_ID=#{rowId} AND T.RENT_ID = #{rentId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <delete id="deleteRentalDetail" parameterType="java.lang.String">
+        DELETE FROM T_SF_RENTAL_DETAIL  WHERE RENT_ID =#{rentId} AND DEL_FLAG = 'M0015'
+    </delete>
+</mapper>

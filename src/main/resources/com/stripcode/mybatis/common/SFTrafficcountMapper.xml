@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFTrafficcountMapper">
+
+    <select id="selectTrafficcount" resultType="com.stripcode.mybatis.sf.model.SFTrafficcount" parameterType="java.lang.String">
+        SELECT
+        T.ROW_ID,
+        T.PP_ID,
+        T.PEDESTRIAN_D1,
+        T.PEDESTRIAN_D2,
+        T.PEDESTRIAN_D3,
+        T.ANNUAL_SALES_EST,
+        T.PEDESTRIAN_WEEK,
+        T.ENTRY_RATE,
+        T.TURNOVER_RATE,
+        T.GUEST_AVG,
+        T.WEEK_SALES,
+        T.MONTH_PCT,
+        T.PEDESTRIAN_D1_AF,
+        T.PEDESTRIAN_D2_AF,
+        T.PEDESTRIAN_D3_AF,
+        T.ANNUAL_SALES_EST_AF,
+        T.PEDESTRIAN_WEEK_AF,
+        T.ENTRY_RATE_AF,
+        T.TURNOVER_RATE_AF,
+        T.GUEST_AVG_AF,
+        T.WEEK_SALES_AF,
+        T.MONTH_PCT_AF,
+        T.ATTACH_ID,
+        T.TEST_SITE,
+        T.USE_STATUS,
+        concat(T.START_DATE,'~',T.END_DATE) timeSlot,
+        U.USER_NAME userName,
+        t1.FILE_PATH filePath,
+        t1.DOC_NAME fileName
+        FROM
+        T_SF_TRAFFICCOUNT T
+        LEFT JOIN t_sys_commonattached t1 on T.ATTACH_ID = t1.ATTACH_ID AND t1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID =T.CREATOR AND U.DEL_FLAG = 'M0015'
+        where  T.PP_ID= #{ppId} AND T.DEL_FLAG = 'M0015' order by T.PP_ID,T.CREATE_TIME
+    </select>
+
+    <insert id="insertTrafficcount" parameterType="com.stripcode.mybatis.sf.model.SFTrafficcount">
+        INSERT INTO T_SF_TRAFFICCOUNT(
+        ROW_ID,
+        PP_ID,
+        PEDESTRIAN_D1,
+        PEDESTRIAN_D2,
+        PEDESTRIAN_D3,
+        ANNUAL_SALES_EST,
+        PEDESTRIAN_WEEK,
+        ENTRY_RATE,
+        TURNOVER_RATE,
+        GUEST_AVG,
+        WEEK_SALES,
+        MONTH_PCT,
+        PEDESTRIAN_D1_AF,
+        PEDESTRIAN_D2_AF,
+        PEDESTRIAN_D3_AF,
+        ANNUAL_SALES_EST_AF,
+        PEDESTRIAN_WEEK_AF,
+        ENTRY_RATE_AF,
+        TURNOVER_RATE_AF,
+        GUEST_AVG_AF,
+        WEEK_SALES_AF,
+        MONTH_PCT_AF,
+        ATTACH_ID,
+        START_DATE,
+        END_DATE,
+        TEST_SITE,
+        USE_STATUS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )VALUES (
+        #{rowId},
+        #{ppId},
+        #{pedestrianD1},
+        #{pedestrianD2},
+        #{pedestrianD3},
+        #{annualSalesEst},
+        #{pedestrianWeek},
+        #{entryRate},
+        #{turnoverRate},
+        #{guestAvg},
+        #{weekSales},
+        #{monthPct},
+        #{pedestrianD1Af},
+        #{pedestrianD2Af},
+        #{pedestrianD3Af},
+        #{annualSalesEstAf},
+        #{pedestrianWeekAf},
+        #{entryRateAf},
+        #{turnoverRateAf},
+        #{guestAvgAf},
+        #{weekSalesAf},
+        #{monthPctAf},
+        #{attachId},
+        #{startDate},
+        #{endDate},
+        #{testSite},
+        #{useStatus},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+
+
+    <update id="updateTrafficcount" parameterType="java.util.HashMap">
+        UPDATE T_SF_TRAFFICCOUNT
+        SET USE_STATUS = #{useStatus}
+        WHERE 1=1
+        <if test="rowId != null and rowId != ''">
+            and ROW_ID = #{rowId}
+        </if>
+        <if test="ppId != null and ppId != ''">
+            and PP_ID = #{ppId}
+        </if>
+    </update>
+
+</mapper>

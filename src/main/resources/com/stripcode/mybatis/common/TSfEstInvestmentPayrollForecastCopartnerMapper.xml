@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.TSfEstInvestmentPayrollForecastCopartnerMapper" >
+  <delete id="deleteByRowId" parameterType="java.lang.String" >
+    delete from t_sf_est_investment_payroll_forecast_copartner
+    where ROW_ID = #{rowId}
+  </delete>
+
+  <insert id="insertInvestmentPayrollForecastCopartner" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentPayrollForecastCopartner" >
+    insert into t_sf_est_investment_payroll_forecast_copartner (ROW_ID, INVESTMENT_ID,
+      POS_NAME, NUMBER, FIX_SALARY_STD, 
+      MEAL_SUB_STD, RENT_SUB_STD, FULL_ATTND_STD, 
+      AVG_OVERTIME, PERFORM_COEF, RECRUITMENT_MODEL, FIXED_CHARGES,FULL_ATTND_STD_SPARE,
+      SALARY_BEAR, OTHER_WELFARE, CREATOR, 
+      CREATE_TIME, UPDATER, UPDATE_TIME, 
+      DEL_FLAG
+      )
+    values (#{rowId}, #{investmentId},
+      #{posName}, #{number}, #{fixSalaryStd}, 
+      #{mealSubStd}, #{rentSubStd}, #{fullAttndStd}, 
+      #{avgOvertime}, #{performCoef}, #{recruitmentModel}, #{fixedCharges}, #{fullAttndStdSpare},
+      #{salaryBear}, #{otherWelfare}, #{creator}, sysdate(), #{updater}, sysdate(), 'M0015'
+      )
+  </insert>
+
+  <update id="updateInvestmentPayrollForecastCopartner" parameterType="com.stripcode.mybatis.sf.model.TSfEstInvestmentPayrollForecastCopartner" >
+    update t_sf_est_investment_payroll_forecast_copartner
+    set INVESTMENT_ID = #{investmentId},
+      POS_NAME = #{posName},
+      NUMBER = #{number},
+      FIX_SALARY_STD = #{fixSalaryStd},
+      MEAL_SUB_STD = #{mealSubStd},
+      RENT_SUB_STD = #{rentSubStd},
+      FULL_ATTND_STD = #{fullAttndStd},
+      AVG_OVERTIME = #{avgOvertime},
+      PERFORM_COEF = #{performCoef},
+      RECRUITMENT_MODEL = #{recruitmentModel},
+      FIXED_CHARGES = #{fixedCharges},
+      FULL_ATTND_STD_SPARE = #{fullAttndStdSpare},
+      SALARY_BEAR = #{salaryBear},
+      OTHER_WELFARE = #{otherWelfare}
+    where ROW_ID = #{rowId}
+  </update>
+
+  <select id="selectInvestmentPayrollForecastCopartner" resultType="com.stripcode.mybatis.sf.model.TSfEstInvestmentPayrollForecastCopartner" parameterType="java.lang.String" >
+    select ROW_ID, INVESTMENT_ID, POS_NAME, NUMBER, FIX_SALARY_STD, MEAL_SUB_STD,FIXED_CHARGES,
+    RENT_SUB_STD, FULL_ATTND_STD, AVG_OVERTIME, PERFORM_COEF, RECRUITMENT_MODEL, SALARY_BEAR, FULL_ATTND_STD_SPARE,
+    OTHER_WELFARE
+    from t_sf_est_investment_payroll_forecast_copartner
+    where INVESTMENT_ID = #{investmentId}
+  </select>
+  <update id="deleteInvestmentId" parameterType="java.lang.String">
+    UPDATE T_SF_EST_INVESTMENT_PAYROLL_FORECAST_COPARTNER
+    SET
+    DEL_FLAG = 'M0014'
+    WHERE INVESTMENT_ID = #{investmentId}
+  </update>
+</mapper>

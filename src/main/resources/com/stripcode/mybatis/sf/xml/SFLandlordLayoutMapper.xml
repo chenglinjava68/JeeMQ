@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFLandlordLayoutMapper">
+    <select id="selectHousePaperAll"  resultType="com.stripcode.mybatis.sf.model.SFLandlordLayout">
+        SELECT
+            T.TEMPLATE_ID,
+            T.TITLE,
+            T1.ATTACH_ID,
+            T1.IS_EXIST,
+            T1.IS_SUPPLY,
+            T1.SUPPLY_DATE,
+            T1.REASON,
+            T1.REMARK,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            T1.PP_ID,
+            T1.IS_GET
+        FROM
+            T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_LANDLORD_LAYOUT T1 ON T.TEMPLATE_ID = T1.TEMPLATE_ID AND  T1.DEL_FLAG = 'M0015' AND T1.PP_ID =#{ppId}
+        LEFT JOIN T_SYS_COMMONATTACHED C ON T1.ATTACH_ID = C.ATTACH_ID
+        WHERE T.PAGE_ID ='SF30_053' AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertHousePaper" parameterType="com.stripcode.mybatis.sf.model.SFLandlordLayout">
+        INSERT INTO
+         T_SF_LANDLORD_LAYOUT
+         (
+            ROW_ID,
+            PP_ID,
+            IS_GET,
+            TEMPLATE_ID,
+            ATTACH_ID,
+            IS_EXIST,
+            IS_SUPPLY,
+            SUPPLY_DATE,
+            REASON,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+         )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{isGet},
+            #{templateId},
+            #{attachId},
+            #{isExist},
+            #{isSupply},
+            #{supplyDate},
+            #{reason},
+            #{remark},
+            #{creator},
+            sysdate(),
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updateHousePaper" parameterType="com.stripcode.mybatis.sf.model.SFLandlordLayout">
+        UPDATE
+            T_SF_LANDLORD_LAYOUT
+        SET
+            IS_EXIST =#{isExist},
+            IS_SUPPLY =#{isSupply},
+            IS_GET =#{isGet},
+            ATTACH_ID =#{attachId},
+            SUPPLY_DATE =#{supplyDate},
+            REASON =#{reason},
+            REMARK =#{remark},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND TEMPLATE_ID = #{templateId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="HousePaperCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        T_SF_LANDLORD_LAYOUT
+        WHERE PP_ID= #{ppId} AND TEMPLATE_ID = #{templateId} AND DEL_FLAG = 'M0015'
+    </select>
+</mapper>

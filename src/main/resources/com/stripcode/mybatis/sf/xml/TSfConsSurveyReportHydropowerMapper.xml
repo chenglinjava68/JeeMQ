@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFConsSurveyReportHydropowerMapper" >
+
+  <insert id="insertHydropower" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportHydropower" >
+    insert into t_sf_cons_survey_report_hydropower (ROW_ID, PP_ID,
+      IS_POWER_SUPPLY, POWER_CAPACITY, CURRENT_CAPACITY, 
+      ROOM_STORE_BACK, CABLE_LENGTH, IS_WATER_SUPPLY, 
+      WATER_QUANTITY, WATER_PRESSURE, IS_FIT_HEALTH, 
+      WATER_PIPE_LEN, WATER_PIPE_DIAMETER, IS_DRAINAGE, 
+      IS_LOWER_PIPE, PRE_POSITION, TOLIET_AREA, 
+      IS_IMPROVE_LOCATION, TOLIET_MGR, TOLIET_OPEN_HOURS,
+      START_TIME,
+      END_TIME,
+      CREATOR, CREATE_TIME, UPDATER, 
+      UPDATE_TIME, DEL_FLAG, DEF1, 
+      DEF2, DEF3, DEF4, DEF5, 
+      DEF6, DEF7, DEF8, DEF9, 
+      DEF10)
+    values (#{rowId,jdbcType=VARCHAR}, #{ppId,jdbcType=VARCHAR},
+      #{isPowerSupply,jdbcType=VARCHAR}, #{powerCapacity,jdbcType=DECIMAL}, #{currentCapacity,jdbcType=DECIMAL}, 
+      #{roomStoreBack,jdbcType=VARCHAR}, #{cableLength,jdbcType=DECIMAL}, #{isWaterSupply,jdbcType=VARCHAR}, 
+      #{waterQuantity,jdbcType=VARCHAR}, #{waterPressure,jdbcType=VARCHAR}, #{isFitHealth,jdbcType=VARCHAR}, 
+      #{waterPipeLen,jdbcType=DECIMAL}, #{waterPipeDiameter,jdbcType=VARCHAR}, #{isDrainage,jdbcType=VARCHAR}, 
+      #{isLowerPipe,jdbcType=VARCHAR}, #{prePosition,jdbcType=VARCHAR}, #{tolietArea,jdbcType=DECIMAL}, 
+      #{isImproveLocation,jdbcType=VARCHAR}, #{tolietMgr,jdbcType=VARCHAR}, #{tolietOpenHours,jdbcType=VARCHAR},
+      #{startTime},
+      #{endTime},
+      #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}, #{def1,jdbcType=VARCHAR}, 
+      #{def2,jdbcType=VARCHAR}, #{def3,jdbcType=VARCHAR}, #{def4,jdbcType=VARCHAR}, #{def5,jdbcType=VARCHAR}, 
+      #{def6,jdbcType=VARCHAR}, #{def7,jdbcType=VARCHAR}, #{def8,jdbcType=VARCHAR}, #{def9,jdbcType=VARCHAR}, 
+      #{def10,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateHydropower" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportHydropower" >
+    update t_sf_cons_survey_report_hydropower
+    set
+      IS_POWER_SUPPLY = #{isPowerSupply,jdbcType=VARCHAR},
+      POWER_CAPACITY = #{powerCapacity,jdbcType=DECIMAL},
+      CURRENT_CAPACITY = #{currentCapacity,jdbcType=DECIMAL},
+      ROOM_STORE_BACK = #{roomStoreBack,jdbcType=VARCHAR},
+      CABLE_LENGTH = #{cableLength,jdbcType=DECIMAL},
+      IS_WATER_SUPPLY = #{isWaterSupply,jdbcType=VARCHAR},
+      WATER_QUANTITY = #{waterQuantity,jdbcType=VARCHAR},
+      WATER_PRESSURE = #{waterPressure,jdbcType=VARCHAR},
+      IS_FIT_HEALTH = #{isFitHealth,jdbcType=VARCHAR},
+      WATER_PIPE_LEN = #{waterPipeLen,jdbcType=DECIMAL},
+      WATER_PIPE_DIAMETER = #{waterPipeDiameter,jdbcType=VARCHAR},
+      IS_DRAINAGE = #{isDrainage,jdbcType=VARCHAR},
+      IS_LOWER_PIPE = #{isLowerPipe,jdbcType=VARCHAR},
+      PRE_POSITION = #{prePosition,jdbcType=VARCHAR},
+      TOLIET_AREA = #{tolietArea,jdbcType=DECIMAL},
+      IS_IMPROVE_LOCATION = #{isImproveLocation,jdbcType=VARCHAR},
+      TOLIET_MGR = #{tolietMgr,jdbcType=VARCHAR},
+      TOLIET_OPEN_HOURS = #{tolietOpenHours,jdbcType=VARCHAR},
+      START_TIME = #{startTime},
+      END_TIME = #{endTime},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=VARCHAR},
+      DEF1 = #{def1,jdbcType=VARCHAR},
+      DEF2 = #{def2,jdbcType=VARCHAR},
+      DEF3 = #{def3,jdbcType=VARCHAR},
+      DEF4 = #{def4,jdbcType=VARCHAR},
+      DEF5 = #{def5,jdbcType=VARCHAR},
+      DEF6 = #{def6,jdbcType=VARCHAR},
+      DEF7 = #{def7,jdbcType=VARCHAR},
+      DEF8 = #{def8,jdbcType=VARCHAR},
+      DEF9 = #{def9,jdbcType=VARCHAR},
+      DEF10 = #{def10,jdbcType=VARCHAR}
+    where PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+  </update>
+  <select id="queryHydropower" resultType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportHydropower" parameterType="java.lang.String" >
+    select ROW_ID, PP_ID, IS_POWER_SUPPLY, POWER_CAPACITY, CURRENT_CAPACITY,
+    ROOM_STORE_BACK, CABLE_LENGTH, IS_WATER_SUPPLY, WATER_QUANTITY, WATER_PRESSURE, IS_FIT_HEALTH, 
+    WATER_PIPE_LEN, WATER_PIPE_DIAMETER, IS_DRAINAGE, IS_LOWER_PIPE, PRE_POSITION, TOLIET_AREA, 
+    IS_IMPROVE_LOCATION, TOLIET_MGR, TOLIET_OPEN_HOURS,
+    START_TIME,
+      END_TIME,
+      CREATOR, CREATE_TIME, UPDATER,
+    UPDATE_TIME, DEL_FLAG, DEF1, DEF2, DEF3, DEF4, DEF5, DEF6, DEF7, DEF8, DEF9, DEF10
+    from t_sf_cons_survey_report_hydropower
+    where PP_ID = #{ppId}
+  </select>
+</mapper>

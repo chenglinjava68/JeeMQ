@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cp.dao.CpMarketInfoMapper">
+
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+            CP.ROW_ID,
+            CP.MARKET_ID,
+            CP.MARKET_NAME,
+            CP.PARENT_ID,
+            CP.COUNTRY,
+            CP.PROVINCE,
+            CP.CITY,
+            CP.DISTRICT,
+            CP.STREET,
+            CP.REGION,
+            E1.customerNumber,
+            E1.brandNumber,
+            E1.openStoreNumber,
+            CP.LEVEL,
+            CP.IS_CITYCOMP
+        FROM
+            T_MP_MARKETINFO CP
+            LEFT JOIN (
+                SELECT
+                        A.MARKET_ID,
+                    COUNT(DISTINCT C.CUSTOMER_ID) customerNumber,
+                    COUNT(DISTINCT C.BRAND) brandNumber,
+                    COUNT(DISTINCT C.BRAND) openStoreNumber
+                FROM
+                    T_MP_MARKETINFO A
+                    INNER JOIN T_CS_ERP_MARKET_INFO B ON B.MARKET_ID LIKE CONCAT(A.MARKET_ID,'%')
+                    INNER JOIN T_CS_CUSTOMER_ERP_INFO C ON B.AUTHORIZATION_ID = C.ROW_ID
+                <if test="brand!=null and brand!=''">
+                        AND C.BRAND =#{brand}
+                </if>
+                GROUP BY A.MARKET_ID
+            ) E1 ON CP.MARKET_ID = E1.MARKET_ID
+        <where>
+            <if test="marketName!=null and marketName!=''">
+                AND MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
+            </if>
+            <if test="region!=null and region!=''">
+                AND CP.MARKET_ID  LIKE CONCAT('%',#{region},'%')
+            </if>
+            <if test="marketId!=null and marketId!=''">
+                AND CP.MARKET_ID LIKE CONCAT('%',#{marketId},'%')
+            </if>
+            <if test="province!=null and province!=''">
+              <choose>
+                    <when test="city!=null and city!=''">
+                        <choose>
+                            <when test="district!=null and district!=''">
+                                <choose>
+                                    <when test="street!=null and street!=''">
+                                            AND CP.MARKET_ID  LIKE CONCAT(#{street},'%')
+                                    </when>
+                                    <otherwise>
+                                        AND CP.MARKET_ID  LIKE CONCAT(#{district},'%')
+                                    </otherwise>
+                                </choose>
+                            </when>
+                            <otherwise>
+                                  AND CP.MARKET_ID  LIKE CONCAT(#{city},'%')
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                                AND CP.MARKET_ID   LIKE CONCAT(#{province},'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="level!=null and level!=''">
+                AND LEVEL = #{level}
+            </if>
+            <if test="isMarketGaps=='M0012'">
+                AND E1.customerNumber IS NULL AND E1.brandNumber IS NULL
+            </if>
+            <if test="isMarketGaps=='M0013'">
+                <![CDATA[AND E1.customerNumber > 0 OR E1.brandNumber > 0 ]]>
+            </if>
+            AND CP.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY CP.MARKET_ID
+    </select>
+
+    <select id="selectCpMInfoForID" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+            CP.MARKET_ID,
+            CP.MARKET_NAME,
+            CP.PARENT_ID,
+            CP.COUNTRY,
+            CP.REGION,
+            CP.PROVINCE,
+            CP.CITY,
+            CP.DISTRICT,
+            CP.STREET
+        FROM
+            T_MP_MARKETINFO CP
+        LEFT JOIN T_CS_ERP_MARKET_INFO MI ON MI.MARKET_ID = CP.MARKET_ID AND MI.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO CEI ON CEI.ERP_CODE = MI.ERP_ID AND CEI.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO CUM ON CUM.CUSTOMER_ID = CEI.CUSTOMER_ID AND CUM.DEL_FLAG = 'M0015'
+        <where>
+            AND CUM.CUSTOMER_ID = #{customerId}
+            AND CP.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+
+    <select id="selectCpMarket" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+          SELECT
+            ROW_ID,
+            MARKET_ID,
+            MARKET_NAME,
+            PARENT_ID,
+            COUNTRY,
+            PROVINCE,
+            CITY,
+            DISTRICT,
+            STREET,
+            REGION,
+            LEVEL,
+            IS_CITYCOMP
+          FROM
+              T_MP_MARKETINFO M
+          WHERE
+              PARENT_ID = (SELECT ROW_ID FROM T_MP_MARKETINFO WHERE MARKET_ID = #{marketId})
+         ORDER BY CONVERT(MARKET_NAME USING GBK)
+    </select>
+
+    <select id="queryCustomerByMarketForPage" parameterType="map" resultType="com.stripcode.mybatis.cs.model.CSCustomerInfo">
+         <![CDATA[
+        SELECT
+            DISTINCT CS.CUSTOMER_ID customerId,
+            T1.MACRO_NAME customerType,
+            T.MACRO_NAME customerProperty,
+            CS.CORPORATION,
+            CS.SUPERIOR_COMPANY,
+            CS.COMPANY_NAME,
+            E1.erpNumber,
+            E2.endDateNumber,
+           	E3.startDateNumber,
+           	CS.USER_STATUS
+        FROM
+            T_CS_CUSTOMERINFO CS
+            LEFT JOIN T_CS_CUSTOMER_ERP_INFO E ON E.CUSTOMER_ID = CS.CUSTOMER_ID AND E.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CS_ERP_MARKET_INFO M ON E.ROW_ID = M.AUTHORIZATION_ID AND M.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON CS.CUSTOMER_PROPERTY = T.MACRO_CODE AND  T.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON CS.CUSTOMER_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'OPERATION_MODE' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS erpNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE DEL_FLAG = 'M0015' GROUP  BY CUSTOMER_ID) E1
+            ON E1.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS endDateNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE curdate() < ACCREDIT_ENDDATE AND DEL_FLAG = 'M0015'GROUP BY CUSTOMER_ID) E2
+            ON E2.CUSTOMER_ID = CS.CUSTOMER_ID
+            LEFT JOIN (SELECT CUSTOMER_ID,COUNT(0) AS startDateNumber FROM T_CS_CUSTOMER_ERP_INFO WHERE curdate() > ACCREDIT_ENDDATE AND DEL_FLAG = 'M0015'GROUP BY CUSTOMER_ID) E3
+            ON E3.CUSTOMER_ID = CS.CUSTOMER_ID
+                    ]]>
+        <where>
+            AND M.MARKET_ID LIKE  CONCAT(#{marketId},'%') AND CS.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY CS.UPDATE_TIME DESC
+    </select>
+
+    <select id="selectForExport" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        SELECT
+        CP.ROW_ID,
+        CP.MARKET_ID,
+        CP.MARKET_NAME,
+        CP.PARENT_ID,
+        CP.COUNTRY,
+        CP.PROVINCE,
+        CP.CITY,
+        CP.DISTRICT,
+        CP.STREET,
+        CP.REGION,
+        E1.customerNumber,
+        E1.brandNumber,
+        E1.openStoreNumber,
+        CP.LEVEL,
+        CP.IS_CITYCOMP
+        FROM
+        T_MP_MARKETINFO CP
+        LEFT JOIN (
+        SELECT
+        A.MARKET_ID,
+        COUNT(DISTINCT C.CUSTOMER_ID) customerNumber,
+        COUNT(DISTINCT C.BRAND) brandNumber,
+        COUNT(DISTINCT C.BRAND) openStoreNumber
+        FROM
+        T_MP_MARKETINFO A
+        INNER JOIN T_CS_ERP_MARKET_INFO B ON B.MARKET_ID LIKE CONCAT(A.MARKET_ID,'%')
+        INNER JOIN T_CS_CUSTOMER_ERP_INFO C ON B.AUTHORIZATION_ID = C.ROW_ID
+        <if test="brand!=null and brand!=''">
+            AND C.BRAND =#{brand}
+        </if>
+        GROUP BY A.MARKET_ID
+        ) E1 ON CP.MARKET_ID = E1.MARKET_ID
+        <where>
+            <if test="marketName!=null and marketName!=''">
+                AND MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
+            </if>
+            <if test="region!=null and region!=''">
+                AND CP.MARKET_ID  LIKE CONCAT('%',#{region},'%')
+            </if>
+            <if test="marketId!=null and marketId!=''">
+                AND CP.MARKET_ID LIKE CONCAT('%',#{marketId},'%')
+            </if>
+            <if test="province!=null and province!=''">
+                <choose>
+                    <when test="city!=null and city!=''">
+                        <choose>
+                            <when test="district!=null and district!=''">
+                                <choose>
+                                    <when test="street!=null and street!=''">
+                                        AND CP.MARKET_ID  LIKE CONCAT(#{street},'%')
+                                    </when>
+                                    <otherwise>
+                                        AND CP.MARKET_ID  LIKE CONCAT(#{district},'%')
+                                    </otherwise>
+                                </choose>
+                            </when>
+                            <otherwise>
+                                AND CP.MARKET_ID  LIKE CONCAT(#{city},'%')
+                            </otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>
+                        AND CP.MARKET_ID   LIKE CONCAT(#{province},'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="level!=null and level!=''">
+                AND LEVEL = #{level}
+            </if>
+            <if test="isMarketGaps=='M0012'">
+                AND E1.customerNumber IS NULL AND E1.brandNumber IS NULL
+            </if>
+            <if test="isMarketGaps=='M0013'">
+                <![CDATA[AND E1.customerNumber > 0 OR E1.brandNumber > 0 ]]>
+            </if>
+            AND CP.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY CP.MARKET_ID
+    </select>
+    <select id="selectByParentId" parameterType="map" resultType="com.stripcode.mybatis.cp.model.CpMarketInfo">
+        select MARKET_ID,MARKET_NAME
+          FROM
+            T_MP_MARKETINFO T
+          WHERE
+          <choose>
+              <when test="cityName=='上海' or cityName=='重庆' or cityName=='北京' or cityName=='天津'">
+                  EXISTS (
+                  SELECT
+                  ROW_ID
+                  FROM
+                  T_MP_MARKETINFO
+                  WHERE
+                  PARENT_ID = (
+                  SELECT
+                  ROW_ID
+                  FROM
+                  T_MP_MARKETINFO
+                  WHERE
+                  MARKET_ID =  #{parentId}
+                  AND DEL_FLAG = 'M0015'
+                  )
+                  AND DEL_FLAG = 'M0015'
+                  AND ROW_ID = T.PARENT_ID
+                  )
+              </when>
+              <otherwise>
+                  PARENT_ID = (SELECT ROW_ID FROM T_MP_MARKETINFO WHERE MARKET_ID = #{parentId} AND DEL_FLAG = 'M0015')
+              </otherwise>
+          </choose>
+          ORDER BY MARKET_ID
+    </select>
+</mapper>

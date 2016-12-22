@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFLandlordInfoMapper">
+    <select id="selectLandLordInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordinfo">
+        SELECT
+              ROW_ID,
+              ESTATE_ID,
+              LANDLORD,
+              CONTACTER,
+              POSITION,
+              TEL,
+              RENT_TYPE,
+              OWNER,
+              ADDRESS
+        FROM T_SF_LANDLORDINFO
+        WHERE ESTATE_ID = #{estateId} AND DEL_FLAG = 'M0015'
+    </select>
+    
+    <select id="selectEstateSourceInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFEstateSource">
+        SELECT
+              ROW_ID,
+              PP_ID,
+              IS_FROM_REP,
+              REP,
+              IS_FROM_BROKER,
+              BROKER,
+              IS_FROM_ALLIANCE,
+              ALLIANCE
+        FROM T_SF_ESTATE_SOURCE
+        WHERE PP_ID = #{ppId} AND DEL_FLAG = 'M0015'
+    </select>
+    
+    <insert id="insertLandLord" parameterType="com.stripcode.mybatis.sf.model.SFLandlordinfo">
+        INSERT INTO T_SF_LANDLORDINFO(
+              ROW_ID,
+              ESTATE_ID,
+              LANDLORD,
+              CONTACTER,
+              POSITION,
+              TEL,
+              RENT_TYPE,
+              OWNER,
+              ADDRESS,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+        )VALUES (
+              #{rowId},
+              #{estateId},
+              #{landlord},
+              #{contacter},
+              #{position},
+              #{tel},
+              #{rentType},
+              #{owner},
+              #{address},
+              #{creator},
+              sysdate(),
+              #{updater},
+              sysdate(),
+              'M0015'
+        )
+    </insert>
+
+    <update id="updateLandLord" parameterType="com.stripcode.mybatis.sf.model.SFLandlordinfo">
+        UPDATE T_SF_LANDLORDINFO
+        SET LANDLORD = #{landlord},
+            CONTACTER = #{contacter},
+            POSITION = #{position},
+            TEL = #{tel},
+            RENT_TYPE = #{rentType},
+            OWNER = #{owner},
+            ADDRESS = #{address},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE ROW_ID = #{rowId} AND ESTATE_ID = #{estateId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <insert id="insertEstateSource" parameterType="com.stripcode.mybatis.sf.model.SFEstateSource">
+        INSERT INTO T_SF_ESTATE_SOURCE(
+            ROW_ID,
+            PP_ID,
+            IS_FROM_REP,
+            REP,
+            IS_FROM_BROKER,
+            BROKER,
+            IS_FROM_ALLIANCE,
+            ALLIANCE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{isFromRep},
+            #{rep},
+            #{isFromBroker},
+            #{broker},
+            #{isFromAlliance},
+            #{alliance},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateEstateSource" parameterType="com.stripcode.mybatis.sf.model.SFEstateSource">
+        UPDATE T_SF_ESTATE_SOURCE
+        SET IS_FROM_REP = #{isFromRep},
+            REP = #{rep},
+            IS_FROM_BROKER = #{isFromBroker},
+            BROKER = #{broker},
+            IS_FROM_ALLIANCE = #{isFromAlliance},
+            ALLIANCE = #{alliance},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+
+    <update id="deleteLandlordInfo" parameterType="map">
+        UPDATE T_SF_LANDLORDINFO
+        SET DEL_FLAG = 'M0014'
+        <where>
+            <if test='islandNull!=0'>
+                ROW_ID NOT IN
+                <foreach collection="rowId" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND ESTATE_ID = #{estateId}
+        </where>
+    </update>
+</mapper>

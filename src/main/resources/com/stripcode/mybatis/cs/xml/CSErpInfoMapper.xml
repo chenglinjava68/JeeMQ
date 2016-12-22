@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSErpInfoMapper">
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+        INSERT INTO
+           T_CS_NEW_MARKETAUZ
+            (
+              ERP_CODE,
+              CREATOR,
+              CREATE_TIME,
+              UPDATER,
+              UPDATE_TIME,
+              DEL_FLAG
+            )
+        VALUE (
+            #{erpCode},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSNewMarketAuz">
+            UPDATE
+                  T_CS_NEW_MARKETAUZ
+            SET
+                   ERP_CODE =  #{erpCode},
+                   UPDATE_TIME = #{updateTime},
+                   UPDATER = #{updater}
+           WHERE  OPTIMAUTH_ID = #{optimauthId}
+    </update>
+    <insert id="insertStore" parameterType="com.stripcode.mybatis.cs.model.CSCustomerPP">
+        INSERT INTO
+            T_CS_CUSTOMER_PP
+            (
+            ROW_ID,
+            NEW_STORE_CODE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+            )
+        VALUE (
+            #{rowId},
+            #{newStoreCode},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updateStore" parameterType="com.stripcode.mybatis.cs.model.CSCustomerPP">
+        UPDATE
+            T_CS_CUSTOMER_PP
+        SET
+            NEW_STORE_CODE =  #{newStoreCode},
+            UPDATE_TIME = #{updateTime},
+            UPDATER = #{updater}
+        WHERE  OPTIMAUTH_ID = #{optimauthId} AND PP_ID = #{ppId}
+    </update>
+
+   <select id="ErpCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+         SELECT
+            count(1)
+         FROM T_CS_NEW_MARKETAUZ TC
+         LEFT JOIN T_CS_MARKET_OPTIMAUTH TCS ON TCS.ROW_ID = TC.OPTIMAUTH_ID
+         WHERE TCS.CUSTOMER_ID  = #{customerId}  AND TCS.ROW_ID = #{rowId}
+   </select>
+
+    <select id="StoreCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+           count(1)
+        FROM T_CS_CUSTOMER_PP TP
+        LEFT JOIN T_CS_MARKET_OPTIMAUTH TCS ON TCS.ROW_ID = TP.OPTIMAUTH_ID
+        WHERE TCS.CUSTOMER_ID  = #{customerId}  AND TCS.ROW_ID = #{rowId}
+    </select>
+
+    <select id="selectErp" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSMarketOptimauth">
+        SELECT
+          TC.ERP_NAME,
+          TC.ERP_CODE,
+          TC.IS_NEW_ERPID
+        FROM T_CS_NEW_MARKETAUZ TC
+        WHERE  TC.OPTIMAUTH_ID = #{optimauthId} AND TC.DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectStore" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSErpInfo">
+        SELECT
+          TS.CN_SITENAME,
+          TCP.NEW_STORE_CODE,
+          TCP.PP_ID
+         FROM
+          T_SF_PIPELINE TS
+       LEFT JOIN T_CS_CUSTOMER_PP TCP ON TS.PP_ID = TCP.PP_ID AND TCP.DEL_FLAG = 'M0015'
+       LEFT JOIN T_CS_MARKET_OPTIMAUTH TCS ON TCP.OPTIMAUTH_ID = TCS.ROW_ID AND TS.DEL_FLAG = 'M0015'
+       WHERE TCS.CUSTOMER_ID  = #{customerId}  AND TCS.ROW_ID = #{rowId} AND TCS.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="IsExistErpCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0) FROM T_CS_NEW_MARKETAUZ
+            WHERE ERP_CODE = #{erpCode}
+        <if test='rowId!=null and rowId!=""'>
+            AND OPTIMAUTH_ID = #{rowId}
+        </if>
+    </select>
+
+</mapper>

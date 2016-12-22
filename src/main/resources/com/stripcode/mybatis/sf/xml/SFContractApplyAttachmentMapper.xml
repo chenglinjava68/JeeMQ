@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFContractApplyAttachmentMapper" >
+
+  <select id="queryContractApplyAttachment" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFContractApplyAttachment">
+    SELECT
+          A.ROW_ID,
+          A.PP_ID,
+          T.TEMPLATE_ID,
+          A.ATTACH_ID,
+          A.IS_EXIST,
+          A.IS_GET,
+          A.REASON,
+          A.IS_SUPPLY,
+          A.SUPPLY_DATE,
+          A.REMARK,
+          C.DOC_NAME fileName,
+          C.FILE_PATH filePath,
+          C.UPDATE_TIME updateTime,
+          T.TITLE
+    FROM T_SYS_ATTACHEDTEMPLATE T
+    LEFT JOIN T_SF_CONTRACT_APPLY_ATTACHMENT A ON A.TEMPLATE_ID = T.TEMPLATE_ID AND A.DEL_FLAG = 'M0015' AND A.PP_ID = #{ppId}
+    LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = A.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+    WHERE T.PAGE_ID = 'SF30_031' AND T.DEL_FLAG = 'M0015'
+    ORDER BY SORT_NO
+  </select>
+
+  <insert id="insertContractApplyAttachment" parameterType="com.stripcode.mybatis.sf.model.SFContractApplyAttachment">
+    INSERT INTO T_SF_CONTRACT_APPLY_ATTACHMENT(
+          ROW_ID,
+          PP_ID,
+          TEMPLATE_ID,
+          ATTACH_ID,
+          IS_EXIST,
+          IS_GET,
+          REASON,
+          IS_SUPPLY,
+          SUPPLY_DATE,
+          REMARK,
+          CREATOR,
+          CREATE_TIME,
+          UPDATER,
+          UPDATE_TIME,
+          DEL_FLAG
+    )VALUES (
+          #{rowId},
+          #{ppId},
+          #{templateId},
+          #{attachId},
+          #{isExist},
+          #{isGet},
+          #{reason},
+          #{isSupply},
+          #{supplyDate},
+          #{remark},
+          #{creator},
+          sysdate(),
+          #{updater},
+          sysdate(),
+          'M0015'
+    )
+  </insert>
+
+  <update id="updateContractApplyAttachment" parameterType="com.stripcode.mybatis.sf.model.SFContractApplyAttachment">
+    UPDATE T_SF_CONTRACT_APPLY_ATTACHMENT
+    SET
+        ROW_ID = #{rowId},
+        PP_ID = #{ppId},
+        TEMPLATE_ID = #{templateId},
+        ATTACH_ID = #{attachId},
+        IS_EXIST = #{isExist},
+        IS_GET = #{isGet},
+        REASON = #{reason},
+        IS_SUPPLY = #{isSupply},
+        SUPPLY_DATE = #{supplyDate},
+        REMARK = #{remark},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId}
+  </update>
+</mapper>

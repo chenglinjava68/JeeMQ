@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMStoreInfoMapper">
+
+    <!--分页查所有-->
+    <select id="selectForPage" parameterType="map" resultType="com.stripcode.mybatis.am.model.AMStoreInfo">
+        SELECT
+            AM.STATUS,
+            AM.STORE_ID,
+            AM.STORE_CODE,
+            AM.CN_SITENAME,
+            T.MACRO_NAME brand,
+            T1.MACRO_NAME operationMode,
+            T2.MACRO_NAME channelType,
+            T3.MACRO_NAME storeProperty,
+            B1.COUNTRY,
+            B1.PROVINCE,
+            B2.CITY,
+            B3.DISTRICT,
+            B4.STREET,
+            C.ERP_NAME marketName,
+            AM.CUSTOMER_ID,
+            AM.BRAND BRAND_CODE
+        FROM
+            T_AM_STORE AM
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON AM.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON AM.OPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'OPERATION_MODE' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON AM.CHANNEL_TYPE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'CHANNEL_TYPE' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON AM.STORE_PROPERTY = T3.MACRO_CODE AND T3.MACRO_TYPE = 'STORE_PROPERTY' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B1 ON AM.PROVINCE = B1.MARKET_ID AND B1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B2 ON AM.CITY = B2.MARKET_ID AND B2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B3 ON AM.DISTRICT = B3.MARKET_ID AND B3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B4 ON AM.STREET = B4.MARKET_ID AND B4.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PIPELINE A ON A.PP_ID = AM.STORE_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CS_NEW_MARKETAUZ C ON A.ERP_CODE = C.ROW_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+            <if test="brand!=null and brand!=''">
+                AND AM.BRAND = #{brand}
+            </if>
+            <if test="operationMode!=null and operationMode!=''">
+                AND AM.OPERATION_MODE = #{operationMode}
+            </if>
+            <if test="cnsiteName != null and cnsiteName != ''">
+                AND AM.CN_SITENAME LIKE CONCAT('%',#{cnsiteName},'%')
+            </if>
+            <if test="coopMode != null and coopMode != ''">
+                AND AM.COOP_MODE = #{coopMode}
+            </if>
+            <if test="storeImage != null and storeImage != ''">
+                AND AM.STORE_IMAGE = #{storeImage}
+            </if>
+            <if test="customerId != null and customerId != ''">
+                AND AM.CUSTOMER_ID = #{customerId}
+            </if>
+            <if test="channelType != null and channelType != ''">
+                AND AM.CHANNEL_TYPE = #{channelType}
+            </if>
+            <if test="province != null and province != ''">
+                AND AM.PROVINCE = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                AND AM.CITY = #{city}
+            </if>
+            <if test="district != null and district != ''">
+                AND AM.DISTRICT = #{district}
+            </if>
+            <if test="street != null and street != ''">
+                AND AM.STREET = #{street}
+            </if>
+            AND AM.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY AM.UPDATE_TIME DESC
+    </select>
+
+    <select id="selectByStoreId" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMStoreInfo">
+        SELECT
+            AM.STORE_CODE,
+            AM.CN_SITENAME,
+            T.MACRO_NAME brand,
+            T1.MACRO_NAME operationMode,
+            T2.MACRO_NAME channelType,
+            T3.MACRO_NAME storeImage,
+            T6.MACRO_NAME storeProperty,
+            B1.COUNTRY,
+            B1.PROVINCE,
+            B2.CITY,
+            B3.DISTRICT,
+            B4.STREET,
+            AM.ADDRESS,
+            AM.APPROVAL_DATE,
+            AM.SIGN_DATE,
+            AM.POSTCODE,
+            AM.TEL,
+            AM.OPEN_DATE,
+            AM.REFORM_DATE,
+            AM.STATUS,
+            AM.CONTRACT_START_DATE,
+            AM.CONTRACT_END_DATE,
+            AM.APPLY_AREA,
+            AM.OPERATE_AREA,
+            AM.RESERVE_AREA,
+            C.CORPORATION corporation,
+            T4.MACRO_NAME custormerProperty,
+            T5.MACRO_NAME coopMode,
+            AM.JOINED_SIGN_DATE,
+            AM.REP_ID,
+            AM.OPERATION_MGR
+        FROM
+            T_AM_STORE AM
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON AM.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON AM.OPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'OPERATION_MODE' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON AM.CHANNEL_TYPE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'CHANNEL_TYPE' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON AM.STORE_IMAGE = T3.MACRO_CODE AND T3.MACRO_TYPE = 'STORE_IMAGE' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T4 ON AM.CUSTOMER_PROPERTY = T4.MACRO_CODE AND T4.MACRO_TYPE = 'CUSTORMER_PROPERTY' AND T4.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T5 ON AM.COOP_MODE = T5.MACRO_CODE AND T5.MACRO_TYPE = 'COOPERATION_MODEL' AND T5.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T6 ON AM.STORE_PROPERTY = T6.MACRO_CODE AND T6.MACRO_TYPE = 'STORE_PROPERTY' AND T6.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B1 ON AM.PROVINCE = B1.MARKET_ID AND B1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B2 ON AM.CITY = B2.MARKET_ID AND B2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B3 ON AM.DISTRICT = B3.MARKET_ID AND B3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B4 ON AM.STREET = B4.MARKET_ID AND B4.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CS_CUSTOMERINFO C ON AM.CUSTOMER_ID = C.CUSTOMER_ID AND C.DEL_FLAG = 'M0015'
+        WHERE
+            AM.STORE_ID = #{storeId}
+            AND AM.DEL_FLAG = 'M0015'
+    </select>
+
+    <select id="selectForExport" parameterType="map" resultType="com.stripcode.mybatis.am.model.AMStoreInfo">
+        SELECT
+            AM.STATUS,
+            AM.STORE_ID,
+            AM.STORE_CODE,
+            AM.CN_SITENAME,
+            T.MACRO_NAME brand,
+            T1.MACRO_NAME operationMode,
+            T2.MACRO_NAME channelType,
+            T3.MACRO_NAME storeProperty,
+            B1.COUNTRY,
+            B1.PROVINCE,
+            B2.CITY,
+            B3.DISTRICT,
+            B4.STREET,
+            C.ERP_NAME marketName,
+            AM.CUSTOMER_ID,
+            AM.BRAND BRAND_CODE
+        FROM
+            T_AM_STORE AM
+            LEFT JOIN T_CODE_MACRO_DEFINE T ON AM.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T1 ON AM.OPERATION_MODE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'OPERATION_MODE' AND T1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T2 ON AM.CHANNEL_TYPE = T2.MACRO_CODE AND T2.MACRO_TYPE = 'CHANNEL_TYPE' AND T2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON AM.STORE_PROPERTY = T3.MACRO_CODE AND T3.MACRO_TYPE = 'STORE_PROPERTY' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CODE_MACRO_DEFINE T3 ON AM.STORE_PROPERTY = T3.MACRO_CODE AND T3.MACRO_TYPE = 'STORE_PROPERTY' AND T3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B1 ON AM.PROVINCE = B1.MARKET_ID AND B1.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B2 ON AM.CITY = B2.MARKET_ID AND B2.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B3 ON AM.DISTRICT = B3.MARKET_ID AND B3.DEL_FLAG = 'M0015'
+            LEFT JOIN T_MP_MARKETINFO B4 ON AM.STREET = B4.MARKET_ID AND B4.DEL_FLAG = 'M0015'
+            LEFT JOIN T_SF_PIPELINE A ON A.PP_ID = AM.STORE_ID AND A.DEL_FLAG = 'M0015'
+            LEFT JOIN T_CS_NEW_MARKETAUZ C ON A.ERP_CODE = C.ROW_ID AND C.DEL_FLAG = 'M0015'
+        <where>
+            <if test="brand!=null and brand!=''">
+                AND AM.BRAND = #{brand}
+            </if>
+            <if test="operationMode!=null and operationMode!=''">
+                AND AM.OPERATION_MODE = #{operationMode}
+            </if>
+            <if test="cnsiteName != null and cnsiteName != ''">
+                AND AM.CN_SITENAME LIKE CONCAT('%',#{cnsiteName},'%')
+            </if>
+            <if test="coopMode != null and coopMode != ''">
+                AND AM.COOP_MODE = #{coopMode}
+            </if>
+            <if test="storeImage != null and storeImage != ''">
+                AND AM.STORE_IMAGE = #{storeImage}
+            </if>
+            <if test="channelType != null and channelType != ''">
+                AND AM.CHANNEL_TYPE = #{channelType}
+            </if>
+            <if test="province != null and province != ''">
+                AND AM.PROVINCE = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                AND AM.CITY = #{city}
+            </if>
+            <if test="district != null and district != ''">
+                AND AM.DISTRICT = #{district}
+            </if>
+            <if test="street != null and street != ''">
+                AND AM.STREET = #{street}
+            </if>
+            AND AM.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY AM.UPDATE_TIME DESC
+    </select>
+</mapper>

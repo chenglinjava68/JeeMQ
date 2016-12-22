@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.TSysBranchOfficeMapper" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sys_branch_office
+    where AUTO_NO = #{autoNo}
+  </delete>
+  <insert id="insert" parameterType="TSysBranchOffice" >
+   INSERT INTO T_SYS_BRANCH_OFFICE (
+        AUTO_NO,
+        ROW_ID,
+        BRANCHES_CODE,
+        BRANCHES_NAME_CN,
+        BRANCHES_NAME_EN,
+        BRAND,
+        OPERATION_DIRECTOR,
+        DIRECTOR_PHONE,
+        ADDRESS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    )
+    VALUES
+        (
+            #{autoNo},
+            #{rowId},
+            #{branchesCode},
+            #{branchesNameCn},
+            #{branchesNameEn},
+            #{brand},
+            #{operationDirector},
+            #{directorPhone},
+            #{address},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            #{delFlag},
+            #{def1},
+            #{def2},
+            #{def3},
+            #{def4},
+            #{def5},
+            #{def6},
+            #{def7},
+            #{def8},
+            #{def9},
+            #{def10})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="TSysBranchOffice" >
+   UPDATE T_SYS_BRANCH_OFFICE
+    SET ROW_ID = #{rowId},
+    BRANCHES_CODE = #{branchesCode},
+    BRANCHES_NAME_CN = #{branchesNameCn},
+    BRANCHES_NAME_EN = #{branchesNameEn},
+    BRAND = #{brand},
+    OPERATION_DIRECTOR = #{operationDirector},
+    DIRECTOR_PHONE = #{directorPhone},
+    ADDRESS = #{address},
+    CREATOR = #{creator},
+    CREATE_TIME = #{createTime},
+    UPDATER = #{updater},
+    UPDATE_TIME = #{updateTime},
+    DEL_FLAG = #{delFlag},
+    DEF1 = #{def1},
+    DEF2 = #{def2},
+    DEF3 = #{def3},
+    DEF4 = #{def4},
+    DEF5 = #{def5},
+    DEF6 = #{def6},
+    DEF7 = #{def7},
+    DEF8 = #{def8},
+    DEF9 = #{def9},
+    DEF10 = #{def10}
+    WHERE
+        AUTO_NO = #{autoNo}
+  </update>
+  <select id="selectByPrimaryKey" resultType="TSysBranchOffice" parameterType="java.lang.Integer" >
+    SELECT
+        AUTO_NO,
+        ROW_ID,
+        BRANCHES_CODE,
+        BRANCHES_NAME_CN,
+        BRANCHES_NAME_EN,
+        BRAND,
+        OPERATION_DIRECTOR,
+        DIRECTOR_PHONE,
+        ADDRESS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_BRANCH_OFFICE
+    where AUTO_NO = #{autoNo}
+  </select>
+  <select id="selectAll" resultType="TSysBranchOffice" >
+    SELECT
+        AUTO_NO,
+        ROW_ID,
+        BRANCHES_CODE,
+        BRANCHES_NAME_CN,
+        BRANCHES_NAME_EN,
+        BRAND,
+        OPERATION_DIRECTOR,
+        DIRECTOR_PHONE,
+        ADDRESS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG,
+        DEF1,
+        DEF2,
+        DEF3,
+        DEF4,
+        DEF5,
+        DEF6,
+        DEF7,
+        DEF8,
+        DEF9,
+        DEF10
+    FROM
+        T_SYS_BRANCH_OFFICE
+        WHERE DEL_FLAG = 'M0015'
+        ORDER BY AUTO_NO
+  </select>
+  <select id="selectForTree" parameterType="java.lang.String" resultType="Tree">
+      SELECT
+        M.MACRO_CODE id,
+        M.MACRO_NAME text,
+        'M0000' parentId,
+        '总部' parentText
+    FROM
+        T_CODE_MACRO_DEFINE M
+    WHERE
+        MACRO_TYPE = 'BRAND'
+    UNION ALL
+        SELECT
+            B.ROW_ID,
+            B.BRANCHES_NAME_CN,
+            B.BRAND,
+            M.MACRO_NAME
+        FROM
+            T_SYS_BRANCH_OFFICE B
+        LEFT JOIN t_code_macro_define M ON MACRO_TYPE = 'BRAND'
+        AND B.BRAND = M.MACRO_CODE
+        AND M.DEL_FLAG = 'M0015'
+        AND B.DEL_FLAG = 'M0015'
+  </select>
+  <select id="selectByBrand" parameterType="TSysBranchOffice" resultType="TSysBranchOffice">
+      SELECT
+            B.ROW_ID,
+            B.BRANCHES_NAME_CN,
+            B.BRAND
+        FROM
+            T_SYS_BRANCH_OFFICE B
+        WHERE B.BRAND = #{brand}
+        AND B.DEL_FLAG = 'M0015'
+  </select>
+</mapper>

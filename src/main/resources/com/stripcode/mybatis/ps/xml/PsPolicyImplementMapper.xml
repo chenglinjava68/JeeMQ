@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.ps.dao.PSPolicyImplementMapper">
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAssessment">
+        SELECT
+        TSF.ROW_ID,
+        TIN.SUPERIOR_COMPANY,
+        TCU.ERP_CODE,
+        TCU.ERP_NAME,
+        TC.PP_CODE,
+        T.CN_SITENAME,
+        T.PP_ID,
+        T5.MACRO_NAME STORE_PROPERTY,
+        T6.ITEM_NAME SUPPORT_ITEM,
+        T7.ITEM_NAME SUPPORT_MODE,
+        TSF.SALES,
+        TSF.START_DATE,
+        TSF.END_DATE,
+        T4.MACRO_NAME ASSESSMENT_ITEM,
+        TSF.TARGET,
+        TSF.RETURN_RATIO,
+        TSF.RETURN_SALES
+        FROM T_SF_PIPELINE T
+        LEFT JOIN T_SF_POLICY_SUPPORT_ASSESSMENT TSF ON TSF.PP_ID=T.PP_ID AND TSF.DEL_FLAG='M0015'
+        LEFT JOIN T_SF_APPLY_PIPELINE_CODE TC ON TC.PP_ID=T.PP_ID AND TC.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_NEW_MARKETAUZ TMA ON T.ERP_CODE=TMA.ROW_ID AND TMA.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMER_ERP_INFO TCU ON TCU.ERP_CODE=TMA.ERP_CODE AND TCU.DEL_FLAG='M0015'
+        LEFT JOIN T_CS_CUSTOMERINFO TIN ON TIN.CUSTOMER_ID= TCU.CUSTOMER_ID AND TIN.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T4 ON T4.MACRO_CODE=TSF.ASSESSMENT_ITEM AND T4.MACRO_TYPE='ASSESSMENT_INDEX' AND T4.DEL_FLAG='M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T5 ON T5.MACRO_CODE=T.STORE_PROPERTY AND T5.MACRO_TYPE='STORE_PROPERTY' AND T5.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T6 ON T6.ITEM_CODE=TSF.SUPPORT_ITEM  AND T6.ITEM_TYPE='M0101' AND T6.DEL_FLAG='M0015'
+        LEFT JOIN T_PS_POLICY_ITEM T7 ON T7.ITEM_CODE=TSF.SUPPORT_MODE AND T7.ITEM_TYPE='M0102' AND T7.DEL_FLAG='M0015'
+        <where>
+            <if test="superiorCompany != null and superiorCompany != ''">
+                AND TIN.SUPERIOR_COMPANY LIKE CONCAT('%',#{superiorCompany},'%')
+            </if>
+            <if test="erpCode != null and erpCode != ''">
+                AND TCU.ERP_CODE LIKE CONCAT('%',#{erpCode},'%')
+            </if>
+            <if test="erpName != null and erpName != ''">
+                AND TCU.ERP_NAME LIKE CONCAT('%',#{erpName},'%')
+            </if>
+            <if test="ppCode != null and ppCode != ''">
+                AND TC.PP_CODE LIKE CONCAT('%',#{ppCode},'%')
+            </if>
+            <if test="cnSiteName != null and cnSiteName != ''">
+                AND T.CN_SITENAME LIKE CONCAT('%',#{cnSiteName},'%')
+            </if>
+            <if test="storeProperty != null and storeProperty != ''">
+                AND T.STORE_PROPERTY = #{storeProperty}
+            </if>
+            <if test="supportItem != null and supportItem != ''">
+                AND TSF.SUPPORT_ITEM = #{supportItem}
+            </if>
+            <if test="supportMode != null and supportMode != ''">
+                AND TSF.SUPPORT_MODE = #{supportMode}
+            </if>
+            <if test="assessmentItem != null and assessmentItem != ''">
+                AND TSF.ASSESSMENT_ITEM = #{assessmentItem}
+            </if>
+            AND T.DEL_FLAG = 'M0015'
+        </where>
+        ORDER BY T.UPDATE_TIME DESC
+    </select>
+
+</mapper>

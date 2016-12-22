@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.cs.dao.CSAlterDiscountRateMapper">
+    <select id="selectBaseById" parameterType="java.lang.String" resultType="com.stripcode.mybatis.cs.model.CSCustomerErpInfo">
+        SELECT
+            Tcs.CUSTOMER_ID,
+            Tcs.CORPORATION ,
+            Tcs.TEL ,
+            Tcs.ID_NUMBER ,
+            Tcs.ADDRESS ,
+            Tcs.COMPANY_NAME ,
+            Tcer.ERP_ID ,
+            Tcer.ERP_NAME ,
+            Tcer.ACCREDIT_ENDDATE ,
+            Tcer.ACCREDIT_STARTDATE ,
+            Tcer.BASIC_DISCOUNT_RATE ,
+            T.TYPE_NAME brand,
+            T1.TYPE_NAME cooperationMode,
+            T2.TYPE_NAME customerProperty,
+            T3.TYPE_NAME superiorCompany
+        FROM
+            T_CS_CUSTOMER_ERP_INFO Tcer
+        LEFT JOIN T_CS_CUSTOMERINFO Tcs ON Tcer.CUSTOMER_ID = Tcs.CUSTOMER_ID AND Tcer.DEL_FLAG = 'jeemq301002'
+        LEFT JOIN T_SYS_DATATYPE T ON Tcer.BRAND = T.TYPE_CODE AND T.TYPE_ID = '009'  AND T.DEL_FLAG = 'jeemq301002'
+        LEFT JOIN T_SYS_DATATYPE T1 ON Tcer.COOPERATION_MODE = T1.TYPE_CODE AND T1.TYPE_ID = '010' AND  T1.DEL_FLAG = 'jeemq301002'
+        LEFT JOIN T_SYS_DATATYPE T2 ON Tcs.CUSTOMER_PROPERTY = T2.TYPE_CODE AND T2.TYPE_ID = '013' AND  T2.DEL_FLAG = 'jeemq301002'
+        LEFT JOIN T_SYS_DATATYPE T3 ON Tcs.SUPERIOR_COMPANY = T3.TYPE_CODE AND T3.TYPE_ID = '014' AND  T3.DEL_FLAG = 'jeemq301002'
+        <where>
+            AND Tcs.CUSTOMER_ID = #{customerId}
+            AND  Tcs.DEL_FLAG = 'jeemq301002'
+        </where>
+    </select>
+
+
+    <insert id="insert" parameterType="com.stripcode.mybatis.cs.model.CSAlterDiscountRate">
+        INSERT INTO
+            T_CS_ALTER_DISCOUNT_RATE
+        (
+            OLD_DISCOUNT_RATE,
+            NEW_DISCOUNT_RATE,
+            REMARK,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )
+        VALUE (
+            #{NEW_DISCOUNT_RATE},
+            #{OLD_DISCOUNT_RATE},
+            #{remark},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'jeemq301002'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.cs.model.CSAlterDiscountRate">
+        <![CDATA[
+            UPDATE
+                  T_CS_ALTER_DISCOUNT_RATE
+            SET
+                   OLD_DISCOUNT_RATE =  #{oldDiscountRate},
+                   NEW_DISCOUNT_RATE =  #{newDiscountRate},
+                   REMARK = #{remark},
+                   UPDATE_TIME = #{updateTime},
+                   UPDATER = #{updater}
+           WHERE CUSTOMER_ID = #{customerId}
+        ]]>
+    </update>
+</mapper>

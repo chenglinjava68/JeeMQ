@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFRentalProposalMapper">
+    <select id="selectProposal" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFRentalProposal">
+        SELECT
+            T.ROW_ID,
+            T.RENT_START_DATE,
+            T.RENT_END_DATE,
+            T.RENT_MODE,
+            T.RENTAL,
+            T.RELATION,
+            T.POINTS
+        FROM
+             T_SF_RENTAL_PROPOSAL T
+       WHERE T.PP_ID=#{ppId} AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertRentalProposal" parameterType="com.stripcode.mybatis.sf.model.SFRentalProposal">
+        INSERT INTO
+         T_SF_RENTAL_PROPOSAL
+         (
+            ROW_ID,
+            PP_ID,
+            RENT_START_DATE,
+            RENT_END_DATE,
+            RENT_MODE,
+            RENTAL,
+            RELATION,
+            POINTS,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+         )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{rentStartDate},
+            #{rentEndDate},
+            #{rentMode},
+            #{rental},
+            #{relation},
+            #{points},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    <update id="updateRentalProposal" parameterType="com.stripcode.mybatis.sf.model.SFRentalProposal">
+        UPDATE
+            T_SF_RENTAL_PROPOSAL
+        SET
+        RENT_START_DATE =#{rentStartDate},
+        RENT_END_DATE =#{rentEndDate},
+        RENT_MODE = #{rentMode},
+        RENTAL =#{rental},
+        RELATION =#{relation},
+        POINTS =#{points},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE  PP_ID = #{ppId} AND ROW_ID=#{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsRentalProposal" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+        T_SF_RENTAL_PROPOSAL
+        WHERE ROW_ID = #{rowId} AND PP_ID= #{ppId}  AND DEL_FLAG = 'M0015'
+    </select>
+    <select id="selectAttachment"  resultType="com.stripcode.mybatis.sf.model.SFRentalProposalAttachment">
+       SELECT
+            U.USER_NAME creater,
+            T.CREATE_TIME createrTime,
+            TC.TITLE,
+            T.ATTACH_ID,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            TC.TEMPLATE_ID
+        FROM
+             T_SYS_ATTACHEDTEMPLATE TC
+             LEFT JOIN
+             (
+            SELECT T.TEMPLATE_ID,T.ATTACH_ID,T.CREATE_TIME,T.CREATOR
+            FROM
+             T_SF_RENTAL_PROPOSAL_ATTACHMENT T
+             INNER JOIN T_SF_RENTAL_PROPOSAL T1 ON T1.ROW_ID = T.RENT_ID AND T1.DEL_FLAG = 'M0015' AND T1.PP_ID = #{ppId}
+            WHERE T.DEL_FLAG = 'M0015'
+             ) T
+	       ON T.TEMPLATE_ID = TC.TEMPLATE_ID
+		LEFT JOIN T_SYS_USER U ON U.USER_ID = T.CREATOR AND U.DEL_FLAG = 'M0015'
+		LEFT JOIN T_SYS_COMMONATTACHED C ON T.ATTACH_ID = C.ATTACH_ID
+         WHERE
+                TC.PAGE_ID='SF30_055' AND TC.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertAttachment" parameterType="com.stripcode.mybatis.sf.model.SFRentalProposalAttachment">
+        INSERT INTO
+        T_SF_RENTAL_PROPOSAL_ATTACHMENT
+        (
+        ROW_ID,
+        RENT_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        ATTACHMENT_NAME,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUES (
+        #{ArowId},
+        #{rentId},
+        #{templateId},
+        #{attachId},
+        #{title},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="updateAttachment" parameterType="com.stripcode.mybatis.sf.model.SFRentalProposalAttachment">
+        UPDATE
+        T_SF_RENTAL_PROPOSAL_ATTACHMENT
+        SET
+        ATTACHMENT_NAME =#{title},
+        ATTACH_ID =#{attachId},
+        UPDATER = #{updater},
+        UPDATE_TIME = #{updateTime}
+        WHERE RENT_ID=#{rentId} AND TEMPLATE_ID = #{templateId}  AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsAttachment" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM
+        T_SF_RENTAL_PROPOSAL_ATTACHMENT
+        WHERE RENT_ID=#{rowId} AND TEMPLATE_ID = #{templateId}  AND DEL_FLAG = 'M0015'
+    </select>
+</mapper>

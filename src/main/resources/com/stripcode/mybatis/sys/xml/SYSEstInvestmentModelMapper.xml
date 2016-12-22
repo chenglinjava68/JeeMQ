@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sys.dao.SYSEstInvestmentModelMapper">
+
+    <!--分页查所有-->
+    <select id="queryForPage" parameterType="map" resultType="com.stripcode.mybatis.sys.model.SYSEstInvestmentModel">
+        SELECT
+        SYS.ROW_ID,
+        T.MACRO_NAME  BRAND,
+        SYS.YEAR,
+        SYS.ATTACH_ID,
+        T1.MACRO_NAME MODEL_TYPE,
+        SYS.MODEL_VERSION,
+        T2.MACRO_NAME MODEL_STATUS
+        FROM T_SYS_EST_INVESTMENT_MODEL SYS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON SYS.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON SYS.MODEL_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CALCULATION_MODEL_TYPE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON SYS.MODEL_STATUS = T2.MACRO_CODE AND T2.MACRO_TYPE = 'STATUS' AND T2.DEL_FLAG = 'M0015'
+        <where>
+            AND SYS.DEL_FLAG = 'M0015'
+            <if test="brand != null and brand != ''">
+                AND SYS.BRAND = #{brand}
+            </if>
+            <if test="year != null and year != ''">
+                AND SYS.YEAR = #{year}
+            </if>
+            <if test="modelType != null and modelType != ''">
+                AND SYS.MODEL_TYPE = #{modelType}
+            </if>
+            <if test="modelVersion != null and modelVersion != ''">
+                AND SYS.MODEL_VERSION LIKE CONCAT('%',#{modelVersion},'%')
+            </if>
+            <if test="modelStatus != null and modelStatus != ''">
+                AND SYS.MODEL_STATUS = #{modelStatus}
+            </if>
+        </where>
+        ORDER BY SYS.UPDATE_TIME DESC
+    </select>
+    <select id="selectLoad" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sys.model.SYSEstInvestmentModel">
+        SELECT
+        SYS.ROW_ID,
+        SYS.BRAND,
+        SYS.YEAR,
+        SYS.ATTACH_ID,
+        SYS.MODEL_TYPE,
+        SYS.MODEL_VERSION,
+        SYS.MODEL_STATUS,
+        TSC.DOC_NAME fileName,
+        TSC.FILE_PATH fieldId
+        FROM T_SYS_EST_INVESTMENT_MODEL SYS
+        LEFT JOIN T_SYS_COMMONATTACHED TSC ON TSC.ATTACH_ID =SYS.ATTACH_ID AND TSC.DEL_FLAG ='M0015'
+        <where>
+            AND SYS.ROW_ID = #{rowId}
+            AND SYS.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <insert id="insert" parameterType="com.stripcode.mybatis.sys.model.SYSEstInvestmentModel">
+        INSERT INTO T_SYS_EST_INVESTMENT_MODEL
+        (
+        ROW_ID,
+        BRAND,
+        YEAR,
+        MODEL_TYPE,
+        MODEL_VERSION,
+        MODEL_STATUS,
+        ATTACH_ID,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{brand},
+        #{year},
+        #{modelType},
+        #{modelVersion},
+        #{modelStatus},
+        #{attachId},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.sys.model.SYSEstInvestmentModel">
+        UPDATE T_SYS_EST_INVESTMENT_MODEL
+        SET
+        BRAND = #{brand},
+        YEAR = #{year},
+        MODEL_TYPE = #{modelType},
+        MODEL_VERSION = #{modelVersion},
+        MODEL_STATUS = #{modelStatus},
+        ATTACH_ID = #{attachId},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+    </update>
+    <update id="updatesave" parameterType="com.stripcode.mybatis.sys.model.SYSEstInvestmentModel">
+        UPDATE T_SYS_EST_INVESTMENT_MODEL
+        SET
+        MODEL_STATUS = 'M0044',
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        ROW_ID != #{rowId} AND MODEL_TYPE = #{modelType}  AND BRAND = #{brand} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectForExport" resultType="com.stripcode.mybatis.sys.model.SYSEstInvestmentModel">
+        SELECT
+        SYS.ROW_ID,
+        T.MACRO_NAME  BRAND,
+        SYS.YEAR,
+        T1.MACRO_NAME MODEL_TYPE,
+        SYS.MODEL_VERSION,
+        T2.MACRO_NAME MODEL_STATUS
+        FROM T_SYS_EST_INVESTMENT_MODEL SYS
+        LEFT JOIN T_CODE_MACRO_DEFINE T ON SYS.BRAND = T.MACRO_CODE AND T.MACRO_TYPE = 'BRAND' AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T1 ON SYS.MODEL_TYPE = T1.MACRO_CODE AND T1.MACRO_TYPE = 'CALCULATION_MODEL_TYPE' AND T1.DEL_FLAG = 'M0015'
+        LEFT JOIN T_CODE_MACRO_DEFINE T2 ON SYS.MODEL_STATUS = T2.MACRO_CODE AND T2.MACRO_TYPE = 'STATUS' AND T2.DEL_FLAG = 'M0015'
+    </select>
+</mapper>

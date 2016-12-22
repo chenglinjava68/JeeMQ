@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.user.dao.RscSysRoleusermapMapper" >
+  <insert id="insert" parameterType="RscSysRoleusermap" >
+    INSERT INTO T_SYS_ROLEUSERMAP
+    (ROLE_ID,
+     POSITION_ID,
+     CREATOR,
+     CREATE_TIME,
+     UPDATER,
+     UPDATE_TIME,
+     DEL_FLAG,
+     DEF1,
+     DEF2,
+     DEF3,
+     DEF4,
+     DEF5,
+     DEF6,
+     DEF7,
+     DEF8,
+     DEF9,
+     DEF10)
+    VALUES
+    (
+      #{roleId},
+      #{positionid},
+      #{creator},
+      sysdate(),
+      #{creator},
+      sysdate(),
+      'M0015',
+      #{def1},
+      #{def2},
+      #{def3},
+      #{def4},
+      #{def5},
+      #{def6},
+      #{def7},
+      #{def8},
+      #{def9},
+      #{def10}
+    )
+  </insert>
+  <delete id="deleteByPositionId">
+    DELETE FROM T_SYS_ROLEUSERMAP WHERE POSITION_ID = #{positionid}
+  </delete>
+  <select id="selectAll" resultType="RscSysRoleusermap" >
+    SELECT
+      ROLE_ID,
+      POSITION_ID
+    FROM T_SYS_ROLEUSERMAP
+  </select>
+  <select id="query" parameterType="map" resultType="RscSysRoleusermap" >
+    SELECT
+      ROLE_ID,
+      POSITION_ID
+    FROM T_SYS_ROLEUSERMAP
+    <where>
+      <if test="roleId != null">
+        and Role_ID = #{roleId}
+      </if>
+      <if test="positionId != null">
+        and POSITION_ID = #{positionId}
+      </if>
+    </where>
+  </select>
+  <select id="selectForMenu" parameterType="map" resultType="RscSysRoleusermap" >
+
+  </select>
+  <select id="queryRole" parameterType="map" resultType="RscSysRoleusermap" >
+    SELECT
+    ROLE_ID,
+    POSITION_ID
+    FROM T_SYS_ROLEUSERMAP
+    <where>
+      <if test="roleId != null">
+        and Role_ID = #{roleId}
+      </if>
+      <if test="positionId != null">
+        and POSITION_ID = #{positionId}
+      </if>
+    </where>
+  </select>
+</mapper>

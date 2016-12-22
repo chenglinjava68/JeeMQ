@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFStorePhotoAttachementMapper">
+    <select id="selectPhotoAttachement"  resultType="com.stripcode.mybatis.sf.model.SFStorePhotoAttachment">
+        SELECT
+            U.USER_NAME creater,
+            C.UPDATE_TIME createrTime,
+            T.TEMPLATE_ID,
+            T.TITLE,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId,
+            T1.ATTACH_ID
+        FROM
+            T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_STORE_PHOTO_ATTACHMENT T1 ON T.TEMPLATE_ID = T1.TEMPLATE_ID AND  T1.DEL_FLAG = 'M0015' AND T1.PP_ID =#{ppId}
+        LEFT JOIN T_SYS_COMMONATTACHED C ON T1.ATTACH_ID = C.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = C.CREATOR AND U.DEL_FLAG = 'M0015'
+       WHERE T.PAGE_ID ='SF30_073' AND T.DEL_FLAG = 'M0015'
+    </select>
+    <insert id="insertPhotoAttachement" parameterType="com.stripcode.mybatis.sf.model.SFStorePhotoAttachment">
+        INSERT INTO
+         T_SF_STORE_PHOTO_ATTACHMENT
+         (
+            ROW_ID,
+            PP_ID,
+            TEMPLATE_ID,
+            ATTACH_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+         )
+        VALUES (
+            #{rowId},
+            #{ppId},
+            #{templateId},
+            #{attachId},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+    <update id="updatePhotoAttachement" parameterType="com.stripcode.mybatis.sf.model.SFPipelinePausePermination">
+        UPDATE
+            T_SF_STORE_PHOTO_ATTACHMENT
+        SET
+            ATTACH_ID = #{attachId},
+            UPDATER = #{updater},
+            UPDATE_TIME = #{updateTime}
+        WHERE PP_ID = #{ppId} AND TEMPLATE_ID = #{templateId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="isExistsPhotoAttachement" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+            COUNT(1)
+        FROM
+        T_SF_STORE_PHOTO_ATTACHMENT
+        WHERE PP_ID= #{ppId} AND TEMPLATE_ID = #{templateId} AND DEL_FLAG = 'M0015'
+    </select>
+</mapper>

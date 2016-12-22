@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFLandlordNegotiationMapper">
+   <select id="queryNegotiation" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordNegotiation">
+       SELECT
+              N.ROW_ID,
+              N.PP_ID,
+              N.TOPIC,
+              N.DATE_TIME,
+              N.LL_PARTICIPANT,
+              N.MB_PARTICIPANT,
+              N.RENTAL,
+              N.MG_FEE,
+              N.PENALTY,
+              N.POINTS,
+              N.FREE_RENT,
+              N.LOCATION,
+              N.CONTENT,
+              N.ATTACH_ID
+        FROM T_SF_LANDLORD_NEGOTIATION N
+        WHERE N.PP_ID =#{PP_ID} AND N.DEL_FLAG = 'M0015'
+   </select>
+
+    <select id="queryNegotiationInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.sf.model.SFLandlordNegotiation">
+        SELECT
+        N.ROW_ID,
+        N.PP_ID,
+        N.TOPIC,
+        N.DATE_TIME,
+        N.LL_PARTICIPANT,
+        N.MB_PARTICIPANT,
+        N.RENTAL,
+        N.MG_FEE,
+        N.PENALTY,
+        N.POINTS,
+        N.FREE_RENT,
+        N.LOCATION,
+        N.CONTENT,
+        N.ATTACH_ID,
+        C.DOC_NAME fileName,
+        C.FILE_PATH
+        FROM T_SF_LANDLORD_NEGOTIATION N
+        LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = N.ATTACH_ID AND C.DEL_FLAG = 'M0015'
+        WHERE N.PP_ID =#{ppId} AND ROW_ID = #{rowId} AND N.DEL_FLAG = 'M0015'
+    </select>
+
+    <insert id="insertNegotiation" parameterType="com.stripcode.mybatis.sf.model.SFLandlordNegotiation">
+        INSERT INTO T_SF_LANDLORD_NEGOTIATION(
+            ROW_ID,
+            PP_ID,
+            TOPIC,
+            DATE_TIME,
+            LL_PARTICIPANT,
+            MB_PARTICIPANT,
+            RENTAL,
+            MG_FEE,
+            PENALTY,
+            POINTS,
+            FREE_RENT,
+            LOCATION,
+            CONTENT,
+            ATTACH_ID,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{rowId},
+            #{ppId},
+            #{topic},
+            #{dateTime},
+            #{llParticipant},
+            #{mbParticipant},
+            #{rental},
+            #{mgFee},
+            #{penalty},
+            #{points},
+            #{freeRent},
+            #{location},
+            #{content},
+            #{attachId},
+            #{creator},
+            sysdate(),
+            #{updater},
+            sysdate(),
+            'M0015'
+        )
+    </insert>
+    
+    <update id="updateNegotiation" parameterType="com.stripcode.mybatis.sf.model.SFLandlordNegotiation">
+        UPDATE T_SF_LANDLORD_NEGOTIATION
+        SET TOPIC = #{topic},
+            DATE_TIME = #{dateTime},
+            LL_PARTICIPANT = #{llParticipant},
+            MB_PARTICIPANT = #{mbParticipant},
+            RENTAL = #{rental},
+            MG_FEE = #{mgFee},
+            PENALTY = #{penalty},
+            POINTS = #{points},
+            FREE_RENT = #{freeRent},
+            LOCATION = #{location},
+            CONTENT = #{content},
+            ATTACH_ID = #{attachId},
+            UPDATER = #{updater},
+            UPDATE_TIME = sysdate()
+        WHERE PP_ID = #{ppId} AND ROW_ID = #{rowId}
+    </update>
+</mapper>

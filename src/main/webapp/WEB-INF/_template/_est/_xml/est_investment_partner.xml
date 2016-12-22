@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CaModel>
+	<ident id="" path="" type="" />
+	<init>
+		<sheet id="新加盟市场开发审批表">
+			<cell c="3" r="3">
+				<v></v>
+			</cell>
+			<cell c="6" r="3">
+				<v></v>
+			</cell>
+			<cell c="8" r="3">
+				<v></v>
+			</cell>
+			<cell c="10" r="3">
+				<v></v>
+			</cell>
+			<cell c="12" r="3">
+				<v></v>
+			</cell>
+			<cell c="3" r="4">
+				<v></v>
+			</cell>
+			<cell c="6" r="4">
+				<v></v>
+			</cell>
+			<cell c="12" r="4">
+				<v></v>
+			</cell>
+			<cell c="3" r="5">
+				<v></v>
+			</cell>
+			<cell c="6" r="5">
+				<v></v>
+			</cell>
+			<cell c="8" r="5">
+				<v></v>
+			</cell>
+			<cell c="10" r="5">
+				<v></v>
+			</cell>
+			<cell c="3" r="6">
+				<v></v>
+			</cell>
+			<cell c="7" r="6">
+				<v></v>
+			</cell>
+			<cell c="10" r="6">
+				<v></v>
+			</cell>
+			<cell c="3" r="7">
+				<v></v>
+			</cell>
+			<cell c="6" r="7">
+				<v></v>
+			</cell>
+			<cell c="10" r="7">
+				<v></v>
+			</cell>
+			<cell c="7" r="8">
+				<v></v>
+			</cell>
+			<cell c="10" r="8">
+				<v></v>
+			</cell>
+			<cell c="3" r="9">
+				<v></v>
+			</cell>
+			<cell c="7" r="9">
+				<v></v>
+			</cell>
+			<cell c="3" r="10">
+				<v></v>
+			</cell>
+			<cell c="7" r="10">
+				<v></v>
+			</cell>
+			<cell c="3" r="11">
+				<v></v>
+			</cell>
+			<cell c="3" r="12">
+				<v></v>
+			</cell>
+			<cell c="3" r="13">
+				<v></v>
+			</cell>
+			<cell c="3" r="15">
+				<v></v>
+			</cell>
+			<cell c="4" r="15">
+				<v></v>
+			</cell>
+			<cell c="6" r="15">
+				<v></v>
+			</cell>
+			<cell c="8" r="15">
+				<v></v>
+			</cell>
+			<cell c="3" r="16">
+				<v></v>
+			</cell>
+			<cell c="4" r="16">
+				<v></v>
+			</cell>
+			<cell c="6" r="16">
+				<v></v>
+			</cell>
+			<cell c="8" r="16">
+				<v></v>
+			</cell>
+			<cell c="3" r="17">
+				<v></v>
+			</cell>
+			<cell c="4" r="17">
+				<v></v>
+			</cell>
+			<cell c="6" r="17">
+				<v></v>
+			</cell>
+			<cell c="8" r="17">
+				<v></v>
+			</cell>
+			<cell c="3" r="21">
+				<v></v>
+			</cell>
+			<cell c="7" r="21">
+				<v></v>
+			</cell>
+			<cell c="3" r="22">
+				<v></v>
+			</cell>
+			<cell c="7" r="22">
+				<v></v>
+			</cell>
+			<cell c="3" r="23">
+				<v></v>
+			</cell>
+			<cell c="7" r="23">
+				<v></v>
+			</cell>
+			<cell c="2" r="28">
+				<v></v>
+			</cell>
+			<cell c="3" r="28">
+				<v></v>
+			</cell>
+			<cell c="4" r="28">
+				<v></v>
+			</cell>
+			<cell c="7" r="28">
+				<v></v>
+			</cell>
+			<cell c="9" r="28">
+				<v></v>
+			</cell>
+			<cell c="11" r="28">
+				<v></v>
+			</cell>
+			<cell c="11" r="30">
+				<v></v>
+			</cell>
+		</sheet>
+		<sheet id="损益表">
+			<cell c="2" r="2" name="investmentDetailCopartnerStore.contractStartDate">
+				<v></v>
+			</cell>
+			<cell c="5" r="2" name="investmentDetailCopartnerStore.storeCode">
+				<v></v>
+			</cell>
+			<cell c="9" r="2" name="investmentDetailCopartnerStore.contractArea">
+				<v></v>
+			</cell>
+			<cell c="2" r="3" name="investmentDetailCopartnerStore.contractEndDate">
+				<v></v>
+			</cell>
+			<cell c="5" r="3" name="investmentDetailCopartnerStore.cnSitename">
+				<v></v>
+			</cell>
+			<cell c="2" r="17" name="investmentOtherCostRate.waterElectricityGasFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="18" name="investmentOtherCostRate.wrappageFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="19" name="investmentOtherCostRate.accessoriesFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="20" name="investmentOtherCostRate.promotionFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="21" name="investmentOtherCostRate.exLaborFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="22" name="investmentOtherCostRate.clothesMakeupFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="23" name="investmentOtherCostRate.maintenanceFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="24" name="investmentOtherCostRate.dataTrafficeFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="25" name="investmentOtherCostRate.officeFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="26" name="investmentOtherCostRate.posProceduresFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="27" name="investmentOtherCostRate.goodsSurplusFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="28" name="investmentOtherCostRate.traveFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="29" name="investmentOtherCostRate.businessFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="30" name="investmentOtherCostRate.otherControlFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="31" name="investmentOtherCostRate.preOpenFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="33" name="investmentOtherCostRate.logisticsFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="40" name="investmentOtherCostRate.transferFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="41" name="investmentOtherCostRate.depreciactionFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="42" name="investmentOtherCostRate.licenseFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="43" name="investmentOtherCostRate.adFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="44" name="investmentOtherCostRate.otherSundryFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="45" name="investmentOtherCostRate.closeLoseFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="60" name="investmentOtherCostRate.adSupporFeeRate">
+				<v></v>
+			</cell>
+			<cell c="2" r="61" name="investmentOtherCostRate.stockFeeRate">
+				<v></v>
+			</cell>
+		</sheet>
+		<sheet id="非人力测算表">
+			
+			<cell c="3" r="3" name="investmentIncomeSharings[0].salesPct">
+				<v></v>
+			</cell>
+			<cell c="4" r="3" name="investmentIncomeSharings[1].salesPct">
+				<v></v>
+			</cell>
+			<cell c="6" r="3" name="investmentIncomeSharings[2].salesPct">
+				<v></v>
+			</cell>
+			<cell c="8" r="3" name="investmentIncomeSharings[3].salesPct">
+				<v></v>
+			</cell>
+
+			<cell c="3" r="4" name="investmentIncomeSharings[0].incomeSharingRadio">
+				<v></v>
+			</cell>
+			<cell c="4" r="4" name="investmentIncomeSharings[1].incomeSharingRadio">
+				<v></v>
+			</cell>
+			<cell c="6" r="4" name="investmentIncomeSharings[2].incomeSharingRadio">
+				<v></v>
+			</cell>
+			<cell c="8" r="4" name="investmentIncomeSharings[3].incomeSharingRadio">
+				<v></v>
+			</cell>
+
+			<cell c="2" r="6" name="investmentNonLaborCost.storeIncomeFir">
+				<v></v>
+			</cell>
+			<cell c="3" r="6" name="investmentNonLaborCost.storeIncomeSec">
+				<v></v>
+			</cell>
+			<cell c="4" r="6" name="investmentNonLaborCost.storeIncomeThi">
+				<v></v>
+			</cell>
+			<cell c="6" r="6" name="investmentNonLaborCost.storeIncomeFour">
+				<v></v>
+			</cell>
+			<cell c="8" r="6" name="investmentNonLaborCost.storeIncomeFive">
+				<v></v>
+			</cell>
+
+			<cell c="3" r="9" name="investmentNonLaborCost.rentMonthPerSquare">
+				<v></v>
+			</cell>
+			<cell c="4" r="9" name="investmentNonLaborCost.rentFirstYear">
+				<v></v>
+			</cell>
+			<cell c="5" r="9" name="investmentNonLaborCost.rentIncRate">
+				<v></v>
+			</cell>
+			<cell c="6" r="9" name="investmentNonLaborCost.rentContractTerm">
+				<v></v>
+			</cell>
+			<cell c="7" r="9" name="investmentNonLaborCost.deductionPointFirYear">
+				<v></v>
+			</cell>
+			<cell c="8" r="9" name="investmentNonLaborCost.deductionPointContractTerm">
+				<v></v>
+			</cell>
+			<cell c="9" r="9" name="investmentNonLaborCost.propertyFeeMonth">
+				<v></v>
+			</cell>
+			<cell c="10" r="9" name="investmentNonLaborCost.propertyFeeYear">
+				<v></v>
+			</cell>
+			<cell c="11" r="9" name="investmentNonLaborCost.rentTypeName">
+				<v></v>
+			</cell>
+			<cell c="3" r="10" name="investmentNonLaborCost.rentStartDate">
+				<v></v>
+			</cell>
+			<cell c="5" r="10" name="investmentNonLaborCost.rentEndDate">
+				<v></v>
+			</cell>
+			<cell c="8" r="10" name="investmentNonLaborCost.rentYears">
+				<v></v>
+			</cell>
+			<cell c="10" r="10" name="investmentNonLaborCost.openDate">
+				<v></v>
+			</cell>
+			<cell c="3" r="12" name="investmentNonLaborCost.leaseBond">
+				<v></v>
+			</cell>
+			<cell c="4" r="12" name="investmentNonLaborCost.goodsBond">
+				<v></v>
+			</cell>
+			<cell c="5" r="12" name="investmentNonLaborCost.renovationOtherFee">
+				<v></v>
+			</cell>
+			<cell c="2" r="15" name="investmentNonLaborCost.propSuportFee">
+				<v></v>
+			</cell>
+			<cell c="3" r="15" name="investmentNonLaborCost.logisticsSuportFee">
+				<v></v>
+			</cell>
+			<cell c="4" r="15" name="investmentNonLaborCost.renovationSuportFee">
+				<v></v>
+			</cell>
+			<cell c="8" r="15" name="investmentNonLaborCost.otherSuportFee">
+				<v></v>
+			</cell>
+			<cell c="10" r="15" name="investmentNonLaborCost.companyInvestmentTotal">
+				<v></v>
+			</cell>
+		</sheet>
+		<sheet id="人力测算表">
+			<cell c="3" r="2">
+				<v></v>
+			</cell>
+			<cell c="5" r="2">
+				<v></v>
+			</cell>
+			<cell c="2" r="3">
+				<v></v>
+			</cell>
+			
+			<cell c="2" r="4" name="investmentDetailCopartnerStore.salesAvgMonth">
+				<v></v>
+			</cell>
+			<cell c="2" r="5" name="investmentDetailCopartnerStore.minStd">
+				<v></v>
+			</cell>
+			<cell c="2" r="6" name="investmentDetailCopartnerStore.socSecPct">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="11" name="investmentPayrollForecastCopartnerList[0].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="11" name="investmentPayrollForecastCopartnerList[0].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="11" name="investmentPayrollForecastCopartnerList[0].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="11" name="investmentPayrollForecastCopartnerList[0].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="11" name="investmentPayrollForecastCopartnerList[0].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="11" name="investmentPayrollForecastCopartnerList[0].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="11" name="investmentPayrollForecastCopartnerList[0].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="11" name="investmentPayrollForecastCopartnerList[0].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="11" name="investmentPayrollForecastCopartnerList[0].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="11" name="investmentPayrollForecastCopartnerList[0].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="11" name="investmentPayrollForecastCopartnerList[0].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="11" name="investmentPayrollForecastCopartnerList[0].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="11" name="investmentPayrollForecastCopartnerList[0].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="12" name="investmentPayrollForecastCopartnerList[1].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="12" name="investmentPayrollForecastCopartnerList[1].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="12" name="investmentPayrollForecastCopartnerList[1].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="12" name="investmentPayrollForecastCopartnerList[1].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="12" name="investmentPayrollForecastCopartnerList[1].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="12" name="investmentPayrollForecastCopartnerList[1].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="12" name="investmentPayrollForecastCopartnerList[1].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="12" name="investmentPayrollForecastCopartnerList[1].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="12" name="investmentPayrollForecastCopartnerList[1].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="12" name="investmentPayrollForecastCopartnerList[1].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="12" name="investmentPayrollForecastCopartnerList[1].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="12" name="investmentPayrollForecastCopartnerList[1].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="12" name="investmentPayrollForecastCopartnerList[1].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="13" name="investmentPayrollForecastCopartnerList[2].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="13" name="investmentPayrollForecastCopartnerList[2].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="13" name="investmentPayrollForecastCopartnerList[2].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="13" name="investmentPayrollForecastCopartnerList[2].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="13" name="investmentPayrollForecastCopartnerList[2].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="13" name="investmentPayrollForecastCopartnerList[2].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="13" name="investmentPayrollForecastCopartnerList[2].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="13" name="investmentPayrollForecastCopartnerList[2].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="13" name="investmentPayrollForecastCopartnerList[2].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="13" name="investmentPayrollForecastCopartnerList[2].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="13" name="investmentPayrollForecastCopartnerList[2].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="13" name="investmentPayrollForecastCopartnerList[2].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="13" name="investmentPayrollForecastCopartnerList[2].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="14" name="investmentPayrollForecastCopartnerList[3].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="14" name="investmentPayrollForecastCopartnerList[3].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="14" name="investmentPayrollForecastCopartnerList[3].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="14" name="investmentPayrollForecastCopartnerList[3].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="14" name="investmentPayrollForecastCopartnerList[3].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="14" name="investmentPayrollForecastCopartnerList[3].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="14" name="investmentPayrollForecastCopartnerList[3].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="14" name="investmentPayrollForecastCopartnerList[3].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="14" name="investmentPayrollForecastCopartnerList[3].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="14" name="investmentPayrollForecastCopartnerList[3].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="14" name="investmentPayrollForecastCopartnerList[3].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="14" name="investmentPayrollForecastCopartnerList[3].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="14" name="investmentPayrollForecastCopartnerList[3].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="15" name="investmentPayrollForecastCopartnerList[4].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="15" name="investmentPayrollForecastCopartnerList[4].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="15" name="investmentPayrollForecastCopartnerList[4].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="15" name="investmentPayrollForecastCopartnerList[4].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="15" name="investmentPayrollForecastCopartnerList[4].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="15" name="investmentPayrollForecastCopartnerList[4].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="15" name="investmentPayrollForecastCopartnerList[4].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="15" name="investmentPayrollForecastCopartnerList[4].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="15" name="investmentPayrollForecastCopartnerList[4].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="15" name="investmentPayrollForecastCopartnerList[4].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="15" name="investmentPayrollForecastCopartnerList[4].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="15" name="investmentPayrollForecastCopartnerList[4].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="15" name="investmentPayrollForecastCopartnerList[4].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="16" name="investmentPayrollForecastCopartnerList[5].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="16" name="investmentPayrollForecastCopartnerList[5].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="16" name="investmentPayrollForecastCopartnerList[5].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="16" name="investmentPayrollForecastCopartnerList[5].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="16" name="investmentPayrollForecastCopartnerList[5].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="16" name="investmentPayrollForecastCopartnerList[5].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="16" name="investmentPayrollForecastCopartnerList[5].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="16" name="investmentPayrollForecastCopartnerList[5].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="16" name="investmentPayrollForecastCopartnerList[5].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="16" name="investmentPayrollForecastCopartnerList[5].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="16" name="investmentPayrollForecastCopartnerList[5].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="16" name="investmentPayrollForecastCopartnerList[5].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="16" name="investmentPayrollForecastCopartnerList[5].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="17" name="investmentPayrollForecastCopartnerList[6].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="17" name="investmentPayrollForecastCopartnerList[6].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="17" name="investmentPayrollForecastCopartnerList[6].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="17" name="investmentPayrollForecastCopartnerList[6].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="17" name="investmentPayrollForecastCopartnerList[6].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="17" name="investmentPayrollForecastCopartnerList[6].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="17" name="investmentPayrollForecastCopartnerList[6].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="17" name="investmentPayrollForecastCopartnerList[6].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="17" name="investmentPayrollForecastCopartnerList[6].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="17" name="investmentPayrollForecastCopartnerList[6].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="17" name="investmentPayrollForecastCopartnerList[6].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="17" name="investmentPayrollForecastCopartnerList[6].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="17" name="investmentPayrollForecastCopartnerList[6].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="18" name="investmentPayrollForecastCopartnerList[7].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="18" name="investmentPayrollForecastCopartnerList[7].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="18" name="investmentPayrollForecastCopartnerList[7].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="18" name="investmentPayrollForecastCopartnerList[7].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="18" name="investmentPayrollForecastCopartnerList[7].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="18" name="investmentPayrollForecastCopartnerList[7].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="18" name="investmentPayrollForecastCopartnerList[7].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="18" name="investmentPayrollForecastCopartnerList[7].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="18" name="investmentPayrollForecastCopartnerList[7].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="18" name="investmentPayrollForecastCopartnerList[7].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="18" name="investmentPayrollForecastCopartnerList[7].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="18" name="investmentPayrollForecastCopartnerList[7].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="18" name="investmentPayrollForecastCopartnerList[7].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="19" name="investmentPayrollForecastCopartnerList[8].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="19" name="investmentPayrollForecastCopartnerList[8].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="19" name="investmentPayrollForecastCopartnerList[8].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="19" name="investmentPayrollForecastCopartnerList[8].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="19" name="investmentPayrollForecastCopartnerList[8].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="19" name="investmentPayrollForecastCopartnerList[8].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="19" name="investmentPayrollForecastCopartnerList[8].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="19" name="investmentPayrollForecastCopartnerList[8].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="19" name="investmentPayrollForecastCopartnerList[8].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="19" name="investmentPayrollForecastCopartnerList[8].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="19" name="investmentPayrollForecastCopartnerList[8].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="19" name="investmentPayrollForecastCopartnerList[8].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="19" name="investmentPayrollForecastCopartnerList[8].otherWelfare">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="2" r="20" name="investmentPayrollForecastCopartnerList[9].posName">
+				<v></v>
+			</cell>
+			<cell c="3" r="20" name="investmentPayrollForecastCopartnerList[9].recruitmentModel">
+				<v></v>
+			</cell>
+			<cell c="4" r="20" name="investmentPayrollForecastCopartnerList[9].salaryBear">
+				<v></v>
+			</cell>
+			<cell c="5" r="20" name="investmentPayrollForecastCopartnerList[9].number">
+				<v></v>
+			</cell>
+			<cell c="6" r="20" name="investmentPayrollForecastCopartnerList[9].fixSalaryStd">
+				<v></v>
+			</cell>
+			<cell c="7" r="20" name="investmentPayrollForecastCopartnerList[9].fullAttndStdSpare">
+				<v></v>
+			</cell>
+			<cell c="8" r="20" name="investmentPayrollForecastCopartnerList[9].mealSubStd">
+				<v></v>
+			</cell>
+			<cell c="9" r="20" name="investmentPayrollForecastCopartnerList[9].rentSubStd">
+				<v></v>
+			</cell>
+			<cell c="10" r="20" name="investmentPayrollForecastCopartnerList[9].fullAttndStd">
+				<v></v>
+			</cell>
+			<cell c="11" r="20" name="investmentPayrollForecastCopartnerList[9].fixedCharges">
+				<v></v>
+			</cell>
+			<cell c="12" r="20" name="investmentPayrollForecastCopartnerList[9].avgOvertime">
+				<v></v>
+			</cell>
+			<cell c="13" r="20" name="investmentPayrollForecastCopartnerList[9].performCoef">
+				<v></v>
+			</cell>
+			<cell c="17" r="20" name="investmentPayrollForecastCopartnerList[9].otherWelfare">
+				<v></v>
+			</cell>
+			
+			<cell c="19" r="25">
+				<v></v>
+			</cell>
+			<cell c="19" r="26">
+				<v></v>
+			</cell>
+		</sheet>
+	</init>
+	<return>
+		<sheet id="损益表">
+			<cell c="10" r="12" name="investmentNonLaborCost.estStoreDailyCost">
+				<v></v>
+			</cell>
+			<cell c="11" r="12" name="investmentNonLaborCost.joinInvestmentTotal">
+				<v></v>
+			</cell>
+		</sheet>
+		<sheet id="非人力测算表">
+			<cell c="2" r="12" name="investmentNonLaborCost.rentHalfYear">
+				<v></v>
+			</cell>
+			<cell c="7" r="12" name="investmentNonLaborCost.mgrAnnualSalary">
+				<v></v>
+			</cell>
+			<cell c="8" r="12" name="investmentNonLaborCost.shoppingGuideSalary">
+				<v></v>
+			</cell>
+			<cell c="9" r="12" name="investmentNonLaborCost.specialPositionSalary">
+				<v></v>
+			</cell>
+			<cell c="10" r="12" name="investmentNonLaborCost.estStoreDailyCost">
+				<v></v>
+			</cell>
+			<cell c="11" r="12" name="investmentNonLaborCost.joinInvestmentTotal">
+				<v></v>
+			</cell>
+			<cell c="6" r="15" name="investmentNonLaborCost.manageSalaryYear">
+				<v></v>
+			</cell>
+		</sheet>
+		<sheet id="新加盟市场开发审批表">
+			
+			<cell c="4" r="36" name="investmentResultDateCopartner.storeIncomeFir">
+				<v></v>
+			</cell>
+			<cell c="5" r="36" name="investmentResultDateCopartner.storeIncomeSec">
+				<v></v>
+			</cell>
+			<cell c="6" r="36" name="investmentResultDateCopartner.storeIncomeThi">
+				<v></v>
+			</cell>
+			<cell c="7" r="36" name="investmentResultDateCopartner.storeIncomeFour">
+				<v></v>
+			</cell>
+			<cell c="8" r="36" name="investmentResultDateCopartner.storeIncomeFive">
+				<v></v>
+			</cell>
+			<cell c="9" r="36" name="investmentResultDateCopartner.storeIncomeTotal">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="4" r="37" name="investmentResultDateCopartner.companyIncomeFir">
+				<v></v>
+			</cell>
+			<cell c="5" r="37" name="investmentResultDateCopartner.companyIncomeSec">
+				<v></v>
+			</cell>
+			<cell c="6" r="37" name="investmentResultDateCopartner.companyIncomeThi">
+				<v></v>
+			</cell>
+			<cell c="7" r="37" name="investmentResultDateCopartner.companyIncomeFour">
+				<v></v>
+			</cell>
+			<cell c="8" r="37" name="investmentResultDateCopartner.companyIncomeFive">
+				<v></v>
+			</cell>
+			<cell c="9" r="37" name="investmentResultDateCopartner.companyIncomeTotal">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="4" r="38" name="investmentResultDateCopartner.copartnerUcFir">
+				<v></v>
+			</cell>
+			<cell c="5" r="38" name="investmentResultDateCopartner.copartnerUcSec">
+				<v></v>
+			</cell>
+			<cell c="6" r="38" name="investmentResultDateCopartner.copartnerUcThi">
+				<v></v>
+			</cell>
+			<cell c="7" r="38" name="investmentResultDateCopartner.copartnerUcFour">
+				<v></v>
+			</cell>
+			<cell c="8" r="38" name="investmentResultDateCopartner.copartnerUcFive">
+				<v></v>
+			</cell>
+			<cell c="9" r="38" name="investmentResultDateCopartner.copartnerUcTotal">
+				<v></v>
+			</cell>
+			
+			
+			<cell c="4" r="39" name="investmentResultDateCopartner.companyUcFir">
+				<v></v>
+			</cell>
+			<cell c="5" r="39" name="investmentResultDateCopartner.companyUcSec">
+				<v></v>
+			</cell>
+			<cell c="6" r="39" name="investmentResultDateCopartner.companyUcThi">
+				<v></v>
+			</cell>
+			<cell c="7" r="39" name="investmentResultDateCopartner.companyUcFour">
+				<v></v>
+			</cell>
+			<cell c="8" r="39" name="investmentResultDateCopartner.companyUcFive">
+				<v></v>
+			</cell>
+			<cell c="9" r="39" name="investmentResultDateCopartner.companyUcTotal">
+				<v></v>
+			</cell>
+			
+		</sheet>
+	</return>
+	<file path="" />
+</CaModel>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFPolicySupportAgreeAttachmentMapper">
+
+    <select id="selectSFPolicySupportAgreeAttachment" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+              SELECT
+         T.ROW_ID,
+            U.USER_NAME creator,
+            TC.UPDATE_TIME createTime1,
+            TC.TEMPLATE_ID,
+            TC.TITLE,
+            TC.TEMPLATE_ID,
+            T.ATTACH_ID,
+            TSC.DOC_NAME fileName,
+            TSC.FILE_PATH fieldId
+        FROM
+             T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT T
+        LEFT JOIN T_SYS_ATTACHEDTEMPLATE TC ON T.TEMPLATE_ID = TC.TEMPLATE_ID AND T.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED TSC ON TSC.ATTACH_ID ='32aea39686fd4dff8fce1d69a8e4b501' AND TSC.DEL_FLAG ='M0015'
+         LEFT JOIN T_SYS_USER U ON U.USER_ID = TC.CREATOR AND U.DEL_FLAG = 'M0015'
+         WHERE
+                 TC.DEL_FLAG='M0015' AND TC.PAGE_ID='SF30_067'AND T.ATTACH_ID=#{attachId}
+    </select>
+    <select id="selectSFPolicySupportAttachment" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+         SELECT
+            P.ROW_ID,
+            P.PP_ID,
+            T.TITLE,
+            U.USER_NAME creator,
+            P.UPDATE_TIME createTime1,
+            T.TEMPLATE_ID,
+            P.ATTACH_ID,
+            C.DOC_NAME fileName,
+            C.FILE_PATH filePath
+        FROM
+             T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT P ON T.TEMPLATE_ID = P.TEMPLATE_ID AND P.DEL_FLAG = 'M0015' AND P.PP_ID =#{ppId}
+        LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID =P.ATTACH_ID AND C.DEL_FLAG ='M0015'
+         LEFT JOIN T_SYS_USER U ON U.USER_ID = C.CREATOR AND U.DEL_FLAG = 'M0015'
+         WHERE
+                T.PAGE_ID='SF30_068' AND T.DEL_FLAG='M0015'
+    </select>
+    <select id="selectSFPolicyAttachment" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+         SELECT
+            P.ROW_ID,
+            P.PP_ID,
+            T.TITLE,
+            U.USER_NAME creator,
+            P.UPDATE_TIME createTime1,
+            T.TEMPLATE_ID,
+            P.ATTACH_ID,
+            C.DOC_NAME fileName,
+            C.FILE_PATH filePath
+        FROM
+             T_SYS_ATTACHEDTEMPLATE T
+        LEFT JOIN T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT P ON T.TEMPLATE_ID = P.TEMPLATE_ID AND P.DEL_FLAG = 'M0015' AND P.PP_ID =#{ppId}
+        LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID =P.ATTACH_ID AND C.DEL_FLAG ='M0015'
+         LEFT JOIN T_SYS_USER U ON U.USER_ID = C.CREATOR AND U.DEL_FLAG = 'M0015'
+         WHERE
+                T.PAGE_ID='SF30_069' AND T.DEL_FLAG='M0015'
+    </select>
+
+    <insert id="insert" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupport">
+        INSERT INTO T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        (
+        ROW_ID,
+        PP_ID,
+        TEMPLATE_ID,
+        ATTACH_ID,
+        ATTACHMENT_TYPE,
+        STATUS,
+        CREATOR,
+        CREATE_TIME,
+        UPDATER,
+        UPDATE_TIME,
+        DEL_FLAG
+        )
+        VALUE
+        (
+        #{rowId},
+        #{ppId},
+        #{templateId},
+        #{attachId},
+        #{attachmentType},
+        #{status},
+        #{creator},
+        sysdate(),
+        #{updater},
+        sysdate(),
+        'M0015'
+        )
+    </insert>
+    <update id="update" parameterType="com.stripcode.mybatis.sf.model.SFPolicySupport">
+        UPDATE T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT
+        SET
+        ROW_ID = #{rowId}
+        PP_ID = #{ppId},
+        ATTACH_ID = #{attachId},
+        ATTACHMENT_TYPE =#{attachmentType},
+        STATUS = #{status},
+        UPDATER = #{updater},
+        UPDATE_TIME = sysdate()
+        WHERE
+        TEMPLATE_ID = #{templateId} AND DEL_FLAG = 'M0015'
+    </update>
+    <select id="selectPpId" resultType="com.stripcode.mybatis.sf.model.SFPolicySupportAgreeAttachment">
+        SELECT
+            T.ROW_ID,
+            U.USER_NAME CREATOR,
+            TC.UPDATE_TIME CREATETIME1,
+            TC.TEMPLATE_ID,
+            TC.TITLE,
+            TC.TEMPLATE_ID,
+            T.ATTACH_ID,
+            T.PP_ID,
+            TSC.DOC_NAME FILENAME,
+            TSC.FILE_PATH FIELDID
+        FROM
+            T_SF_POLICY_SUPPORT_AGREEMENT_ATTACHMENT T
+        LEFT JOIN T_SYS_ATTACHEDTEMPLATE TC ON T.TEMPLATE_ID = TC.TEMPLATE_ID AND TC.DEL_FLAG = 'M0015'
+        LEFT JOIN T_SYS_COMMONATTACHED TSC ON TSC.ATTACH_ID =T.ATTACH_ID AND TSC.DEL_FLAG ='M0015'
+        LEFT JOIN T_SYS_USER U ON U.USER_ID = TC.CREATOR AND U.DEL_FLAG = 'M0015'
+        WHERE
+            T.PP_ID=#{ppId} AND T.TEMPLATE_ID ='6cd97736-974e-11e6-bced-480fcf39' AND T.DEL_FLAG='M0015'
+    </select>
+
+</mapper>

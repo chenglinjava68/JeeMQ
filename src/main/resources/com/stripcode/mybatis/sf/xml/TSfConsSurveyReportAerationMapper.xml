@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFConsSurveyReportAerationMapper" >
+
+  <insert id="insertAeration" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportAeration" >
+    insert into t_sf_cons_survey_report_aeration (ROW_ID, PP_ID,
+      SUMMER_OUTDOOR_TEMP, WINTER_OUTDOOR_TEMP, AIR_CONDITION_SUPPLY, 
+      TOTAL_COLD, AIR_CONDITION_MODE, FAN_HEAT_EFFECT, 
+      NOISE_EFFECT, IS_ENVIRONMENTAL_PERMITS, MEASURES, 
+      CREATOR, CREATE_TIME, UPDATER, 
+      UPDATE_TIME, DEL_FLAG, DEF1, 
+      DEF2, DEF3, DEF4, DEF5, 
+      DEF6, DEF7, DEF8, DEF9, 
+      DEF10)
+    values (#{rowId,jdbcType=VARCHAR}, #{ppId,jdbcType=VARCHAR},
+      #{summerOutdoorTemp,jdbcType=VARCHAR}, #{winterOutdoorTemp,jdbcType=VARCHAR}, #{airConditionSupply,jdbcType=VARCHAR}, 
+      #{totalCold,jdbcType=DECIMAL}, #{airConditionMode,jdbcType=VARCHAR}, #{fanHeatEffect,jdbcType=VARCHAR}, 
+      #{noiseEffect,jdbcType=VARCHAR}, #{isEnvironmentalPermits,jdbcType=VARCHAR}, #{measures,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR}, #{def1,jdbcType=VARCHAR}, 
+      #{def2,jdbcType=VARCHAR}, #{def3,jdbcType=VARCHAR}, #{def4,jdbcType=VARCHAR}, #{def5,jdbcType=VARCHAR}, 
+      #{def6,jdbcType=VARCHAR}, #{def7,jdbcType=VARCHAR}, #{def8,jdbcType=VARCHAR}, #{def9,jdbcType=VARCHAR}, 
+      #{def10,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateAeration" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportAeration" >
+    update t_sf_cons_survey_report_aeration
+    set
+      SUMMER_OUTDOOR_TEMP = #{summerOutdoorTemp,jdbcType=VARCHAR},
+      WINTER_OUTDOOR_TEMP = #{winterOutdoorTemp,jdbcType=VARCHAR},
+      AIR_CONDITION_SUPPLY = #{airConditionSupply,jdbcType=VARCHAR},
+      TOTAL_COLD = #{totalCold,jdbcType=DECIMAL},
+      AIR_CONDITION_MODE = #{airConditionMode,jdbcType=VARCHAR},
+      FAN_HEAT_EFFECT = #{fanHeatEffect,jdbcType=VARCHAR},
+      NOISE_EFFECT = #{noiseEffect,jdbcType=VARCHAR},
+      IS_ENVIRONMENTAL_PERMITS = #{isEnvironmentalPermits,jdbcType=VARCHAR},
+      MEASURES = #{measures,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      DEL_FLAG = #{delFlag,jdbcType=VARCHAR},
+      DEF1 = #{def1,jdbcType=VARCHAR},
+      DEF2 = #{def2,jdbcType=VARCHAR},
+      DEF3 = #{def3,jdbcType=VARCHAR},
+      DEF4 = #{def4,jdbcType=VARCHAR},
+      DEF5 = #{def5,jdbcType=VARCHAR},
+      DEF6 = #{def6,jdbcType=VARCHAR},
+      DEF7 = #{def7,jdbcType=VARCHAR},
+      DEF8 = #{def8,jdbcType=VARCHAR},
+      DEF9 = #{def9,jdbcType=VARCHAR},
+      DEF10 = #{def10,jdbcType=VARCHAR}
+    where PP_ID =#{ppId} AND ROW_ID = #{rowId} AND DEL_FLAG = 'M0015'
+  </update>
+  <select id="queryAeration" resultType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportAeration" parameterType="java.lang.String" >
+    select AUTO_NO, ROW_ID, PP_ID, SUMMER_OUTDOOR_TEMP, WINTER_OUTDOOR_TEMP, AIR_CONDITION_SUPPLY, 
+    TOTAL_COLD, AIR_CONDITION_MODE, FAN_HEAT_EFFECT, NOISE_EFFECT, IS_ENVIRONMENTAL_PERMITS, 
+    MEASURES, CREATOR, CREATE_TIME, UPDATER, UPDATE_TIME, DEL_FLAG, DEF1, DEF2, DEF3, 
+    DEF4, DEF5, DEF6, DEF7, DEF8, DEF9, DEF10
+    from t_sf_cons_survey_report_aeration
+    where PP_ID = #{ppId}
+  </select>
+</mapper>

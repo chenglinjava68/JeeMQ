@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.am.dao.AMAuthorizationInfoMapper">
+    <select id="selectForAuthorizationInfo" parameterType="java.lang.String" resultType="com.stripcode.mybatis.am.model.AMAuthorizationInfo">
+        SELECT
+            C.DOC_NAME title,
+            A.ATTACH_ID,
+            A.ACCREDIT_STARTDATE,
+            A.ACCREDIT_ENDDATE,
+            A.UPLOAD_DATE uploadDate,
+            C.DOC_NAME fileName,
+            C.FILE_PATH fieldId
+        FROM
+            T_AM_AUTHORIZATION_ATTACHMENT A
+            LEFT JOIN T_SYS_COMMONATTACHED C ON A.ATTACH_ID = C.ATTACH_ID
+        <where>
+            A.STORE_ID = #{storeId}
+            AND A.DEL_FLAG = 'M0015'
+        </where>
+    </select>
+    <insert id="insertAuthorizationInfo" parameterType="com.stripcode.mybatis.am.model.AMAuthorizationInfo">
+        INSERT INTO T_AM_AUTHORIZATION_ATTACHMENT(
+            STORE_ID,
+            ATTACH_ID,
+            ROW_ID,
+            ACCREDIT_STARTDATE,
+            ACCREDIT_ENDDATE,
+            UPLOAD_DATE,
+            CREATOR,
+            CREATE_TIME,
+            UPDATER,
+            UPDATE_TIME,
+            DEL_FLAG
+        )VALUES (
+            #{storeId},
+            #{attachId},
+            #{rowId},
+            #{accreditStartDate},
+            #{accreditEndDate},
+            #{uploadDate},
+            #{creator},
+            #{createTime},
+            #{updater},
+            #{updateTime},
+            'M0015'
+        )
+    </insert>
+
+    <update id="updateAuthorizationInfo" parameterType="com.stripcode.mybatis.am.model.AMAuthorizationInfo">
+         UPDATE T_AM_AUTHORIZATION_ATTACHMENT
+        SET ACCREDIT_STARTDATE = #{accreditStartDate},
+            ACCREDIT_ENDDATE = #{accreditEndDate},
+            UPLOAD_DATE = #{uploadDate}
+        WHERE STORE_ID = #{storeId}
+    </update>
+
+    <update id="deleteAuthorizationInfo" parameterType="map">
+        UPDATE T_AM_AUTHORIZATION_ATTACHMENT
+        SET DEL_FLAG = 'M0014'
+        <where>
+            <if test='isContractNull!=0'>
+                ROW_ID NOT IN
+                <foreach collection="rowId" item="item" index="index"
+                         open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            AND STORE_ID = #{storeId}
+        </where>
+    </update>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.stripcode.mybatis.sf.dao.SFConsSurveyReportOthersMapper" >
+
+  <insert id="insertOthers" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportOthers" >
+    insert into t_sf_cons_survey_report_others ( ROW_ID, PP_ID,
+      FROZEN_STORAGE, ICE_MACHINE, STORE_AIR_CONDITION, 
+      OTHER_EQUIPMENT, DISTANCE, DISPERSION, 
+      IS_OWNER_CONFIRM, IS_RADIATING, IS_FIRE_ALARM, 
+      SIGN_FIRM, SIGN_DRAWING, SIGN_DRAWING_PAGES, 
+      ELEC_FILE, IS_DEPARTMENT_CONFIRM, SIGN_VISIBILITY_LEFT, 
+      SIGN_VISIBILITY_RIGHT, INDEPENDENT_INDEX_SIGN, 
+      NECESSARY_CONDITION, NO_NECESSARY_CONDITION, 
+      CREATOR, CREATE_TIME, UPDATER, 
+      UPDATE_TIME, DEL_FLAG)
+    values (#{rowId,jdbcType=VARCHAR}, #{ppId,jdbcType=VARCHAR},
+      #{frozenStorage,jdbcType=VARCHAR}, #{iceMachine,jdbcType=VARCHAR}, #{storeAirCondition,jdbcType=VARCHAR}, 
+      #{otherEquipment,jdbcType=VARCHAR}, #{distance,jdbcType=DECIMAL}, #{dispersion,jdbcType=DECIMAL}, 
+      #{isOwnerConfirm,jdbcType=VARCHAR}, #{isRadiating,jdbcType=VARCHAR}, #{isFireAlarm,jdbcType=VARCHAR}, 
+      #{signFirm,jdbcType=VARCHAR}, #{signDrawing,jdbcType=VARCHAR}, #{signDrawingPages,jdbcType=INTEGER}, 
+      #{elecFile,jdbcType=VARCHAR}, #{isDepartmentConfirm,jdbcType=VARCHAR}, #{signVisibilityLeft,jdbcType=VARCHAR}, 
+      #{signVisibilityRight,jdbcType=VARCHAR}, #{independentIndexSign,jdbcType=VARCHAR}, 
+      #{necessaryCondition,jdbcType=VARCHAR}, #{noNecessaryCondition,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateOthers" parameterType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportOthers" >
+    update t_sf_cons_survey_report_others
+    set
+      FROZEN_STORAGE = #{frozenStorage,jdbcType=VARCHAR},
+      ICE_MACHINE = #{iceMachine,jdbcType=VARCHAR},
+      STORE_AIR_CONDITION = #{storeAirCondition,jdbcType=VARCHAR},
+      OTHER_EQUIPMENT = #{otherEquipment,jdbcType=VARCHAR},
+      DISTANCE = #{distance,jdbcType=DECIMAL},
+      DISPERSION = #{dispersion,jdbcType=DECIMAL},
+      IS_OWNER_CONFIRM = #{isOwnerConfirm,jdbcType=VARCHAR},
+      IS_RADIATING = #{isRadiating,jdbcType=VARCHAR},
+      IS_FIRE_ALARM = #{isFireAlarm,jdbcType=VARCHAR},
+      SIGN_FIRM = #{signFirm,jdbcType=VARCHAR},
+      SIGN_DRAWING = #{signDrawing,jdbcType=VARCHAR},
+      SIGN_DRAWING_PAGES = #{signDrawingPages,jdbcType=INTEGER},
+      ELEC_FILE = #{elecFile,jdbcType=VARCHAR},
+      IS_DEPARTMENT_CONFIRM = #{isDepartmentConfirm,jdbcType=VARCHAR},
+      SIGN_VISIBILITY_LEFT = #{signVisibilityLeft,jdbcType=VARCHAR},
+      SIGN_VISIBILITY_RIGHT = #{signVisibilityRight,jdbcType=VARCHAR},
+      INDEPENDENT_INDEX_SIGN = #{independentIndexSign,jdbcType=VARCHAR},
+      NECESSARY_CONDITION = #{necessaryCondition,jdbcType=VARCHAR},
+      NO_NECESSARY_CONDITION = #{noNecessaryCondition,jdbcType=VARCHAR},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ROW_ID = #{rowId} AND PP_ID = #{ppId} AND DEL_FLAG ='M0015'
+  </update>
+  <select id="queryOthers" resultType="com.stripcode.mybatis.sf.model.TSfConsSurveyReportOthers" parameterType="java.lang.String" >
+    select
+    O.ROW_ID,
+    O.PP_ID,
+    O.FROZEN_STORAGE,
+    O.ICE_MACHINE,
+    O.STORE_AIR_CONDITION,
+    O.OTHER_EQUIPMENT,
+    O.DISTANCE,
+    O.DISPERSION,
+    O.IS_OWNER_CONFIRM,
+    O.IS_RADIATING,
+    O.IS_FIRE_ALARM,
+    O.SIGN_FIRM,
+    O.SIGN_DRAWING,
+    O.SIGN_DRAWING_PAGES,
+    O.ELEC_FILE,
+    O.IS_DEPARTMENT_CONFIRM,
+    O.SIGN_VISIBILITY_LEFT,
+    O.SIGN_VISIBILITY_RIGHT,
+    O.INDEPENDENT_INDEX_SIGN,
+    O.NECESSARY_CONDITION,
+    O.NO_NECESSARY_CONDITION,
+    C.DOC_NAME fileName,
+    C.FILE_PATH
+    from T_SF_CONS_SURVEY_REPORT_OTHERS O
+    LEFT JOIN T_SYS_COMMONATTACHED C ON C.ATTACH_ID = O.ELEC_FILE AND C.DEL_FLAG = 'M0015'
+    where O.PP_ID = #{ppId} AND O.DEL_FLAG='M0015'
+  </select>
+</mapper>
